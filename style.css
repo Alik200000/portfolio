@@ -240,15 +240,6 @@ body {
 /* -----------------------------------------
    Layout Utilities
 ----------------------------------------- */
-.max-w-7xl { max-width: 80rem; }
-.max-w-6xl { max-width: 72rem; }
-.max-w-4xl { max-width: 56rem; }
-.max-w-2xl { max-width: 42rem; }
-.max-w-md  { max-width: 28rem; }
-.mx-auto   { margin-left: auto; margin-right: auto; }
-
-.grid { display: grid; }
-.flex { display: flex; }
 .hidden { display: none !important; }
 
 /* Responsive adjustments */
