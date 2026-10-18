@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Портфолио | AI Developer & Data Specialist</title>
-  <!-- Google Fonts & Lucide Icons -->
+  <title>Алимжан Аптаев | Fullstack & AI Automation Developer</title>
+  
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <!-- Tailwind CSS CDN -->
+  
+  <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -17,6 +19,7 @@
         extend: {
           colors: {
             dark: '#0a0d14',
+            surface: '#121826',
           }
         }
       }
@@ -27,41 +30,46 @@
 </head>
 <body class="bg-dark text-slate-100 antialiased selection:bg-cyan-500 selection:text-white">
 
-  <!-- Background Animated Glows -->
+  <!-- Ambient Glows -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
     <div class="glow-orb orb-1"></div>
     <div class="glow-orb orb-2"></div>
     <div class="glow-orb orb-3"></div>
   </div>
 
-  <!-- Header / Navigation -->
-  <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-dark/70 border-b border-white/10 transition-all duration-300" id="navbar">
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-[#0a0d14]/80 border-b border-white/10" id="navbar">
     <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-      <a href="#hero" class="flex items-center gap-2 group">
+      <a href="#hero" class="flex items-center gap-3 group">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-purple-600 flex items-center justify-center font-mono font-bold text-lg text-white shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-          &lt;/&gt;
+          A
         </div>
-        <span class="font-bold text-xl tracking-tight text-white group-hover:text-cyan-400 transition-colors">Portfolio<span class="text-cyan-400">.dev</span></span>
+        <div>
+          <span class="font-bold text-lg tracking-tight text-white block leading-none">Алимжан Аптаев</span>
+          <span class="text-xs text-cyan-400 font-mono">Fullstack &amp; AI Engineer</span>
+        </div>
       </a>
 
       <!-- Desktop Nav -->
       <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+        <a href="#projects" class="hover:text-cyan-400 transition-colors">Реальные проекты</a>
+        <a href="#skills" class="hover:text-cyan-400 transition-colors">Стек &amp; Опыт</a>
         <a href="#about" class="hover:text-cyan-400 transition-colors">Обо мне</a>
-        <a href="#skills" class="hover:text-cyan-400 transition-colors">Навыки</a>
-        <a href="#projects" class="hover:text-cyan-400 transition-colors">Проекты</a>
-        <a href="#experience" class="hover:text-cyan-400 transition-colors">Опыт</a>
         <a href="#contact" class="hover:text-cyan-400 transition-colors">Контакты</a>
       </nav>
 
-      <!-- Action & Toggle -->
-      <div class="flex items-center gap-4">
-        <button id="themeToggle" class="p-2.5 rounded-xl border border-white/10 hover:border-cyan-500/50 hover:bg-white/5 transition-all text-slate-300" title="Переключить тему">
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-3">
+        <button id="themeToggle" class="p-2.5 rounded-xl border border-white/10 hover:border-cyan-500/50 hover:bg-white/5 transition-all text-slate-300" title="Тема">
           <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
           <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
         </button>
-        <a href="#contact" class="btn-primary hidden sm:inline-flex items-center gap-2">
-          <span>Связаться</span>
-          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        <a href="https://github.com/Alik200000" target="_blank" class="p-2.5 rounded-xl border border-white/10 hover:border-white/30 hover:bg-white/5 transition-all text-slate-300" title="GitHub Profile">
+          <i data-lucide="github" class="w-5 h-5"></i>
+        </a>
+        <a href="https://wa.me/77786078732" target="_blank" class="btn-primary hidden sm:inline-flex items-center gap-2">
+          <i data-lucide="message-circle" class="w-4 h-4"></i>
+          <span>WhatsApp</span>
         </a>
         <button id="mobileMenuBtn" class="md:hidden p-2 text-slate-300 hover:text-white">
           <i data-lucide="menu" class="w-6 h-6"></i>
@@ -69,380 +77,367 @@
       </div>
     </div>
 
-    <!-- Mobile Nav Menu -->
-    <div id="mobileMenu" class="hidden md:hidden border-b border-white/10 bg-dark/95 backdrop-blur-xl px-6 py-4 flex flex-col gap-4 text-slate-300">
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="hidden md:hidden border-b border-white/10 bg-[#0a0d14]/95 backdrop-blur-xl px-6 py-4 flex flex-col gap-3 text-slate-300">
+      <a href="#projects" class="mobile-link py-2 hover:text-cyan-400">Реальные проекты</a>
+      <a href="#skills" class="mobile-link py-2 hover:text-cyan-400">Стек &amp; Опыт</a>
       <a href="#about" class="mobile-link py-2 hover:text-cyan-400">Обо мне</a>
-      <a href="#skills" class="mobile-link py-2 hover:text-cyan-400">Навыки</a>
-      <a href="#projects" class="mobile-link py-2 hover:text-cyan-400">Проекты</a>
-      <a href="#experience" class="mobile-link py-2 hover:text-cyan-400">Опыт</a>
       <a href="#contact" class="mobile-link py-2 hover:text-cyan-400">Контакты</a>
-      <a href="#contact" class="btn-primary text-center justify-center mt-2">Связаться</a>
+      <a href="https://wa.me/77786078732" target="_blank" class="btn-primary text-center justify-center mt-2">Написать в WhatsApp</a>
     </div>
   </header>
 
   <main class="relative z-10 pt-20">
     <!-- Hero Section -->
     <section id="hero" class="min-h-[calc(100vh-5rem)] flex items-center justify-center px-6 py-20">
-      <div class="max-w-4xl mx-auto text-center flex flex-col items-center">
+      <div class="max-w-5xl mx-auto text-center flex flex-col items-center">
         <!-- Status Badge -->
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-sm font-medium mb-8 animate-fade-in">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-sm font-medium mb-6">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-          <span>Открыт к новым проектам и вакансиям</span>
+          <span>Открыт к B2B разработке, AI-проектам и сильным офферам</span>
         </div>
 
-        <!-- Main Title -->
+        <!-- Title -->
         <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 leading-tight">
-          Привет, я <span class="text-gradient">Разработчик</span> &amp; <br>
-          <span class="typing-text text-cyan-400" id="typingElement"></span>
+          Алимжан Аптаев <br>
+          <span class="text-gradient font-bold text-3xl sm:text-5xl md:text-6xl">Fullstack &amp; AI Developer</span>
         </h1>
 
-        <!-- Subtitle -->
-        <p class="text-lg sm:text-xl text-slate-400 max-w-2xl mb-10 leading-relaxed font-normal">
-          Создаю современные веб-приложения, внедряю ИИ и языковые модели (LLM/RAG), автоматизирую процессы и готовлю качественные датасеты данных.
+        <!-- Direct Pitch (No Water) -->
+        <p class="text-lg sm:text-xl text-slate-300 max-w-3xl mb-8 leading-relaxed font-normal">
+          Разрабатываю B2B-сервисы, финтех-автоматизацию и интеграции под рынок Казахстана. Автор <span class="text-white font-semibold">Kaspi Repricer Enterprise</span>, ERP/Ops-системы для <span class="text-white font-semibold">Smart Digital Group</span> (в продакшене на Render) и B2B e-commerce платформы с 1С для <span class="text-white font-semibold">Alatau Food Trade</span>.
         </p>
 
         <!-- CTA Buttons -->
-        <div class="flex flex-wrap items-center justify-center gap-4">
+        <div class="flex flex-wrap items-center justify-center gap-4 mb-16">
           <a href="#projects" class="btn-primary flex items-center gap-2">
             <i data-lucide="layers" class="w-4 h-4"></i>
-            <span>Смотреть проекты</span>
+            <span>Смотреть проекты на GitHub</span>
           </a>
-          <a href="#contact" class="btn-secondary flex items-center gap-2">
-            <i data-lucide="message-square" class="w-4 h-4"></i>
-            <span>Обсудить задачу</span>
+          <a href="https://wa.me/77786078732" target="_blank" class="btn-secondary flex items-center gap-2">
+            <i data-lucide="phone" class="w-4 h-4 text-emerald-400"></i>
+            <span>+7 (778) 607-87-32</span>
           </a>
-          <button id="downloadCvBtn" class="btn-outline flex items-center gap-2">
-            <i data-lucide="download" class="w-4 h-4"></i>
-            <span>Скачать резюме</span>
-          </button>
+          <a href="https://github.com/Alik200000" target="_blank" class="btn-outline flex items-center gap-2">
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+            <span>github.com/Alik200000</span>
+          </a>
         </div>
 
-        <!-- Quick Stats -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-16 w-full pt-10 border-t border-white/10">
-          <div class="p-4 rounded-2xl glass-card">
-            <div class="text-3xl font-extrabold text-white mb-1">15+</div>
-            <div class="text-xs text-slate-400 uppercase tracking-wider">Завершенных проектов</div>
+        <!-- Real Metrics Grid -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full">
+          <div class="glass-card p-5 rounded-2xl text-left border border-white/10">
+            <div class="text-xs font-mono text-cyan-400 uppercase tracking-wider mb-1">Kaspi.kz</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white mb-1">Top-1 Bot</div>
+            <div class="text-xs text-slate-400">Автоматический демпинг (-1 ₸), стоп-цена и XML-фиды</div>
           </div>
-          <div class="p-4 rounded-2xl glass-card">
-            <div class="text-3xl font-extrabold text-cyan-400 mb-1">2+</div>
-            <div class="text-xs text-slate-400 uppercase tracking-wider">Года практики</div>
+          <div class="glass-card p-5 rounded-2xl text-left border border-white/10">
+            <div class="text-xs font-mono text-indigo-400 uppercase tracking-wider mb-1">B2B Интеграции</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white mb-1">1С:Предприятие</div>
+            <div class="text-xs text-slate-400">Синхронизация цен, остатков и заказов по CommerceML 3.1</div>
           </div>
-          <div class="p-4 rounded-2xl glass-card">
-            <div class="text-3xl font-extrabold text-indigo-400 mb-1">100%</div>
-            <div class="text-xs text-slate-400 uppercase tracking-wider">Внимание к деталям</div>
+          <div class="glass-card p-5 rounded-2xl text-left border border-white/10">
+            <div class="text-xs font-mono text-emerald-400 uppercase tracking-wider mb-1">В продакшене</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white mb-1">Live SaaS</div>
+            <div class="text-xs text-slate-400">Работающие системы на Render, Cloudflare и Vercel</div>
           </div>
-          <div class="p-4 rounded-2xl glass-card">
-            <div class="text-3xl font-extrabold text-emerald-400 mb-1">&lt;24ч</div>
-            <div class="text-xs text-slate-400 uppercase tracking-wider">Скорость ответа</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-24 px-6 border-t border-white/5">
-      <div class="max-w-6xl mx-auto">
-        <div class="flex flex-col md:flex-row items-center gap-12">
-          <!-- Profile Card -->
-          <div class="w-full md:w-1/2 flex justify-center">
-            <div class="relative group">
-              <div class="absolute -inset-1 rounded-3xl bg-gradient-to-r from-cyan-500 to-indigo-600 opacity-30 group-hover:opacity-60 blur-xl transition duration-500"></div>
-              <div class="relative glass-card p-8 rounded-3xl border border-white/15 max-w-md w-full">
-                <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-cyan-400 to-indigo-600 flex items-center justify-center text-4xl mb-6 shadow-xl">
-                  👨‍💻
-                </div>
-                <h3 class="text-2xl font-bold text-white mb-2">AI &amp; Web Engineer</h3>
-                <p class="text-sm text-cyan-400 font-mono mb-4">Казахстан • Удаленная работа / Астана / Алматы</p>
-                <div class="space-y-3 text-slate-300 text-sm">
-                  <div class="flex items-center gap-3">
-                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-                    <span>Интеграция LLM (OpenAI, Claude, DeepSeek)</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-                    <span>Fullstack веб-разработка (Python, JS, Node)</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-                    <span>Разметка и подготовка датасетов (Data Labeling)</span>
-                  </div>
-                  <div class="flex items-center gap-3">
-                    <i data-lucide="check-circle" class="w-4 h-4 text-emerald-400"></i>
-                    <span>Владение языками: Русский, Казахский, Английский</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Description -->
-          <div class="w-full md:w-1/2">
-            <div class="text-cyan-400 font-mono text-sm tracking-wider uppercase mb-2">О специалисте</div>
-            <h2 class="text-3xl sm:text-4xl font-bold text-white mb-6">Создаю надежные решения на стыке кода и интеллекта</h2>
-            <p class="text-slate-300 leading-relaxed mb-6">
-              Мой профиль — это комбинация гибкой веб-разработки и современных AI-инструментов. Я помогаю бизнесу оптимизировать процессы: от создания удобных интерфейсов и серверных API до автоматизации обработки текстов, модерации контента и внедрения AI-ассистентов.
-            </p>
-            <p class="text-slate-400 leading-relaxed mb-8">
-              Ценю чистый код, системное мышление и глубокое погружение в задачу. Всегда ориентируюсь на конечный бизнес-результат и удобство реального пользователя.
-            </p>
-
-            <div class="flex flex-wrap gap-3">
-              <span class="badge">#Python</span>
-              <span class="badge">#FastAPI</span>
-              <span class="badge">#LLM_Agents</span>
-              <span class="badge">#RAG</span>
-              <span class="badge">#JavaScript</span>
-              <span class="badge">#TailwindCSS</span>
-              <span class="badge">#Data_Annotation</span>
-            </div>
+          <div class="glass-card p-5 rounded-2xl text-left border border-white/10">
+            <div class="text-xs font-mono text-purple-400 uppercase tracking-wider mb-1">Стек разработки</div>
+            <div class="text-2xl sm:text-3xl font-extrabold text-white mb-1">Python + TS</div>
+            <div class="text-xs text-slate-400">FastAPI, Next.js 16, Node.js, Tailwind v4, Multi-AI</div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Skills Section -->
-    <section id="skills" class="py-24 px-6 bg-slate-900/40 border-t border-white/5">
-      <div class="max-w-6xl mx-auto">
-        <div class="text-center max-w-2xl mx-auto mb-16">
-          <div class="text-cyan-400 font-mono text-sm tracking-wider uppercase mb-2">Технологии</div>
-          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Стек и ключевые компетенции</h2>
-          <p class="text-slate-400">Инструменты и технологии, которые использую в ежедневной работе для создания надежных систем.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <!-- Card 1: AI & Data -->
-          <div class="glass-card p-8 rounded-3xl border border-white/10 hover:border-cyan-500/40 transition-all duration-300 group">
-            <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <i data-lucide="cpu" class="w-6 h-6"></i>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-3">AI &amp; Data Science</h3>
-            <p class="text-sm text-slate-400 mb-6 leading-relaxed">
-              Работа с языковыми моделями, построение RAG-систем, промпт-инжиниринг и качественная разметка данных.
-            </p>
-            <ul class="space-y-2.5 text-sm text-slate-300">
-              <li class="flex items-center justify-between">
-                <span>LLM Integration (OpenAI, Claude, Ollama)</span>
-                <span class="text-xs text-cyan-400 font-mono">Advanced</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>RAG &amp; Vector Databases (Pinecone, Chroma)</span>
-                <span class="text-xs text-cyan-400 font-mono">Confident</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>Data Labeling &amp; AI Training</span>
-                <span class="text-xs text-cyan-400 font-mono">Expert</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>LangChain / AI Agents</span>
-                <span class="text-xs text-cyan-400 font-mono">Confident</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Card 2: Backend & Logic -->
-          <div class="glass-card p-8 rounded-3xl border border-white/10 hover:border-indigo-500/40 transition-all duration-300 group">
-            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <i data-lucide="server" class="w-6 h-6"></i>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-3">Backend &amp; API</h3>
-            <p class="text-sm text-slate-400 mb-6 leading-relaxed">
-              Написание надежных серверных решений, проектирование баз данных и автоматизация фоновых скриптов.
-            </p>
-            <ul class="space-y-2.5 text-sm text-slate-300">
-              <li class="flex items-center justify-between">
-                <span>Python (FastAPI, Flask)</span>
-                <span class="text-xs text-indigo-400 font-mono">Advanced</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>PostgreSQL / SQLite</span>
-                <span class="text-xs text-indigo-400 font-mono">Confident</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>REST API Design &amp; Webhooks</span>
-                <span class="text-xs text-indigo-400 font-mono">Advanced</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>Парсинг &amp; Автоматизация (Selenium, BS4)</span>
-                <span class="text-xs text-indigo-400 font-mono">Advanced</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- Card 3: Frontend & UI -->
-          <div class="glass-card p-8 rounded-3xl border border-white/10 hover:border-purple-500/40 transition-all duration-300 group">
-            <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-              <i data-lucide="layout" class="w-6 h-6"></i>
-            </div>
-            <h3 class="text-xl font-bold text-white mb-3">Frontend &amp; UX</h3>
-            <p class="text-sm text-slate-400 mb-6 leading-relaxed">
-              Создание адаптивных, стильных и быстрых интерфейсов с акцентом на высокую производительность.
-            </p>
-            <ul class="space-y-2.5 text-sm text-slate-300">
-              <li class="flex items-center justify-between">
-                <span>HTML5 / Modern CSS3</span>
-                <span class="text-xs text-purple-400 font-mono">Expert</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>JavaScript (ES6+)</span>
-                <span class="text-xs text-purple-400 font-mono">Advanced</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>Tailwind CSS / Glassmorphism</span>
-                <span class="text-xs text-purple-400 font-mono">Expert</span>
-              </li>
-              <li class="flex items-center justify-between">
-                <span>Responsive &amp; Mobile-First Design</span>
-                <span class="text-xs text-purple-400 font-mono">Expert</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Projects Section -->
+    <!-- Real Projects Section -->
     <section id="projects" class="py-24 px-6 border-t border-white/5">
       <div class="max-w-6xl mx-auto">
         <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
           <div>
-            <div class="text-cyan-400 font-mono text-sm tracking-wider uppercase mb-2">Портфолио</div>
-            <h2 class="text-3xl sm:text-4xl font-bold text-white">Избранные проекты</h2>
+            <div class="text-cyan-400 font-mono text-sm tracking-wider uppercase mb-2">Портфолио с исходным кодом</div>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white">Реальные коммерческие и инженерные проекты</h2>
           </div>
-          <!-- Filter Buttons -->
-          <div class="flex flex-wrap gap-2 mt-6 md:mt-0" id="filterContainer">
-            <button class="filter-btn active" data-filter="all">Все</button>
-            <button class="filter-btn" data-filter="ai">AI &amp; LLM</button>
-            <button class="filter-btn" data-filter="web">Web &amp; API</button>
-            <button class="filter-btn" data-filter="data">Data &amp; Automation</button>
-          </div>
+          <a href="https://github.com/Alik200000?tab=repositories" target="_blank" class="text-sm font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1 mt-4 md:mt-0">
+            <span>Все репозитории на GitHub</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projectsGrid">
-          <!-- Project 1 -->
-          <div class="project-card glass-card rounded-3xl overflow-hidden border border-white/10 flex flex-col" data-category="ai">
-            <div class="h-48 bg-gradient-to-tr from-cyan-900/60 via-indigo-900/40 to-slate-900 flex items-center justify-center relative p-6">
-              <i data-lucide="bot" class="w-16 h-16 text-cyan-400 opacity-80"></i>
-              <span class="absolute top-4 right-4 text-xs font-mono px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">AI &amp; LLM</span>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          <!-- Project 1: Kaspi Repricer Enterprise -->
+          <div class="glass-card p-8 rounded-3xl border border-white/10 hover:border-red-500/40 transition-all flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-3 py-1 rounded-full text-xs font-mono bg-red-500/10 text-red-400 border border-red-500/30">B2B SaaS • Kaspi.kz Marketplace</span>
+                <span class="text-xs font-mono text-slate-400">Python / FastAPI</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-red-400 transition-colors">
+                Kaspi Repricer Enterprise
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                Автоматический репрайсер и интеллектуальный демпер для продавцов Kaspi Магазина.
+              </p>
+              <ul class="space-y-2 text-xs text-slate-400 mb-6">
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-red-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Захват кнопки «Купить» (Топ-1):</strong> алгоритм сканирует цены конкурентов и выставляет цену на 1 ₸ ниже лидера.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-red-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Стоп-цена и защита маржи:</strong> бот никогда не опустит цену ниже себестоимости и поднимает цену вверх, если дешевый конкурент распродан.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-red-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Инфраструктура:</strong> автоматическая генерация защищенного XML-фида для <code class="text-slate-300">merchant.kaspi.kz</code>, Cloudflare Tunnel, SQLite WAL (multi-tenant изоляция) и Telegram-алерты.</span>
+                </li>
+              </ul>
             </div>
-            <div class="p-6 flex-1 flex flex-col justify-between">
-              <div>
-                <h3 class="text-xl font-bold text-white mb-2">Smart Assistant with RAG</h3>
-                <p class="text-slate-400 text-sm leading-relaxed mb-4">
-                  Интеллектуальный AI-ассистент для поиска по корпоративной базе знаний с контекстной памятью и точными ответами без галлюцинаций.
-                </p>
-                <div class="flex flex-wrap gap-2 mb-6">
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">Python</span>
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">FastAPI</span>
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">ChromaDB</span>
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">OpenAI</span>
-                </div>
+            <div>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="badge">#Python</span>
+                <span class="badge">#FastAPI</span>
+                <span class="badge">#Kaspi_XML_Feed</span>
+                <span class="badge">#Cloudflare_Tunnel</span>
+                <span class="badge">#MultiTenant</span>
               </div>
               <div class="flex items-center gap-4 pt-4 border-t border-white/10">
-                <a href="#contact" class="text-sm font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
-                  <span>Демонстрация</span>
-                  <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                <a href="https://github.com/Alik200000/kaspi-repricer" target="_blank" class="btn-primary text-xs py-2 px-4 flex items-center gap-2">
+                  <i data-lucide="github" class="w-4 h-4"></i>
+                  <span>Репозиторий на GitHub</span>
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- Project 2 -->
-          <div class="project-card glass-card rounded-3xl overflow-hidden border border-white/10 flex flex-col" data-category="data">
-            <div class="h-48 bg-gradient-to-tr from-emerald-900/60 via-teal-900/40 to-slate-900 flex items-center justify-center relative p-6">
-              <i data-lucide="database" class="w-16 h-16 text-emerald-400 opacity-80"></i>
-              <span class="absolute top-4 right-4 text-xs font-mono px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Data &amp; Automation</span>
+          <!-- Project 2: Smart Digital Group -->
+          <div class="glass-card p-8 rounded-3xl border border-white/10 hover:border-emerald-500/40 transition-all flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-3 py-1 rounded-full text-xs font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">В продакшене (Live на Render)</span>
+                <span class="text-xs font-mono text-slate-400">Node.js / Express</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-emerald-400 transition-colors">
+                Smart Digital Ops &amp; Profit Intelligence
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                Сквозная операционная ERP/CRM система автоматизации бизнес-процессов и финансово-управленческого учета для компании Smart Digital Group.
+              </p>
+              <ul class="space-y-2 text-xs text-slate-400 mb-6">
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Автоматизированный цикл:</strong> Канбан-воронка лидов, AI-генератор смет и КП за 2 секунды, авторазворачивание проекта при выигрыше сделки.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Себестоимость &amp; P&amp;L:</strong> логирование часов команды по грейдам, учет прямых затрат (токены OpenAI, сервера), предотвращение кассовых разрывов.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Деплой:</strong> развернут и стабильно работает на Render в боевом режиме.</span>
+                </li>
+              </ul>
             </div>
-            <div class="p-6 flex-1 flex flex-col justify-between">
-              <div>
-                <h3 class="text-xl font-bold text-white mb-2">E-Commerce Data Quality Pipeline</h3>
-                <p class="text-slate-400 text-sm leading-relaxed mb-4">
-                  Система автоматической валидации и модерации товарных карточек: выявление нестыковок в характеристиках, ценах и описаниях.
-                </p>
-                <div class="flex flex-wrap gap-2 mb-6">
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">Python</span>
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">Pandas</span>
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">Data Labeling</span>
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">Regex</span>
-                </div>
+            <div>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="badge">#NodeJS</span>
+                <span class="badge">#Express</span>
+                <span class="badge">#REST_API</span>
+                <span class="badge">#Render_Production</span>
+                <span class="badge">#Profit_Analytics</span>
               </div>
               <div class="flex items-center gap-4 pt-4 border-t border-white/10">
-                <a href="#contact" class="text-sm font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
-                  <span>Детали кейса</span>
-                  <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                <a href="https://smart-digital-ops-core.onrender.com" target="_blank" class="btn-primary text-xs py-2 px-4 flex items-center gap-2 bg-emerald-600 hover:bg-emerald-500">
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                  <span>Открыть Live Demo на Render</span>
+                </a>
+                <a href="https://github.com/Alik200000/smart-digital-ops-core" target="_blank" class="text-xs font-mono text-slate-300 hover:text-white flex items-center gap-1">
+                  <i data-lucide="github" class="w-4 h-4"></i>
+                  <span>Исходный код</span>
                 </a>
               </div>
             </div>
           </div>
 
-          <!-- Project 3 -->
-          <div class="project-card glass-card rounded-3xl overflow-hidden border border-white/10 flex flex-col" data-category="web">
-            <div class="h-48 bg-gradient-to-tr from-purple-900/60 via-indigo-900/40 to-slate-900 flex items-center justify-center relative p-6">
-              <i data-lucide="globe" class="w-16 h-16 text-purple-400 opacity-80"></i>
-              <span class="absolute top-4 right-4 text-xs font-mono px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">Web &amp; API</span>
+          <!-- Project 3: Alatau Food Trade -->
+          <div class="glass-card p-8 rounded-3xl border border-white/10 hover:border-cyan-500/40 transition-all flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-3 py-1 rounded-full text-xs font-mono bg-cyan-500/10 text-cyan-400 border border-cyan-500/30">B2B E-Commerce &amp; 1С Интеграция</span>
+                <span class="text-xs font-mono text-slate-400">Next.js 16 / TypeScript</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-cyan-400 transition-colors">
+                Alatau Food Trade (HoReCa Hub)
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                Цифровая оптово-розничная платформа поставок продуктов питания и сырья для ресторанов, отелей и кондитерских г. Алматы.
+              </p>
+              <ul class="space-y-2 text-xs text-slate-400 mb-6">
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Стек:</strong> Next.js 16 (App Router, Turbopack) + React 19 + TypeScript 5 + Tailwind v4.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Интеграция с 1С:</strong> шлюз обмена по CommerceML 3.1 с 1С:Предприятие 8.3 (Управление торговлей Казахстан) — остатки, цены, заказы.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-cyan-400 shrink-0 mt-0.5"></i>
+                  <span><strong>B2B кабинет:</strong> управление отсрочкой платежей, выгрузка ЭСФ и актов сверки, автоскидки от объема.</span>
+                </li>
+              </ul>
             </div>
-            <div class="p-6 flex-1 flex flex-col justify-between">
-              <div>
-                <h3 class="text-xl font-bold text-white mb-2">Modern SaaS Dashboard UI</h3>
-                <p class="text-slate-400 text-sm leading-relaxed mb-4">
-                  Адаптивная панель управления с аналитикой, интерактивными графиками, фильтрацией и темной/светлой темой оформления.
-                </p>
-                <div class="flex flex-wrap gap-2 mb-6">
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">JavaScript</span>
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">TailwindCSS</span>
-                  <span class="text-xs font-mono text-slate-300 bg-white/5 px-2.5 py-1 rounded-lg">Chart.js</span>
-                </div>
+            <div>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="badge">#NextJS_16</span>
+                <span class="badge">#TypeScript</span>
+                <span class="badge">#1C_Enterprise</span>
+                <span class="badge">#CommerceML</span>
+                <span class="badge">#HoReCa</span>
               </div>
               <div class="flex items-center gap-4 pt-4 border-t border-white/10">
-                <a href="#contact" class="text-sm font-medium text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
-                  <span>Просмотр</span>
-                  <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+                <a href="https://github.com/Alik200000/alatau-food-trade" target="_blank" class="btn-primary text-xs py-2 px-4 flex items-center gap-2">
+                  <i data-lucide="github" class="w-4 h-4"></i>
+                  <span>Репозиторий на GitHub</span>
                 </a>
               </div>
             </div>
+          </div>
+
+          <!-- Project 4: Life AI Ecosystem -->
+          <div class="glass-card p-8 rounded-3xl border border-white/10 hover:border-purple-500/40 transition-all flex flex-col justify-between group">
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span class="px-3 py-1 rounded-full text-xs font-mono bg-purple-500/10 text-purple-400 border border-purple-500/30">AI Architecture &amp; Fallback</span>
+                <span class="text-xs font-mono text-slate-400">Dart / Multi-LLM</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">
+                Life AI Ecosystem
+              </h3>
+              <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                Персональная система продуктивности с отказоустойчивым AI-ядром и финансовым трекингом.
+              </p>
+              <ul class="space-y-2 text-xs text-slate-400 mb-6">
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-purple-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Multi-AI Fallback 429 Guard:</strong> интеллектуальная маршрутизация запросов между несколькими LLM при исчерпании лимитов.</span>
+                </li>
+                <li class="flex items-start gap-2">
+                  <i data-lucide="check" class="w-4 h-4 text-purple-400 shrink-0 mt-0.5"></i>
+                  <span><strong>Интеграции:</strong> интеграция учета транзакций Apple Pay и аналитика ежедневных целей.</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <div class="flex flex-wrap gap-2 mb-6">
+                <span class="badge">#Dart</span>
+                <span class="badge">#LLM_Routing</span>
+                <span class="badge">#AI_Agents</span>
+                <span class="badge">#ApplePay</span>
+              </div>
+              <div class="flex items-center gap-4 pt-4 border-t border-white/10">
+                <a href="https://github.com/Alik200000/life-ai-ecosystem" target="_blank" class="btn-primary text-xs py-2 px-4 flex items-center gap-2">
+                  <i data-lucide="github" class="w-4 h-4"></i>
+                  <span>Репозиторий на GitHub</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Technical Skills & Stack (Specific) -->
+    <section id="skills" class="py-24 px-6 bg-[#0d121f] border-t border-white/5">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+          <div class="text-cyan-400 font-mono text-sm tracking-wider uppercase mb-2">Технические компетенции</div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Практический стек без воды</h2>
+          <p class="text-slate-400">Инструменты, которые я использую для решения реальных коммерческих задач селлеров и B2B компаний.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <!-- Backend & Integrations -->
+          <div class="glass-card p-8 rounded-3xl border border-white/10">
+            <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center mb-6">
+              <i data-lucide="server" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-4">Backend &amp; Интеграции</h3>
+            <ul class="space-y-3 text-sm text-slate-300 font-normal">
+              <li><strong>Python:</strong> FastAPI, парсинг витрин, фоновые планировщики (scheduler), скрипты демпинга.</li>
+              <li><strong>Kaspi API:</strong> генерация XML прайс-листов под стандарты Kaspi, Cloudflare туннели.</li>
+              <li><strong>1С:Предприятие 8.3:</strong> протокол CommerceML 3.1, синхронизация номенклатуры и остатков.</li>
+              <li><strong>Node.js / Express:</strong> REST API, вебхуки, multi-tenant базы данных (SQLite WAL, JSON, PostgreSQL).</li>
+            </ul>
+          </div>
+
+          <!-- Frontend & App Architecture -->
+          <div class="glass-card p-8 rounded-3xl border border-white/10">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center mb-6">
+              <i data-lucide="layout" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-4">Frontend &amp; UI</h3>
+            <ul class="space-y-3 text-sm text-slate-300 font-normal">
+              <li><strong>Next.js 16 &amp; React 19:</strong> App Router, SSR, Turbopack, высокая скорость отдачи страниц.</li>
+              <li><strong>TypeScript 5:</strong> строгая типизация DTO, интерфейсов и моделей заказов.</li>
+              <li><strong>Tailwind CSS v4:</strong> создание Glassmorphism-интерфейсов, темных и светлых корпоративных тем.</li>
+              <li><strong>UX &amp; Мобильность:</strong> Mobile-first верстка под планшеты складов и смартфоны селлеров.</li>
+            </ul>
+          </div>
+
+          <!-- AI & Automation -->
+          <div class="glass-card p-8 rounded-3xl border border-white/10">
+            <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center mb-6">
+              <i data-lucide="bot" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-xl font-bold text-white mb-4">AI, Данные &amp; Деплой</h3>
+            <ul class="space-y-3 text-sm text-slate-300 font-normal">
+              <li><strong>LLM &amp; Агенты:</strong> интеграция моделей OpenAI, Claude, DeepSeek с fallback-маршрутизацией.</li>
+              <li><strong>Разметка &amp; Качество данных:</strong> валидация карточек маркетплейсов, аудит каталогов e-commerce.</li>
+              <li><strong>Автоматизация:</strong> Telegram-боты для мгновенных алертов о демпинге и статусах заказов.</li>
+              <li><strong>Деплой:</strong> Render, Vercel, GitHub Pages, Cloudflare Tunnels, CI/CD.</li>
+            </ul>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Experience / Workflow -->
-    <section id="experience" class="py-24 px-6 bg-slate-900/40 border-t border-white/5">
+    <!-- About Me Section -->
+    <section id="about" class="py-24 px-6 border-t border-white/5">
       <div class="max-w-4xl mx-auto">
-        <div class="text-center max-w-2xl mx-auto mb-16">
-          <div class="text-cyan-400 font-mono text-sm tracking-wider uppercase mb-2">Принципы работы</div>
-          <h2 class="text-3xl sm:text-4xl font-bold text-white mb-4">Как я подхожу к задачам</h2>
-          <p class="text-slate-400">Прозрачный и последовательный процесс от первой идеи до релизного результата.</p>
-        </div>
-
-        <div class="space-y-6">
-          <div class="glass-card p-6 rounded-2xl border border-white/10 flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold shrink-0">1</div>
+        <div class="glass-card p-8 sm:p-12 rounded-3xl border border-white/10">
+          <div class="flex flex-col sm:flex-row items-center gap-8 mb-8">
+            <div class="w-24 h-24 rounded-2xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-4xl shadow-xl shrink-0 font-bold text-white">
+              A
+            </div>
             <div>
-              <h4 class="text-lg font-bold text-white mb-1">Анализ требований и постановка целей</h4>
-              <p class="text-slate-400 text-sm leading-relaxed">Вникаю в суть бизнес-задачи, формулирую ограничения, проверяю граничные сценарии и исключаю неопределенности.</p>
+              <h2 class="text-3xl font-extrabold text-white mb-2">Алимжан Аптаев</h2>
+              <p class="text-cyan-400 font-mono text-sm">Казахстан (Алматы / Астана / Удаленно)</p>
+              <p class="text-slate-400 text-sm mt-1">Fullstack Developer • AI Systems Engineer</p>
             </div>
           </div>
-
-          <div class="glass-card p-6 rounded-2xl border border-white/10 flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold shrink-0">2</div>
-            <div>
-              <h4 class="text-lg font-bold text-white mb-1">Прототипирование и архитектура</h4>
-              <p class="text-slate-400 text-sm leading-relaxed">Выбираю надежный стек технологий, продумываю структуру данных и логику интеграции перед началом кодинга.</p>
-            </div>
-          </div>
-
-          <div class="glass-card p-6 rounded-2xl border border-white/10 flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold shrink-0">3</div>
-            <div>
-              <h4 class="text-lg font-bold text-white mb-1">Разработка и тестирование</h4>
-              <p class="text-slate-400 text-sm leading-relaxed">Пишу понятный и поддерживаемый код, тщательно проверяю сценарии ошибок и тестирую функционал.</p>
-            </div>
-          </div>
-
-          <div class="glass-card p-6 rounded-2xl border border-white/10 flex items-start gap-4">
-            <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold shrink-0">4</div>
-            <div>
-              <h4 class="text-lg font-bold text-white mb-1">Деплой и сопровождение</h4>
-              <p class="text-slate-400 text-sm leading-relaxed">Развертывание проекта, передача документации и готовность оперативно развивать проект дальше.</p>
+          <div class="space-y-4 text-slate-300 text-sm sm:text-base leading-relaxed">
+            <p>
+              Я разработчик с фокусом на реальные прикладные задачи: электронную коммерцию, B2B-сервисы, интеграции с Kaspi.kz и 1С, а также внедрение прикладных AI-решений для автоматизации рутины.
+            </p>
+            <p>
+              Вместо абстрактных учебных примеров я создаю готовые к запуску продукты: от репрайсера с защитой маржи селлеров до сквозного финансового учета для IT-агентства. Мой код открыт на GitHub, а продакшен-демо развернуты на Render и Vercel.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-white/10">
+              <div>
+                <span class="text-xs uppercase font-mono text-slate-400 block mb-1">Языки</span>
+                <span class="text-sm font-semibold text-white">Казахский, Русский, Английский</span>
+              </div>
+              <div>
+                <span class="text-xs uppercase font-mono text-slate-400 block mb-1">Формат работы</span>
+                <span class="text-sm font-semibold text-white">Удаленно / Full-time / Проекты</span>
+              </div>
+              <div>
+                <span class="text-xs uppercase font-mono text-slate-400 block mb-1">Локация</span>
+                <span class="text-sm font-semibold text-white">Казахстан</span>
+              </div>
             </div>
           </div>
         </div>
@@ -452,50 +447,26 @@
     <!-- Contact Section -->
     <section id="contact" class="py-24 px-6 border-t border-white/5">
       <div class="max-w-4xl mx-auto">
-        <div class="glass-card p-8 sm:p-12 rounded-3xl border border-white/15 relative overflow-hidden">
-          <div class="max-w-2xl">
-            <div class="text-cyan-400 font-mono text-sm tracking-wider uppercase mb-2">Контакты</div>
-            <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Готовы обсудить проект?</h2>
-            <p class="text-slate-300 leading-relaxed mb-8">
-              Напишите мне в удобный мессенджер или отправьте сообщение через форму. Отвечаю оперативно!
-            </p>
+        <div class="glass-card p-8 sm:p-12 rounded-3xl border border-white/15 text-center">
+          <div class="text-cyan-400 font-mono text-sm tracking-wider uppercase mb-2">Прямая связь</div>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Готов обсудить проект или сотрудничество</h2>
+          <p class="text-slate-300 max-w-xl mx-auto mb-10 leading-relaxed">
+            Если вам нужен разработчик под B2B-продукт, интеграцию с Kaspi/1С, запуск AI-автоматизации или работа в продуктовой команде — напишите мне напрямую.
+          </p>
 
-            <!-- Quick Action Links -->
-            <div class="flex flex-wrap gap-4 mb-10">
-              <a href="https://wa.me/77786078732" target="_blank" class="flex items-center gap-3 px-5 py-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/20 transition-all font-medium">
-                <i data-lucide="phone-call" class="w-5 h-5"></i>
-                <span>WhatsApp: +7 (778) 607-87-32</span>
-              </a>
-              <a href="https://t.me/" target="_blank" class="flex items-center gap-3 px-5 py-3 rounded-2xl bg-sky-500/10 border border-sky-500/30 text-sky-400 hover:bg-sky-500/20 transition-all font-medium">
-                <i data-lucide="send" class="w-5 h-5"></i>
-                <span>Telegram</span>
-              </a>
-            </div>
-
-            <!-- Contact Form -->
-            <form id="contactForm" class="space-y-4">
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label class="block text-xs uppercase tracking-wider text-slate-400 mb-2">Ваше имя</label>
-                  <input type="text" required placeholder="Имя" class="input-field">
-                </div>
-                <div>
-                  <label class="block text-xs uppercase tracking-wider text-slate-400 mb-2">Контакты (WhatsApp / Email)</label>
-                  <input type="text" required placeholder="+7 (...) или email" class="input-field">
-                </div>
-              </div>
-              <div>
-                <label class="block text-xs uppercase tracking-wider text-slate-400 mb-2">Сообщение</label>
-                <textarea rows="4" required placeholder="Расскажите о вашей задаче или вакансии..." class="input-field"></textarea>
-              </div>
-              <button type="submit" class="btn-primary w-full sm:w-auto flex items-center justify-center gap-2">
-                <i data-lucide="send" class="w-4 h-4"></i>
-                <span>Отправить сообщение</span>
-              </button>
-              <div id="formSuccess" class="hidden p-4 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-sm">
-                Спасибо! Ваше сообщение отправлено.
-              </div>
-            </form>
+          <div class="flex flex-wrap items-center justify-center gap-4">
+            <a href="https://wa.me/77786078732" target="_blank" class="btn-primary flex items-center gap-3 px-6 py-3.5 bg-emerald-600 hover:bg-emerald-500">
+              <i data-lucide="phone" class="w-5 h-5"></i>
+              <span class="font-bold">WhatsApp: +7 (778) 607-87-32</span>
+            </a>
+            <a href="mailto:aptayalimzhan07@gmail.com" class="btn-secondary flex items-center gap-3 px-6 py-3.5">
+              <i data-lucide="mail" class="w-5 h-5 text-cyan-400"></i>
+              <span>aptayalimzhan07@gmail.com</span>
+            </a>
+            <a href="https://github.com/Alik200000" target="_blank" class="btn-outline flex items-center gap-3 px-6 py-3.5">
+              <i data-lucide="github" class="w-5 h-5"></i>
+              <span>GitHub: Alik200000</span>
+            </a>
           </div>
         </div>
       </div>
@@ -505,8 +476,10 @@
   <!-- Footer -->
   <footer class="py-8 border-t border-white/5 text-center text-sm text-slate-500">
     <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div>© 2026 Portfolio.dev • Все права защищены.</div>
+      <div>© 2026 Алимжан Аптаев (Alik200000) • Казахстан</div>
       <div class="flex items-center gap-6">
+        <a href="https://github.com/Alik200000" target="_blank" class="hover:text-slate-300 transition-colors">GitHub</a>
+        <a href="https://smart-digital-ops-core.onrender.com" target="_blank" class="hover:text-slate-300 transition-colors">Live Demo</a>
         <a href="#hero" class="hover:text-slate-300 transition-colors">Наверх ↑</a>
       </div>
     </div>
