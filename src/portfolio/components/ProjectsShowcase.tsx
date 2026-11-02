@@ -183,34 +183,32 @@ const projects: (DetailedProject & {
   },
   {
     id: 'bybit-trading-bot',
-    title: 'High-Frequency Trading Assistant',
+    title: 'High-Frequency Trading & ABK Scanner',
     category: 'fullstack',
-    categoryLabel: 'FinTech • Bybit Algorithmic Trading',
-    tagline: 'Автономный торговый бот для анализа биржевого потока сделок (Order Flow) и моментального исполнения ордеров на Bybit.',
+    categoryLabel: 'FinTech • Bybit & Binance АБК Скринер',
+    tagline: 'Автономный торговый бот и скринер «Арбитража Без Карт» (АБК) для поиска спредов Bybit / Binance и дельта-нейтрального сбора фандинга.',
     points: [
-      'WebSocket v5 Real-time: потоковая обработка стакана и публичных трейдов без сетевых задержек REST API.',
-      'Kill-Switch & Риск-менеджмент: динамический Stop-Loss/Take-Profit, жесткий расчет 1% риска депозита и блокировка при -3% дневной просадки.',
-      'Безопасные режимы: Paper-trading (симуляция на живых котировках), Bybit Testnet и Live-торговля.',
+      'АБК Скринер (Арбитраж Без Карт): потоковый межбиржевой мониторинг цен Bybit vs Binance без использования банковских карт физлиц и риска блокировок.',
+      'Дельта-нейтральный фандинг: автоматический расчет годовой ставки APR и выявление аномалий ставки финансирования (Funding Rate Arbitrage).',
+      'Kill-Switch & Риск-менеджмент: динамический Stop-Loss/Take-Profit, расчет 1% риска депозита и блокировка при дневной просадке -3%.',
     ],
-    badges: ['Python', 'WebSocket v5', 'Bybit API', 'FinTech', 'AsyncIO'],
-    architectureNodes: ['Bybit WebSocket v5', 'Order Flow Engine', '1% Risk Kill-Switch', 'Private Order Execution'],
+    badges: ['Python', 'Bybit API', 'Binance API', 'АБК Арбитраж', 'WebSocket v5', 'AsyncIO'],
+    architectureNodes: ['Bybit / Binance API', 'ABK Spread Engine', 'Delta Funding Arbitrage', '1% Risk Kill-Switch'],
     techSpec: {
-      runtime: 'Python AsyncIO',
-      protocol: 'WebSocket v5 (wss://)',
+      runtime: 'Python 3.11+ AsyncIO',
+      protocol: 'WebSocket v5 & REST',
       storage: 'In-Memory Ring Buffer',
       security: 'HMAC SHA256 Signature',
     },
     codeSnippet: {
       language: 'python',
-      title: 'Потоковая обработка биржевого стакана и автоматический Kill-Switch',
-      code: `async def order_book_stream():
-    async with websockets.connect("wss://stream.bybit.com/v5/public/linear") as ws:
-        await ws.send(json.dumps({"op": "subscribe", "args": ["orderbook.50.BTCUSDT"]}))
-        async for msg in ws:
-            data = json.loads(msg)
-            if current_daily_drawdown() <= -0.03:
-                trigger_emergency_kill_switch("Дневной лимит просадки 3% превышен")
-                break`,
+      title: 'Межбиржевой расчет спреда АБК с вычетом комиссий Taker',
+      code: `async def calculate_abk_spread(bybit_bid: float, binance_ask: float) -> dict:
+    # Расчет чистого спреда между Bybit и Binance без банковских карт
+    raw_spread = ((bybit_bid - binance_ask) / binance_ask) * 100
+    total_fee = (0.00055 + 0.00075) * 100  # Bybit Taker (0.055%) + Binance Taker (0.075%)
+    net_spread = raw_spread - total_fee
+    return {"net_spread_pct": net_spread, "profit_1000usd": (net_spread / 100) * 1000}`,
     },
     githubUrl: 'https://github.com/Alik200000/bybit-trading-bot',
   },
