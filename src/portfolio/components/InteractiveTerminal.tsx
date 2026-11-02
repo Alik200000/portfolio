@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Terminal as TerminalIcon, X, Maximize2, Minimize2, CornerDownLeft } from 'lucide-react';
+import { Terminal as TerminalIcon, X, CornerDownLeft } from 'lucide-react';
 
 interface TerminalLine {
   id: string;
@@ -32,6 +32,16 @@ export function InteractiveTerminal() {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 150);
     }
+  }, [isOpen]);
+
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleGlobalKeyDown);
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown);
   }, [isOpen]);
 
   useEffect(() => {
@@ -164,13 +174,14 @@ export function InteractiveTerminal() {
   return (
     <>
       {/* Floating Toggle Pill */}
-      <div className="fixed bottom-6 right-6 z-40">
+      <div className="fixed bottom-6 right-6 z-40 pb-[env(safe-area-inset-bottom)]">
         <motion.button
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Открыть интерактивную консоль"
-          className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#0D111A]/90 hover:bg-[#161C2C] border border-cyan-500/40 text-cyan-300 shadow-xl shadow-cyan-950/60 backdrop-blur-xl text-xs font-mono font-bold cursor-pointer transition-all"
+          aria-expanded={isOpen}
+          className="flex items-center gap-2.5 px-4 py-2.5 rounded-full bg-[#0D111A]/95 hover:bg-[#161C2C] border border-cyan-500/40 text-cyan-300 shadow-xl shadow-cyan-950/60 backdrop-blur-xl text-xs font-mono font-bold cursor-pointer transition-all"
         >
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
@@ -185,11 +196,14 @@ export function InteractiveTerminal() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            role="dialog"
+            aria-label="Интерактивная консоль разработчика"
+            aria-modal="false"
             initial={{ opacity: 0, y: 30, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ type: 'spring', stiffness: 380, damping: 28 }}
-            className="fixed bottom-20 right-4 sm:right-6 z-40 w-[94vw] sm:w-[480px] max-h-[460px] rounded-2xl bg-[#080B11]/95 border border-cyan-500/40 shadow-2xl backdrop-blur-2xl flex flex-col overflow-hidden text-slate-200 font-mono text-xs"
+            className="fixed bottom-20 right-4 sm:right-6 z-40 w-[94vw] sm:w-[480px] max-h-[75vh] sm:max-h-[460px] rounded-2xl bg-[#080B11]/95 border border-cyan-500/40 shadow-2xl backdrop-blur-2xl flex flex-col overflow-hidden text-slate-200 font-mono text-xs mb-[env(safe-area-inset-bottom)]"
           >
             {/* Header bar */}
             <div className="px-4 py-2.5 bg-[#0D121F] border-b border-white/10 flex items-center justify-between select-none">
@@ -201,7 +215,8 @@ export function InteractiveTerminal() {
               </div>
               <button
                 onClick={() => setIsOpen(false)}
-                className="text-slate-400 hover:text-white cursor-pointer"
+                aria-label="Закрыть консоль"
+                className="text-slate-400 hover:text-white cursor-pointer p-1"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -221,7 +236,7 @@ export function InteractiveTerminal() {
             </div>
 
             {/* Scrollable Output */}
-            <div className="p-4 overflow-y-auto flex-1 space-y-2.5 max-h-[300px]">
+            <div className="p-4 overflow-y-auto flex-1 space-y-2.5 max-h-[280px]">
               {history.map((line) => (
                 <div key={line.id} className="leading-relaxed">
                   {line.type === 'input' && (
@@ -254,18 +269,20 @@ export function InteractiveTerminal() {
 
             {/* Input Line */}
             <div className="p-3 bg-[#0D121F] border-t border-white/10 flex items-center gap-2">
-              <span className="text-emerald-400 font-bold">$</span>
+              <span className="text-emerald-400 font-bold" aria-hidden="true">$</span>
               <input
                 ref={inputRef}
                 type="text"
                 value={inputVal}
                 onChange={(e) => setInputVal(e.target.value)}
                 onKeyDown={handleKeyDown}
+                aria-label="Ввод команды"
                 placeholder="Введите команду (например: projects)..."
                 className="flex-1 bg-transparent text-slate-100 placeholder-slate-500 focus:outline-none font-mono text-xs"
               />
               <button
                 onClick={() => handleCommand(inputVal)}
+                aria-label="Выполнить команду"
                 className="p-1 rounded bg-cyan-600/30 hover:bg-cyan-600/50 text-cyan-300 cursor-pointer"
               >
                 <CornerDownLeft className="w-3.5 h-3.5" />

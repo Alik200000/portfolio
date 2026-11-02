@@ -5,7 +5,6 @@ import {
   Copy,
   Check,
   Github,
-  MessageCircle,
   Clock,
   SendHorizontal,
   X,
@@ -34,6 +33,7 @@ export function ContactSection() {
   const [formError, setFormError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [lastWhatsAppUrl, setLastWhatsAppUrl] = useState('');
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Live World Clock Kazakhstan (UTC+5)
@@ -93,10 +93,22 @@ export function ContactSection() {
     }
 
     setIsSubmitting(true);
+
+    // Construct authentic direct message for WhatsApp
+    const text = `Здравствуйте, Алим! Меня зовут ${trimmedName}.\n\nТема: ${projectType}\nМой контакт: ${trimmedContact}\n\nЗадача: ${trimmedMessage}`;
+    const directUrl = `https://wa.me/77786078732?text=${encodeURIComponent(text)}`;
+    setLastWhatsAppUrl(directUrl);
+
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
-    }, 1000);
+      // Attempt to open WhatsApp directly
+      try {
+        window.open(directUrl, '_blank', 'noopener,noreferrer');
+      } catch {
+        // Fallback handled by rendered button
+      }
+    }, 600);
   };
 
   const projectTypes = [
@@ -275,26 +287,40 @@ export function ContactSection() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="py-12 text-center space-y-4"
+                  className="py-10 text-center space-y-4"
                 >
                   <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 mx-auto flex items-center justify-center">
                     <Check className="w-8 h-8" />
                   </div>
                   <h3 className="text-xl font-display font-bold text-white">
-                    Сообщение успешно отправлено!
+                    Заявка сформирована!
                   </h3>
-                  <p className="text-slate-400 text-sm max-w-md mx-auto">
-                    Спасибо за обращение. Я свяжусь с вами в ближайшее время по указанному контакту.
+                  <p className="text-slate-300 text-sm max-w-md mx-auto leading-relaxed">
+                    Данные готовы к передаче. Вы можете сразу перейти в WhatsApp для мгновенного ответа:
                   </p>
-                  <button
-                    onClick={() => {
-                      setSubmitted(false);
-                      setFormState({ name: '', email: '', message: '' });
-                    }}
-                    className="px-6 py-2 rounded-xl bg-white/10 hover:bg-white/15 text-white font-mono text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
-                  >
-                    Отправить ещё одно сообщение
-                  </button>
+
+                  <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
+                    {lastWhatsAppUrl && (
+                      <a
+                        href={lastWhatsAppUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer"
+                      >
+                        <Phone className="w-4 h-4" />
+                        <span>Открыть диалог в WhatsApp</span>
+                      </a>
+                    )}
+                    <button
+                      onClick={() => {
+                        setSubmitted(false);
+                        setFormState({ name: '', email: '', message: '' });
+                      }}
+                      className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 hover:text-white font-mono text-xs transition-colors cursor-pointer"
+                    >
+                      Заполнить заново
+                    </button>
+                  </div>
                 </motion.div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
