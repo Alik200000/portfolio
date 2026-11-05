@@ -19,3 +19,8 @@ lerna-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Added by Project Guardian
+__pycache__
+.venv
+*.db
