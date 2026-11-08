@@ -1,75 +1,72 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Navbar } from './portfolio/components/Navbar';
+import { EditorialPreloader } from './portfolio/components/EditorialPreloader';
 import { Hero } from './portfolio/components/Hero';
 import { StatsCounter } from './portfolio/components/StatsCounter';
 import { ProjectsShowcase } from './portfolio/components/ProjectsShowcase';
 import { TechUniverse } from './portfolio/components/TechUniverse';
-import { JourneyTimeline } from './portfolio/components/JourneyTimeline';
 import { ContactSection } from './portfolio/components/ContactSection';
 import { Footer } from './portfolio/components/Footer';
 import { ScrollProgressBar } from './portfolio/components/ScrollProgressBar';
-import { InteractiveBackground } from './portfolio/components/InteractiveBackground';
 import { InteractiveTerminal } from './portfolio/components/InteractiveTerminal';
 import { PortfolioErrorBoundary } from './portfolio/components/PortfolioErrorBoundary';
+import { LegalModal, LegalTab } from './portfolio/components/LegalModal';
+import { CookieConsent } from './portfolio/components/CookieConsent';
 
 export function App() {
-  const [mousePos, setMousePos] = useState({ x: -500, y: -500 });
+  const [isLegalOpen, setIsLegalOpen] = useState(false);
+  const [legalTab, setLegalTab] = useState<LegalTab>('privacy');
 
-  // Ambient mouse follower for specular lighting
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  const handleOpenLegal = (tab: LegalTab = 'privacy') => {
+    setLegalTab(tab);
+    setIsLegalOpen(true);
+  };
 
   return (
     <PortfolioErrorBoundary>
-      <div className="min-h-screen bg-[#05060A] text-slate-100 selection:bg-cyan-500 selection:text-white relative overflow-x-hidden font-sans">
-        {/* 1. Neon Top Scroll Progress Bar */}
+      <div className="min-h-screen bg-[#07080B] text-slate-100 selection:bg-white selection:text-[#07080B] relative overflow-x-hidden font-sans">
+        {/* 0. Swiss Editorial Preloader (00:00-00:01 video reference) */}
+        <EditorialPreloader />
+
+        {/* 1. Top Scroll Progress Bar */}
         <ScrollProgressBar />
 
-        {/* 2. Interactive Reactive Particle & Constellation Background */}
-        <InteractiveBackground />
-
-        {/* 3. Ambient Spotlight Mouse Follower */}
-        <div
-          className="pointer-events-none fixed inset-0 z-0 transition-opacity duration-500 hidden md:block"
-          style={{
-            background: `radial-gradient(650px circle at ${mousePos.x}px ${mousePos.y}px, rgba(6, 182, 212, 0.07), transparent 80%)`,
-          }}
-        />
-
-        {/* 4. Floating Pill Navigation */}
+        {/* 2. Adaptive Swiss Editorial Top Navigation */}
         <Navbar />
 
-        {/* 5. Main Content Flow */}
+        {/* 3. Main Editorial Content Flow */}
         <main className="relative z-10">
-          {/* Hero Section */}
+          {/* 00:02-00:05: Light Editorial Hero with Mirrored Wordmark & Blueprint Cursor Trail */}
           <Hero />
 
-          {/* Key Confirmed Facts & Competencies */}
+          {/* 00:06-00:14: "ОБО МНЕ" Split Reveal, Bento Grid, Inline Pill Capsules, Marquee & Stroke Headline */}
           <StatsCounter />
 
-          {/* Real Commercial Projects Showcase with 3D Tilt & Architecture Inspector */}
+          {/* 00:15-00:34 & 00:42-00:49: "ГЛАВНЫЙ ПРОЕКТ", 3D Curved Fan & Ring, 360° Wheel & Sticky "ВСЕ РАБОТЫ" */}
           <ProjectsShowcase />
 
-          {/* Practical Tech Stack & Tools */}
+          {/* 00:35-00:37: Light Editorial 4-Column "ТЕХНИКА & СТЕК" Section */}
           <TechUniverse />
 
-          {/* About Me & Practical Engineering Principles */}
-          <JourneyTimeline />
-
-          {/* Direct Contact & Connection Hub */}
-          <ContactSection />
+          {/* 00:38-00:41: Editorial Directory & Minimalist Contact Card */}
+          <ContactSection onOpenLegal={handleOpenLegal} />
         </main>
 
-        {/* 6. Interactive Developer CLI Terminal Widget */}
+        {/* 4. Interactive Developer CLI Terminal Widget */}
         <InteractiveTerminal />
 
-        {/* 7. Footer */}
-        <Footer />
+        {/* 5. Footer with Legal Navigation Links */}
+        <Footer onOpenLegal={handleOpenLegal} />
+
+        {/* 6. Cookie Consent Banner (Reel 4: @davydovit) */}
+        <CookieConsent onOpenLegal={handleOpenLegal} />
+
+        {/* 7. Interactive Legal & Compliance Modal */}
+        <LegalModal
+          isOpen={isLegalOpen}
+          initialTab={legalTab}
+          onClose={() => setIsLegalOpen(false)}
+        />
       </div>
     </PortfolioErrorBoundary>
   );

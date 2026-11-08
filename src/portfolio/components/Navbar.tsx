@@ -1,17 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Zap, Menu, X, ArrowUpRight, Github, Phone } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Github, Phone } from 'lucide-react';
 
 export function Navbar() {
   const [activeSection, setActiveSection] = useState('hero');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [isDarkHeader, setIsDarkHeader] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      // Switch header theme once scrolled past the light editorial Hero
+      const heroEl = document.getElementById('hero');
+      const setupEl = document.getElementById('skills');
+      const y = window.scrollY;
 
-      const sections = ['hero', 'projects', 'skills', 'experience', 'contact'];
+      let overLight = false;
+      if (heroEl) {
+        const rect = heroEl.getBoundingClientRect();
+        if (rect.bottom > 72) overLight = true;
+      }
+      if (setupEl) {
+        const rect = setupEl.getBoundingClientRect();
+        if (rect.top <= 72 && rect.bottom > 72) overLight = true;
+      }
+      setIsDarkHeader(!overLight && y > 40);
+
+      const sections = ['hero', 'experience', 'projects', 'skills', 'contact'];
       for (const section of [...sections].reverse()) {
         const el = document.getElementById(section);
         if (el) {
@@ -30,7 +44,8 @@ export function Navbar() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('scroll', handleScroll);
@@ -39,9 +54,9 @@ export function Navbar() {
   }, [mobileMenuOpen]);
 
   const navItems = [
-    { id: 'projects', label: 'Реальные проекты' },
-    { id: 'skills', label: 'Стек & Опыт' },
     { id: 'experience', label: 'Обо мне' },
+    { id: 'projects', label: 'Работы' },
+    { id: 'skills', label: 'Техника & Стек' },
     { id: 'contact', label: 'Контакты' },
   ];
 
@@ -55,106 +70,95 @@ export function Navbar() {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 sm:px-6 pt-4 pointer-events-none">
-        <motion.nav
-          initial={{ y: -30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-          className={`pointer-events-auto w-full max-w-5xl rounded-full border transition-all duration-300 px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between shadow-2xl ${
-            scrolled
-              ? 'bg-[#090B10]/85 backdrop-blur-2xl border-white/15 shadow-black/80'
-              : 'bg-[#0F131D]/70 backdrop-blur-xl border-white/10 shadow-black/50'
-          }`}
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 border-b backdrop-blur-xl ${
+          isDarkHeader
+            ? 'bg-[#08090C]/85 border-white/10 text-white'
+            : 'bg-[#F3F3EE]/85 border-black/10 text-[#0A0B0E]'
+        }`}
+      >
+        <nav
+          aria-label="Основная навигация"
+          className="max-w-[1440px] mx-auto px-4 sm:px-8 h-14 sm:h-16 flex items-center justify-between"
         >
-          {/* Logo */}
+          {/* Left Brand: Swiss Editorial Wordmark */}
           <button
             onClick={() => scrollToSection('hero')}
-            aria-label="Alim Главная"
-            className="flex items-center gap-2.5 group text-left cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 rounded-xl"
+            aria-label="ALIM.DEV — На главную"
+            className="font-display font-black text-sm sm:text-base tracking-[0.16em] uppercase cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded px-1"
           >
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-violet-500 p-[1px] shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform">
-              <div className="w-full h-full bg-[#090B10] rounded-[11px] flex items-center justify-center font-bold text-white text-base">
-                A
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-display font-black text-sm sm:text-base tracking-tight text-white flex items-center gap-1">
-                Alim<span className="text-cyan-400 font-mono text-xs ml-1 font-normal">Fullstack & AI</span>
-              </span>
-              <span className="font-mono text-[9px] uppercase tracking-wider text-slate-400 font-semibold hidden sm:inline">
-                Казахстан (Алматы / Астана)
-              </span>
-            </div>
+            ALIM.DEV
           </button>
 
-          {/* Desktop Nav Links */}
-          <div className="hidden md:flex items-center gap-1 bg-[#161C2C]/60 border border-white/5 rounded-full px-2 py-1">
+          {/* Center Editorial Links */}
+          <div className="hidden md:flex items-center gap-7">
             {navItems.map((item) => {
               const isActive = activeSection === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className={`relative px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
-                    isActive
-                      ? 'text-white'
-                      : 'text-slate-400 hover:text-slate-200'
+                  className={`relative py-1 text-xs font-semibold tracking-wide transition-opacity cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500 rounded ${
+                    isActive ? 'opacity-100 font-bold' : 'opacity-65 hover:opacity-100'
                   }`}
                 >
+                  <span>{item.label}</span>
                   {isActive && (
-                    <motion.div
-                      layoutId="navPill"
-                      className="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-600 to-indigo-600 shadow-md shadow-cyan-500/20"
-                      transition={{ type: 'spring', stiffness: 450, damping: 30 }}
+                    <motion.span
+                      layoutId="editorialNavUnderline"
+                      className={`absolute left-0 right-0 -bottom-0.5 h-[1.5px] ${
+                        isDarkHeader ? 'bg-white' : 'bg-[#0A0B0E]'
+                      }`}
+                      transition={{ type: 'spring', stiffness: 420, damping: 32 }}
                     />
                   )}
-                  <span className="relative z-10">{item.label}</span>
                 </button>
               );
             })}
           </div>
 
-          {/* Right Actions & Status */}
-          <div className="flex items-center gap-2.5 sm:gap-3">
-            {/* GitHub direct link */}
+          {/* Right Action Links: Связаться + Hamburger */}
+          <div className="flex items-center gap-3 sm:gap-4">
             <a
               href="https://github.com/Alik200000"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Профиль на GitHub"
-              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white border border-white/10 transition-colors"
+              aria-label="Профиль на GitHub Alik200000"
               title="GitHub: Alik200000"
+              className={`hidden sm:inline-flex items-center gap-1.5 text-xs font-mono opacity-75 hover:opacity-100 transition-opacity`}
             >
-              <Github className="w-4 h-4" />
+              <Github className="w-3.5 h-3.5" />
+              <span>GitHub</span>
             </a>
 
-            {/* WhatsApp direct CTA */}
-            <a
-              href="https://wa.me/77786078732"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Написать в WhatsApp"
-              className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/20 transition-all cursor-pointer"
+            <button
+              onClick={() => scrollToSection('contact')}
+              className={`text-xs font-semibold tracking-wide flex items-center gap-2 cursor-pointer px-3.5 py-1.5 rounded-full border transition-all ${
+                isDarkHeader
+                  ? 'border-white/20 hover:bg-white hover:text-[#08090C]'
+                  : 'border-black/20 hover:bg-[#0A0B0E] hover:text-white'
+              }`}
             >
-              <Phone className="w-3.5 h-3.5" />
-              <span>WhatsApp</span>
-            </a>
+              <span>Связаться</span>
+              <span aria-hidden="true" className="font-mono text-[10px] tracking-tighter">
+                ===
+              </span>
+            </button>
 
-            {/* Mobile Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-slate-300 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400"
-              aria-label="Переключить навигационное меню"
+              className="md:hidden p-1.5 rounded-lg border border-current/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+              aria-label="Открыть меню навигации"
               aria-expanded={mobileMenuOpen}
-              aria-controls="mobile-nav-drawer"
+              aria-controls="mobile-editorial-drawer"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
           </div>
-        </motion.nav>
+        </nav>
       </header>
 
-      {/* Mobile Drawer Overlay */}
+      {/* Mobile Full-Width Editorial Drawer */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
@@ -163,45 +167,53 @@ export function Navbar() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden"
+              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-40 md:hidden"
             />
             <motion.div
-              id="mobile-nav-drawer"
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-              className="fixed top-20 left-4 right-4 z-50 p-6 rounded-3xl bg-[#0F131D]/95 backdrop-blur-2xl border border-white/15 shadow-2xl md:hidden"
+              id="mobile-editorial-drawer"
+              initial={{ opacity: 0, y: -16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -16 }}
+              transition={{ type: 'spring', stiffness: 360, damping: 30 }}
+              className="fixed top-16 left-4 right-4 z-50 p-6 rounded-3xl bg-[#0B0D13] text-white border border-white/15 shadow-2xl md:hidden"
             >
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between pb-3 border-b border-white/10">
-                  <span className="font-mono text-xs text-slate-400 uppercase tracking-wider">Навигация</span>
-                  <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
-                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Доступен для проектов</span>
-                  </div>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between pb-3 mb-2 border-b border-white/10 text-[11px] font-mono text-neutral-400 uppercase tracking-widest">
+                  <span>Меню портфолио</span>
+                  <span className="text-emerald-400">● Алматы / Астана</span>
                 </div>
 
                 {navItems.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
-                    className="flex items-center justify-between p-3 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-semibold text-sm transition-colors text-left"
+                    className="flex items-center justify-between py-3 px-4 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-display font-bold text-lg tracking-tight text-left transition-colors"
                   >
                     <span>{item.label}</span>
-                    <ArrowUpRight className="w-4 h-4 text-slate-400" />
+                    <ArrowUpRight className="w-4 h-4 text-neutral-400" />
                   </button>
                 ))}
 
-                <a
-                  href="https://wa.me/77786078732"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 w-full py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-xl flex items-center justify-center gap-2"
-                >
-                  <Phone className="w-4 h-4" />
-                  <span>Написать в WhatsApp: +7 (778) 607-87-32</span>
-                </a>
+                <div className="grid grid-cols-2 gap-2.5 mt-3 pt-3 border-t border-white/10">
+                  <a
+                    href="https://wa.me/77786078732"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-3 px-4 rounded-2xl bg-white text-[#0A0B0E] font-bold text-xs flex items-center justify-center gap-2"
+                  >
+                    <Phone className="w-3.5 h-3.5" />
+                    <span>WhatsApp</span>
+                  </a>
+                  <a
+                    href="https://github.com/Alik200000"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-3 px-4 rounded-2xl bg-white/10 text-white font-mono text-xs flex items-center justify-center gap-2"
+                  >
+                    <Github className="w-3.5 h-3.5" />
+                    <span>GitHub</span>
+                  </a>
+                </div>
               </div>
             </motion.div>
           </>

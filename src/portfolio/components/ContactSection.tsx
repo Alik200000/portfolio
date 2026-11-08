@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  Terminal,
   Copy,
   Check,
   Github,
@@ -10,12 +9,15 @@ import {
   X,
   AlertCircle,
   Phone,
-  Mail,
-  MapPin,
-  ExternalLink,
+  ArrowUpRight,
 } from 'lucide-react';
+import { LegalTab } from './LegalModal';
 
-export function ContactSection() {
+interface ContactSectionProps {
+  onOpenLegal?: (tab: LegalTab) => void;
+}
+
+export function ContactSection({ onOpenLegal }: ContactSectionProps) {
   const email = 'aptayalimzhan07@gmail.com';
   const whatsappNumber = '+7 (778) 607-87-32';
   const whatsappLink = 'https://wa.me/77786078732';
@@ -24,7 +26,8 @@ export function ContactSection() {
 
   const [copied, setCopied] = useState(false);
   const [currentTime, setCurrentTime] = useState('');
-  const [projectType, setProjectType] = useState('Kaspi / B2B Интеграция');
+  const [contactChannel, setContactChannel] = useState('Написать в WhatsApp');
+  const [projectType, setProjectType] = useState('1С / Битрикс24 / Kaspi Интеграция');
   const [formState, setFormState] = useState({
     name: '',
     email: '',
@@ -36,7 +39,6 @@ export function ContactSection() {
   const [lastWhatsAppUrl, setLastWhatsAppUrl] = useState('');
   const copyTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Live World Clock Kazakhstan (UTC+5)
   useEffect(() => {
     const updateTime = () => {
       const now = new Date();
@@ -79,6 +81,11 @@ export function ContactSection() {
     }
   };
 
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormError(null);
@@ -94,32 +101,37 @@ export function ContactSection() {
 
     setIsSubmitting(true);
 
-    // Construct authentic direct message for WhatsApp
-    const text = `Здравствуйте, Алим! Меня зовут ${trimmedName}.\n\nТема: ${projectType}\nМой контакт: ${trimmedContact}\n\nЗадача: ${trimmedMessage}`;
+    const text = `Здравствуйте, Алим! Меня зовут ${trimmedName}.\n\nНаправление: ${projectType}\nПредпочтительная связь: ${contactChannel}\nМой контакт: ${trimmedContact}\n\nЗадача: ${trimmedMessage}`;
     const directUrl = `https://wa.me/77786078732?text=${encodeURIComponent(text)}`;
     setLastWhatsAppUrl(directUrl);
 
     setTimeout(() => {
       setIsSubmitting(false);
       setSubmitted(true);
-      // Attempt to open WhatsApp directly
       try {
         window.open(directUrl, '_blank', 'noopener,noreferrer');
       } catch {
-        // Fallback handled by rendered button
+        // Fallback button shown
       }
-    }, 600);
+    }, 500);
   };
 
+  const editorialNav = [
+    { id: 'projects', label: 'Работы' },
+    { id: 'experience', label: 'Обо мне' },
+    { id: 'projects', label: 'Проекты' },
+    { id: 'skills', label: 'Техника' },
+  ];
+
   const projectTypes = [
-    'Kaspi / B2B Интеграция',
+    '1С / Битрикс24 / Kaspi Интеграция',
     'ИИ-Агенты и автоматизации',
-    'Веб-приложение на React/Next.js',
-    '1С:Предприятие & CRM системы',
+    'Веб-приложение (Next.js / FastAPI)',
+    'Google Sheets / Excel & Отчёты',
   ];
 
   return (
-    <section id="contact" className="relative px-4 sm:px-6 py-24 max-w-6xl mx-auto">
+    <section id="contact" className="relative bg-[#07080B] text-white py-20 sm:py-28 px-4 sm:px-8">
       {/* Toast confirmation */}
       <AnimatePresence>
         {copied && (
@@ -129,14 +141,14 @@ export function ContactSection() {
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="fixed top-24 left-1/2 -translate-x-1/2 z-50 bg-[#161C2C] border border-cyan-500/40 text-cyan-300 px-4 py-2.5 rounded-full shadow-2xl backdrop-blur-xl flex items-center gap-2.5 font-mono text-xs"
+            className="fixed top-20 left-1/2 -translate-x-1/2 z-50 bg-white text-[#07080B] px-4 py-2.5 rounded-full shadow-2xl flex items-center gap-2.5 font-mono text-xs font-bold"
           >
-            <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-            <span>Email ({email}) скопирован в буфер!</span>
+            <Check className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span>Email ({email}) скопирован!</span>
             <button
               onClick={() => setCopied(false)}
               aria-label="Закрыть уведомление"
-              className="ml-1 p-0.5 rounded-full hover:bg-white/10 text-slate-400 hover:text-white transition-colors"
+              className="ml-1 p-0.5 rounded-full hover:bg-black/10 transition-colors"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -144,204 +156,219 @@ export function ContactSection() {
         )}
       </AnimatePresence>
 
-      {/* Section Header */}
-      <div className="text-center max-w-3xl mx-auto mb-16">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-violet-950/40 border border-violet-500/30 text-violet-300 text-xs font-mono mb-3">
-          <Terminal className="w-3.5 h-3.5 text-cyan-400" />
-          <span>ПРЯМАЯ СВЯЗЬ И КОНТАКТЫ</span>
-        </div>
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-display font-black text-white tracking-tight">
-          Готов Обсудить Проект
-        </h2>
-        <p className="text-slate-400 text-sm sm:text-base mt-3 font-medium">
-          Если вам нужен разработчик под B2B-продукт, интеграцию с Kaspi / 1C, запуск AI-автоматизации или работа в сильной команде — напишите мне напрямую.
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Quick Connect Card & Status */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Quick Copy Box */}
-          <div className="rounded-3xl bg-[#0F131D]/80 border border-white/10 p-6 sm:p-7 backdrop-blur-xl shadow-2xl relative overflow-hidden group">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
-                Прямая почта
-              </span>
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-            </div>
-
-            <div className="font-mono text-sm sm:text-base font-bold text-white mb-4 break-all">
-              {email}
-            </div>
-
-            <button
-              onClick={handleCopyEmail}
-              aria-label="Скопировать email адрес"
-              className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-cyan-500/40 text-slate-200 hover:text-white font-mono text-xs font-semibold flex items-center justify-center gap-2 transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-4 h-4 text-emerald-400" />
-                  <span className="text-emerald-400">Скопировано в буфер!</span>
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4 text-cyan-400" />
-                  <span>Скопировать Email</span>
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* Real-Time Operational Status & Location */}
-          <div className="rounded-3xl bg-[#0F131D]/80 border border-white/10 p-6 sm:p-7 backdrop-blur-xl shadow-2xl space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-mono text-slate-300">
-                <Clock className="w-4 h-4 text-cyan-400" />
-                <span>ВРЕМЯ В КАЗАХСТАНЕ (UTC+5)</span>
-              </div>
-              <span className="font-mono text-xs font-bold tabular-nums text-white bg-white/5 px-2.5 py-1 rounded-lg border border-white/5">
-                {currentTime || '12:00:00'}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
-              <MapPin className="w-4 h-4 text-rose-400 shrink-0" />
-              <span>Казахстан (Алматы / Астана / Удалённо)</span>
-            </div>
-
-            <div className="p-3.5 rounded-xl bg-[#161C2C]/70 border border-white/5 space-y-1">
-              <div className="flex items-center gap-2 text-xs font-bold text-emerald-400 font-mono">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                <span>СТАТУС: ДОСТУПЕН ДЛЯ ПРОЕКТОВ</span>
-              </div>
-              <p className="text-[11px] text-slate-400 leading-normal">
-                Готов к задачам по веб-разработке, B2B-интеграциям и автоматизации бизнеса.
-              </p>
-            </div>
-
-            {/* Direct Instant Action Links */}
-            <div className="pt-2 space-y-2.5">
-              <span className="text-[11px] font-mono text-slate-500 uppercase tracking-wider block">
-                Прямые каналы связи
-              </span>
-
-              {/* WhatsApp direct button */}
-              <a
-                href={whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full flex items-center justify-between p-3.5 rounded-2xl bg-emerald-600/20 hover:bg-emerald-600/30 border border-emerald-500/40 text-emerald-300 hover:text-white transition-all font-mono text-xs font-semibold"
+      <div className="max-w-[1380px] mx-auto">
+        {/* =================================================================
+            PART 1: Giant Editorial Directory & Direct Handles (00:38 reference)
+           ================================================================= */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-20 border-b border-white/10">
+          {/* Left 6 Cols: Large Stacked Section Links (Работы / Обо мне / Проекты / Техника) */}
+          <div className="lg:col-span-6 divide-y divide-white/15 border-y border-white/15">
+            {editorialNav.map((item, idx) => (
+              <button
+                key={`${item.label}-${idx}`}
+                type="button"
+                onClick={() => scrollToSection(item.id)}
+                className="w-full py-5 sm:py-6 flex items-center justify-between text-left group cursor-pointer"
               >
-                <div className="flex items-center gap-2.5">
-                  <Phone className="w-4 h-4 text-emerald-400" />
-                  <span>WhatsApp: {whatsappNumber}</span>
-                </div>
-                <ExternalLink className="w-3.5 h-3.5 opacity-70" />
-              </a>
-
-              {/* GitHub and Live Render */}
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                <a
-                  href={githubLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 text-slate-300 hover:text-white transition-all"
-                >
-                  <Github className="w-4 h-4 text-slate-400" />
-                  <span>Alik200000</span>
-                </a>
-                <a
-                  href={renderPortfolioLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/5 hover:border-white/20 text-slate-300 hover:text-white transition-all"
-                >
-                  <ExternalLink className="w-4 h-4 text-cyan-400" />
-                  <span>Render Demo</span>
-                </a>
-              </div>
-            </div>
+                <span className="font-display font-bold text-3xl sm:text-5xl text-white group-hover:translate-x-2 transition-transform">
+                  {item.label}
+                </span>
+                <ArrowUpRight className="w-6 h-6 text-neutral-500 group-hover:text-white transition-colors" />
+              </button>
+            ))}
           </div>
-        </div>
 
-        {/* Right Column: Sleek Developer Terminal Form */}
-        <div className="lg:col-span-7">
-          <div className="rounded-3xl bg-[#090B10]/90 border border-white/15 overflow-hidden shadow-2xl backdrop-blur-2xl">
-            {/* Terminal Window Header (macOS Pills) */}
-            <div className="px-5 py-3.5 bg-[#0F131D] border-b border-white/10 flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-rose-500/80" />
-                <div className="w-3 h-3 rounded-full bg-amber-500/80" />
-                <div className="w-3 h-3 rounded-full bg-emerald-500/80" />
-              </div>
-              <span className="font-mono text-xs text-slate-400 font-medium">
-                terminal://alim-dev/contact.sh
-              </span>
-              <div className="w-12" />
-            </div>
+          {/* Right 6 Cols: Social Handles & Live Kazakhstan Status (00:38 right side reference) */}
+          <div className="lg:col-span-6 flex flex-col justify-between gap-8 lg:pl-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="space-y-6">
+                <div>
+                  <span className="block font-mono text-xs text-neutral-500 mb-1">GitHub</span>
+                  <a
+                    href={githubLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-display font-bold text-2xl sm:text-3xl text-white hover:text-neutral-300 transition-colors inline-flex items-center gap-2"
+                  >
+                    <span>@Alik200000</span>
+                    <ArrowUpRight className="w-5 h-5" />
+                  </a>
+                </div>
 
-            {/* Terminal Body */}
-            <div className="p-6 sm:p-8">
-              {submitted ? (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="py-10 text-center space-y-4"
-                >
-                  <div className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 mx-auto flex items-center justify-center">
-                    <Check className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-xl font-display font-bold text-white">
-                    Заявка сформирована!
-                  </h3>
-                  <p className="text-slate-300 text-sm max-w-md mx-auto leading-relaxed">
-                    Данные готовы к передаче. Вы можете сразу перейти в WhatsApp для мгновенного ответа:
-                  </p>
+                <div>
+                  <span className="block font-mono text-xs text-neutral-500 mb-1">WhatsApp / Телефон</span>
+                  <a
+                    href={whatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-display font-bold text-xl sm:text-2xl text-white hover:text-emerald-400 transition-colors inline-flex items-center gap-2"
+                  >
+                    <span>{whatsappNumber}</span>
+                  </a>
+                </div>
 
-                  <div className="pt-2 flex flex-col sm:flex-row gap-3 justify-center">
-                    {lastWhatsAppUrl && (
-                      <a
-                        href={lastWhatsAppUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs font-mono flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/30 transition-all cursor-pointer"
-                      >
-                        <Phone className="w-4 h-4" />
-                        <span>Открыть диалог в WhatsApp</span>
-                      </a>
-                    )}
+                <div>
+                  <span className="block font-mono text-xs text-neutral-500 mb-1">Прямая почта</span>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-mono text-sm text-neutral-200 break-all">{email}</span>
                     <button
-                      onClick={() => {
-                        setSubmitted(false);
-                        setFormState({ name: '', email: '', message: '' });
-                      }}
-                      className="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/15 text-slate-300 hover:text-white font-mono text-xs transition-colors cursor-pointer"
+                      type="button"
+                      onClick={handleCopyEmail}
+                      aria-label="Скопировать email адрес"
+                      className="px-2.5 py-1 rounded-md bg-white/10 hover:bg-white/20 text-xs font-mono text-white flex items-center gap-1 cursor-pointer transition-colors"
                     >
-                      Заполнить заново
+                      {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
+                      <span>{copied ? 'Скопировано' : 'Копировать'}</span>
                     </button>
                   </div>
-                </motion.div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  {/* Inline Error Message */}
-                  {formError && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-mono flex items-center gap-2"
-                      role="alert"
+                </div>
+              </div>
+
+              {/* Right Mini Links List */}
+              <div className="flex flex-col justify-between sm:items-end text-left sm:text-right space-y-4">
+                <div className="space-y-2 font-mono text-xs">
+                  <a
+                    href={whatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-neutral-300 hover:text-white underline underline-offset-4"
+                  >
+                    WhatsApp Direct
+                  </a>
+                  <a
+                    href={githubLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-neutral-300 hover:text-white underline underline-offset-4"
+                  >
+                    GitHub Repositories
+                  </a>
+                  <a
+                    href={renderPortfolioLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block text-neutral-300 hover:text-white underline underline-offset-4"
+                  >
+                    Render Production
+                  </a>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 text-left w-full sm:max-w-[230px]">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-neutral-400 mb-1">
+                    <span className="flex items-center gap-1">
+                      <Clock className="w-3 h-3" />
+                      АЛМАТЫ (UTC+5)
+                    </span>
+                    <span className="text-white font-bold tabular-nums">{currentTime || '12:00:00'}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[11px] font-mono text-emerald-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>Открыт для проектов</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* =================================================================
+            PART 2: Minimalist Dark Editorial Contact Card (00:39-00:41 reference)
+           ================================================================= */}
+        <div className="pt-16 sm:pt-20">
+          <div className="rounded-3xl bg-[#111319] border border-white/15 p-6 sm:p-12 shadow-2xl">
+            {submitted ? (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="py-10 text-center space-y-4"
+              >
+                <div className="w-16 h-16 rounded-full bg-white text-[#07080B] mx-auto flex items-center justify-center">
+                  <Check className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-display font-black text-white">
+                  Заявка сформирована!
+                </h3>
+                <p className="text-neutral-300 text-sm max-w-md mx-auto leading-relaxed">
+                  Данные подготовлены для отправки. Перейдите в WhatsApp для мгновенного обсуждения вашей задачи:
+                </p>
+                <div className="pt-3 flex flex-col sm:flex-row gap-3 justify-center">
+                  {lastWhatsAppUrl && (
+                    <a
+                      href={lastWhatsAppUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-7 py-3.5 rounded-full bg-white hover:bg-neutral-200 text-[#07080B] font-bold text-xs font-mono flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
-                      <span>{formError}</span>
-                    </motion.div>
+                      <Phone className="w-4 h-4" />
+                      <span>Открыть диалог в WhatsApp</span>
+                    </a>
                   )}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSubmitted(false);
+                      setFormState({ name: '', email: '', message: '' });
+                    }}
+                    className="px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/15 text-white font-mono text-xs cursor-pointer"
+                  >
+                    Заполнить заново
+                  </button>
+                </div>
+              </motion.div>
+            ) : (
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                {/* Left 5 Cols: "Готовы обсудить проект?" + Avatar + Direct Link (00:40 reference) */}
+                <div className="lg:col-span-5 flex flex-col justify-between space-y-8">
+                  <div>
+                    <h2 className="font-display font-black text-3xl sm:text-5xl text-white tracking-tight leading-[1.08]">
+                      Готовы обсудить проект?
+                    </h2>
+                    <p className="text-neutral-400 text-xs sm:text-sm mt-4 leading-relaxed max-w-sm">
+                      Оставьте заявку, и я свяжусь с вами, чтобы обсудить задачу, архитектуру интеграции (1С / Битрикс24 / Kaspi / AI) и формат запуска.
+                    </p>
+                  </div>
+
+                  {/* Avatar Circle + Text like in 00:40 */}
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 rounded-full bg-white text-[#07080B] flex items-center justify-center font-display font-black text-2xl shrink-0 shadow-lg">
+                      A
+                    </div>
+                    <div className="text-xs text-neutral-300 leading-relaxed">
+                      <div className="font-bold text-white">Алим (Alik200000)</div>
+                      <div className="text-neutral-400">Отвечаю лично в течение 15–30 минут</div>
+                    </div>
+                  </div>
 
                   <div>
-                    <label className="block font-mono text-xs text-slate-400 uppercase tracking-wider mb-2">
-                      Направление / Тема обращения
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
+                    <a
+                      href={whatsappLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-xs font-mono font-bold text-white underline underline-offset-4 hover:text-neutral-300"
+                    >
+                      <span>Написать напрямую в WhatsApp</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+
+                {/* Right 7 Cols: Minimalist Underlined Inputs + White Pill Button (00:40 reference) */}
+                <div className="lg:col-span-7">
+                  <form onSubmit={handleSubmit} className="space-y-5">
+                    {formError && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        role="alert"
+                        className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-mono flex items-center gap-2"
+                      >
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        <span>{formError}</span>
+                      </motion.div>
+                    )}
+
+                    {/* Topic Pills */}
+                    <div className="flex flex-wrap gap-2">
                       {projectTypes.map((type) => {
                         const isSelected = projectType === type;
                         return (
@@ -349,14 +376,11 @@ export function ContactSection() {
                             type="button"
                             key={type}
                             aria-pressed={isSelected}
-                            onClick={() => {
-                              setProjectType(type);
-                              if (formError) setFormError(null);
-                            }}
-                            className={`p-2.5 rounded-xl font-mono text-xs font-semibold text-left transition-all border cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 ${
+                            onClick={() => setProjectType(type)}
+                            className={`px-3 py-1.5 rounded-full font-mono text-[11px] transition-colors cursor-pointer border ${
                               isSelected
-                                ? 'bg-gradient-to-r from-violet-600/30 to-cyan-600/30 border-cyan-400 text-white'
-                                : 'bg-[#161C2C]/50 hover:bg-[#161C2C] border-white/5 text-slate-400 hover:text-slate-200'
+                                ? 'bg-white text-[#07080B] border-white font-bold'
+                                : 'bg-transparent text-neutral-400 border-white/15 hover:text-white'
                             }`}
                           >
                             {type}
@@ -364,77 +388,111 @@ export function ContactSection() {
                         );
                       })}
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Input 1: Ваше имя */}
                     <div>
-                      <label className="block font-mono text-xs text-slate-400 uppercase tracking-wider mb-2">
+                      <label htmlFor="contact-name" className="sr-only">
                         Ваше имя
                       </label>
                       <input
+                        id="contact-name"
                         type="text"
                         required
-                        placeholder="Например: Арман"
+                        placeholder="Ваше имя"
                         value={formState.name}
                         onChange={(e) => {
                           setFormState({ ...formState, name: e.target.value });
                           if (formError) setFormError(null);
                         }}
-                        className="w-full px-4 py-3 rounded-xl bg-[#161C2C]/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 text-sm font-sans"
+                        className="w-full px-1 py-3.5 bg-transparent border-b border-white/20 focus:border-white text-white placeholder-neutral-500 focus:outline-none text-sm transition-colors"
                       />
                     </div>
-                    <div>
-                      <label className="block font-mono text-xs text-slate-400 uppercase tracking-wider mb-2">
-                        WhatsApp, Telegram или Email
+
+                    {/* Input 2: Phone / Telegram with KZ flag badge like in 00:40 */}
+                    <div className="flex items-center gap-3 border-b border-white/20 focus-within:border-white transition-colors">
+                      <span className="text-xs font-mono text-neutral-300 shrink-0 select-none">
+                        🇰🇿 +7
+                      </span>
+                      <label htmlFor="contact-phone" className="sr-only">
+                        Телефон, WhatsApp или Telegram
                       </label>
                       <input
+                        id="contact-phone"
                         type="text"
                         required
-                        placeholder="+7 777 ... или @username"
+                        placeholder="(000) 000-00-00 или @telegram"
                         value={formState.email}
                         onChange={(e) => {
                           setFormState({ ...formState, email: e.target.value });
                           if (formError) setFormError(null);
                         }}
-                        className="w-full px-4 py-3 rounded-xl bg-[#161C2C]/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 text-sm font-sans"
+                        className="w-full py-3.5 bg-transparent text-white placeholder-neutral-500 focus:outline-none text-sm"
                       />
                     </div>
-                  </div>
 
-                  <div>
-                    <label className="block font-mono text-xs text-slate-400 uppercase tracking-wider mb-2">
-                      Описание задачи или проекта
-                    </label>
-                    <textarea
-                      rows={4}
-                      required
-                      placeholder="Опишите ваши цели: интеграция с Kaspi/1С, разработка веб-сервиса или внедрение AI..."
-                      value={formState.message}
-                      onChange={(e) => {
-                        setFormState({ ...formState, message: e.target.value });
-                        if (formError) setFormError(null);
-                      }}
-                      className="w-full px-4 py-3 rounded-xl bg-[#161C2C]/60 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500 text-sm font-sans resize-none"
-                    />
-                  </div>
+                    {/* Input 3: Как с вами связаться? (00:40 select reference) */}
+                    <div>
+                      <label htmlFor="contact-channel" className="block font-mono text-[11px] text-neutral-400 mb-1">
+                        Как с вами связаться?
+                      </label>
+                      <select
+                        id="contact-channel"
+                        value={contactChannel}
+                        onChange={(e) => setContactChannel(e.target.value)}
+                        className="w-full px-1 py-3 bg-[#111319] border-b border-white/20 focus:border-white text-white text-sm focus:outline-none cursor-pointer"
+                      >
+                        <option value="Написать в WhatsApp">Написать в WhatsApp</option>
+                        <option value="Написать в Telegram">Написать в Telegram</option>
+                        <option value="Позвонить по телефону">Позвонить по телефону</option>
+                      </select>
+                    </div>
 
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3.5 rounded-xl bg-gradient-to-r from-violet-600 via-indigo-600 to-cyan-500 hover:from-violet-500 hover:to-cyan-400 text-white font-bold text-sm tracking-wide shadow-xl shadow-violet-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400"
-                  >
-                    {isSubmitting ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <>
+                    {/* Input 4: Кратко о задаче */}
+                    <div>
+                      <label htmlFor="contact-message" className="sr-only">
+                        Описание задачи
+                      </label>
+                      <input
+                        id="contact-message"
+                        type="text"
+                        required
+                        placeholder="Кратко о задаче (например: интеграция 1С и Битрикс24, репрайсер Kaspi, сайт или AI-бот)"
+                        value={formState.message}
+                        onChange={(e) => {
+                          setFormState({ ...formState, message: e.target.value });
+                          if (formError) setFormError(null);
+                        }}
+                        className="w-full px-1 py-3.5 bg-transparent border-b border-white/20 focus:border-white text-white placeholder-neutral-500 focus:outline-none text-sm transition-colors"
+                      />
+                    </div>
+
+                    <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="px-8 py-3.5 rounded-full bg-white hover:bg-neutral-200 text-[#07080B] font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                      >
                         <SendHorizontal className="w-4 h-4" />
-                        <span>Отправить сообщение</span>
-                      </>
-                    )}
-                  </button>
-                </form>
-              )}
-            </div>
+                        <span>Отправить</span>
+                      </button>
+
+                      {/* Legal & PD Consent Disclaimer (Reel 4: @davydovit) */}
+                      <p className="text-[11px] text-neutral-500 leading-relaxed max-w-xs">
+                        Нажимая «Отправить», вы соглашаетесь с{' '}
+                        <button
+                          type="button"
+                          onClick={() => onOpenLegal?.('privacy')}
+                          className="text-neutral-300 hover:text-white underline underline-offset-2 cursor-pointer"
+                        >
+                          Политикой конфиденциальности
+                        </button>{' '}
+                        (Закон РК «О персональных данных»).
+                      </p>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
