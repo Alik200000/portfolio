@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Github,
@@ -260,8 +260,23 @@ export function ProjectsShowcase() {
   const [activeModalProject, setActiveModalProject] = useState<DetailedProject | null>(null);
   const [fanMode, setFanMode] = useState<'arc' | 'cylinder'>('arc');
   const [cylinderAngle, setCylinderAngle] = useState<number>(0);
-  const [focusedIndex, setFocusedIndex] = useState<number>(0);
+  const [cylinderPaused, setCylinderPaused] = useState<boolean>(false);
+  const [focusedIndex, setFocusedIndex] = useState<number>(2);
   const [wheelPaused, setWheelPaused] = useState<boolean>(false);
+
+  // Smooth continuous auto-rotation for 3D Cylinder Ring (00:18-00:20 reference)
+  useEffect(() => {
+    if (fanMode !== 'cylinder' || cylinderPaused) return;
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) return;
+
+    const timer = setInterval(() => {
+      setCylinderAngle((prev) => prev - 0.65);
+    }, 30);
+    return () => clearInterval(timer);
+  }, [fanMode, cylinderPaused]);
 
   const filteredProjects = projects.filter((p) => {
     if (selectedFilter === 'all') return true;
@@ -503,24 +518,40 @@ export function ProjectsShowcase() {
                   const rotateY = offsetFromCenter * -9;
                   const translateY = Math.abs(offsetFromCenter) * 10;
                   const isFocused = focusedIndex === index;
+                  const neighborShift =
+                    index < focusedIndex ? -6 : index > focusedIndex ? 6 : 0;
 
                   return (
                     <motion.div
                       key={proj.id}
+                      data-cursor-label="КЕЙС ↗"
                       onMouseEnter={() => setFocusedIndex(index)}
                       onClick={() => setActiveModalProject(proj)}
-                      whileHover={{ y: -12, scale: 1.04 }}
-                      style={{
-                        transform: `perspective(1200px) rotateY(${rotateY}deg) translateY(${translateY}px)`,
+                      animate={{
+                        x: neighborShift,
+                        y: isFocused ? -14 : translateY,
+                        scale: isFocused ? 1.05 : 0.97,
                       }}
-                      className={`group relative rounded-2xl aspect-[3/4] p-5 flex flex-col justify-between cursor-pointer border transition-all duration-300 overflow-hidden bg-gradient-to-b ${
+                      transition={{ type: 'spring', stiffness: 320, damping: 24 }}
+                      style={{
+                        transform: `perspective(1200px) rotateY(${rotateY}deg)`,
+                      }}
+                      className={`group relative rounded-2xl aspect-[3/4] p-5 flex flex-col justify-between cursor-pointer border transition-colors duration-300 overflow-hidden bg-gradient-to-b ${
                         proj.accentGradient
                       } ${
                         isFocused
-                          ? 'border-white shadow-2xl shadow-white/10'
-                          : 'border-white/15 opacity-85 hover:opacity-100'
+                          ? 'border-white shadow-2xl shadow-white/15 z-20'
+                          : 'border-white/15 opacity-85 hover:opacity-100 z-10'
                       }`}
                     >
+                      {/* Animated Scanline Sweep on focused card */}
+                      {isFocused && (
+                        <div
+                          aria-hidden="true"
+                          className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-transparent via-white/12 to-transparent scanline-sweep"
+                        />
+                      )}
+
                       {/* Architectural Grid Overlay */}
                       <div
                         className="absolute inset-0 opacity-15 pointer-events-none"
@@ -563,9 +594,13 @@ export function ProjectsShowcase() {
           ) : (
             /* 00:18-00:20 Reference: 3D Rotating Cylindrical Ring */
             <div className="flex flex-col items-center py-10">
-              <div className="perspective-stage w-full h-[360px] flex items-center justify-center relative">
+              <div
+                onMouseEnter={() => setCylinderPaused(true)}
+                onMouseLeave={() => setCylinderPaused(false)}
+                className="perspective-stage w-full h-[360px] flex items-center justify-center relative"
+              >
                 <div
-                  className="preserve-3d relative w-[240px] h-[300px] transition-transform duration-700 ease-out"
+                  className="preserve-3d relative w-[240px] h-[300px] transition-transform duration-150 ease-linear"
                   style={{
                     transform: `rotateX(-6deg) rotateY(${cylinderAngle}deg)`,
                   }}
@@ -575,6 +610,7 @@ export function ProjectsShowcase() {
                     return (
                       <div
                         key={proj.id}
+                        data-cursor-label="КЕЙС ↗"
                         onClick={() => setActiveModalProject(proj)}
                         style={{
                           transform: `rotateY(${itemAngle}deg) translateZ(310px)`,
@@ -603,8 +639,8 @@ export function ProjectsShowcase() {
                 </div>
               </div>
 
-              {/* Cylinder Rotation Controls */}
-              <div className="mt-6 flex items-center gap-3">
+              {/* Cylinder Rotation & Pause Controls */}
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                 <button
                   type="button"
                   onClick={() => setCylinderAngle((a) => a + 60)}
@@ -616,11 +652,21 @@ export function ProjectsShowcase() {
                 </button>
                 <button
                   type="button"
+                  onClick={() => setCylinderPaused((p) => !p)}
+                  aria-pressed={cylinderPaused}
+                  aria-label={cylinderPaused ? 'Запустить вращение 3D-кольца' : 'Поставить 3D-кольцо на паузу'}
+                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono text-xs flex items-center gap-1.5 cursor-pointer"
+                >
+                  {cylinderPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
+                  <span>{cylinderPaused ? 'Старт' : 'Пауза'}</span>
+                </button>
+                <button
+                  type="button"
                   onClick={() => setCylinderAngle((a) => a - 60)}
                   aria-label="Повернуть 3D-кольцо вправо"
                   className="px-4 py-2 rounded-full bg-white hover:bg-neutral-200 text-[#07080B] font-mono font-bold text-xs flex items-center gap-1.5 cursor-pointer"
                 >
-                  <span>Вращать 3D кольцо</span>
+                  <span>След. +60°</span>
                   <RotateCw className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -795,7 +841,7 @@ export function ProjectsShowcase() {
                   style={{
                     top: `${76 + index * 14}px`,
                   }}
-                  className="md:sticky rounded-3xl bg-[#0E1016] border border-white/15 p-6 sm:p-10 shadow-2xl overflow-hidden"
+                  className="md:sticky scroll-entry-card rounded-3xl bg-[#0E1016] border border-white/15 hover:border-white/35 transition-colors p-6 sm:p-10 shadow-2xl overflow-hidden"
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
                     {/* Left 7 Cols: Editorial Details */}

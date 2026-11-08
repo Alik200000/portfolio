@@ -76,11 +76,60 @@
   }
   33% {
     border-radius: 42% 58% 38% 62% / 59% 39% 61% 41%;
-    transform: rotate(6deg) scale(1.03);
+    transform: rotate(6deg) scale(1.04);
   }
   66% {
     border-radius: 64% 36% 52% 48% / 37% 64% 36% 63%;
-    transform: rotate(-5deg) scale(0.98);
+    transform: rotate(-5deg) scale(0.97);
+  }
+}
+
+@keyframes scanlineSweep {
+  0% {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate3d(0, 350%, 0);
+    opacity: 0;
+  }
+}
+
+/* Native CSS Scroll-Driven Entry/Exit & Parallax Progressive Enhancement */
+@media (prefers-reduced-motion: no-preference) {
+  @supports ((animation-timeline: view()) and (animation-range: entry)) {
+    @keyframes editorialCardEntry {
+      from {
+        opacity: 0.35;
+        transform: translate3d(0, 42px, 0) scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+    }
+
+    @keyframes editorialCardExit {
+      from {
+        opacity: 1;
+        transform: scale(1);
+      }
+      to {
+        opacity: 0.65;
+        transform: scale(0.95);
+      }
+    }
+
+    .scroll-entry-card {
+      animation:
+        editorialCardEntry auto ease-out backwards,
+        editorialCardExit auto ease-in forwards;
+      animation-timeline: view(block);
+      animation-range: entry 0% entry 85%, exit 15% exit 100%;
+    }
   }
 }
 
@@ -98,8 +147,8 @@
   .text-reflection {
     transform: scaleY(-0.82);
     transform-origin: center top;
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0.06) 45%, transparent 90%);
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.22) 0%, rgba(0, 0, 0, 0.06) 45%, transparent 90%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.07) 48%, transparent 92%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.25) 0%, rgba(0, 0, 0, 0.07) 48%, transparent 92%);
     user-select: none;
     pointer-events: none;
   }
@@ -107,7 +156,13 @@
   /* Outlined stroke display text (00:14 reference: ВИДЕОГРАФ / РЕЖИССЁР) */
   .text-outline-stroke {
     color: transparent;
-    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.42);
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.45);
+    transition: color 0.35s ease, -webkit-text-stroke 0.35s ease;
+  }
+
+  .text-outline-stroke:hover {
+    color: rgba(255, 255, 255, 0.95);
+    -webkit-text-stroke: 1.5px rgba(255, 255, 255, 1);
   }
 
   .text-outline-stroke-dark {
@@ -128,7 +183,7 @@
   .editorial-marquee-track {
     display: flex;
     width: max-content;
-    animation: marqueeScroll 28s linear infinite;
+    animation: marqueeScroll 26s linear infinite;
     will-change: transform;
     @media (prefers-reduced-motion: reduce) {
       animation-duration: 120s;
@@ -141,7 +196,7 @@
 
   /* Morphing blob contour for Preloader (00:00-00:01 reference) */
   .editorial-blob-ring {
-    animation: blobMorph 6s ease-in-out infinite;
+    animation: blobMorph 5.5s ease-in-out infinite;
     @media (prefers-reduced-motion: reduce) {
       animation: none;
       border-radius: 50%;
@@ -150,7 +205,7 @@
 
   /* 360 Radial wheel slow orbit (00:23-00:24 reference) */
   .radial-wheel-orbit {
-    animation: orbitSpin 38s linear infinite;
+    animation: orbitSpin 36s linear infinite;
     will-change: transform;
     @media (prefers-reduced-motion: reduce) {
       animation: none;
@@ -158,10 +213,18 @@
   }
 
   .radial-wheel-counter-orbit {
-    animation: counterOrbitSpin 38s linear infinite;
+    animation: counterOrbitSpin 36s linear infinite;
     will-change: transform;
     @media (prefers-reduced-motion: reduce) {
       animation: none;
+    }
+  }
+
+  .scanline-sweep {
+    animation: scanlineSweep 3.8s ease-in-out infinite;
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+      display: none;
     }
   }
 

@@ -114,15 +114,20 @@ export function TechUniverse() {
             return (
               <motion.div
                 key={tool.code}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
+                whileHover={{ y: -8, scale: 1.015 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: idx * 0.08 }}
-                className="rounded-2xl bg-white border border-black/10 p-5 sm:p-6 shadow-sm hover:shadow-xl hover:border-black/25 transition-all flex flex-col justify-between"
+                transition={{ type: 'spring', stiffness: 300, damping: 24, delay: idx * 0.07 }}
+                className="group rounded-2xl bg-white border border-black/10 p-5 sm:p-6 shadow-sm hover:shadow-2xl hover:border-black/30 transition-colors flex flex-col justify-between"
               >
                 <div>
                   {/* Visual Preview Box (Monochrome Dark Plate like camera/laptop photos in 00:36) */}
                   <div className="w-full aspect-[4/3] rounded-xl bg-[#12141A] text-white p-4 mb-5 flex flex-col justify-between relative overflow-hidden">
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-transparent via-white/10 to-transparent scanline-sweep"
+                    />
                     <div
                       className="absolute inset-0 opacity-15 pointer-events-none"
                       style={{
@@ -133,12 +138,12 @@ export function TechUniverse() {
                     />
                     <div className="relative z-10 flex items-center justify-between text-[10px] font-mono text-neutral-400">
                       <span>{tool.code}</span>
-                      <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                     </div>
 
                     <div className="relative z-10 my-auto flex items-center justify-center">
-                      <div className="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center">
-                        <Icon className="w-7 h-7 text-white" />
+                      <div className="w-14 h-14 rounded-2xl bg-white/10 group-hover:bg-white group-hover:text-[#07080B] border border-white/20 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                        <Icon className="w-7 h-7" />
                       </div>
                     </div>
 

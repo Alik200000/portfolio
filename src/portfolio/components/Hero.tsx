@@ -1,54 +1,102 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { ArrowDownRight, Github, Phone, Sparkles } from 'lucide-react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from 'framer-motion';
+import { ArrowDownRight, Github, Phone } from 'lucide-react';
 
-interface BlueprintCell {
+interface BlueprintCluster {
   id: number;
   x: number;
   y: number;
   tag: string;
+  subTag: string;
   size: number;
 }
 
 const BLUEPRINT_TAGS = [
-  '1С:OData 8.3',
-  'Bitrix24 REST',
-  'Kaspi XML 2.0',
-  'Gemini Vision',
-  'Next.js 16 SSR',
-  'FastAPI Async',
-  'АБК FinTech',
+  ['1С:OData 8.3', 'SYNC // OK'],
+  ['Bitrix24 REST', 'BATCH 50/REQ'],
+  ['Kaspi XML 2.0', 'TOP-1 GUARD'],
+  ['Gemini Vision', 'OCR MATRIX'],
+  ['Next.js 16 SSR', 'EDGE READY'],
+  ['FastAPI Async', '23/23 PASS'],
+  ['АБК FinTech', 'DELTA 0.0%'],
 ];
 
+const KINETIC_ROLES = [
+  'Двусторонняя синхронизация 1С:Предприятие 8.3 ↔ Битрикс24',
+  'Автоматический репрайсинг и удержание Топ-1 в Kaspi.kz',
+  'Прикладные AI-агенты (Gemini Vision, Telegram & WhatsApp)',
+  'Fullstack B2B-порталы и ERP-системы на Next.js 16 & FastAPI',
+];
+
+const HERO_LETTERS = ['A', 'L', 'I', 'M', '.', 'D', 'E', 'V'];
+
 export function Hero() {
-  const [trail, setTrail] = useState<BlueprintCell[]>([]);
+  const [trail, setTrail] = useState<BlueprintCluster[]>([]);
+  const [roleIdx, setRoleIdx] = useState(0);
   const containerRef = useRef<HTMLElement | null>(null);
   const lastSpawnRef = useRef<number>(0);
   const counterRef = useRef<number>(0);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
-    const now = performance.now();
-    if (now - lastSpawnRef.current < 65) return;
-    lastSpawnRef.current = now;
+  // Mouse-driven 3D parallax values for giant typography
+  const mouseNormX = useMotionValue(0);
+  const mouseNormY = useMotionValue(0);
+  const smoothX = useSpring(mouseNormX, { stiffness: 180, damping: 24 });
+  const smoothY = useSpring(mouseNormY, { stiffness: 180, damping: 24 });
 
-    if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    // Snap to 56px architectural blueprint grid like in 00:03-00:05 of the reference video
-    const gridSize = 56;
-    const rawX = e.clientX - rect.left;
-    const rawY = e.clientY - rect.top;
-    const snappedX = Math.floor(rawX / gridSize) * gridSize;
-    const snappedY = Math.floor(rawY / gridSize) * gridSize;
+  const wordRotateY = useTransform(smoothX, [-0.5, 0.5], [-6, 6]);
+  const wordRotateX = useTransform(smoothY, [-0.5, 0.5], [5, -5]);
+  const reflectionX = useTransform(smoothX, [-0.5, 0.5], [14, -14]);
 
-    const id = ++counterRef.current;
-    const tag = BLUEPRINT_TAGS[id % BLUEPRINT_TAGS.length];
-
-    setTrail((prev) => [...prev.slice(-6), { id, x: snappedX, y: snappedY, tag, size: gridSize }]);
-
-    setTimeout(() => {
-      setTrail((prev) => prev.filter((item) => item.id !== id));
-    }, 850);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setRoleIdx((prev) => (prev + 1) % KINETIC_ROLES.length);
+    }, 3000);
+    return () => clearInterval(timer);
   }, []);
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const rawX = e.clientX - rect.left;
+      const rawY = e.clientY - rect.top;
+
+      mouseNormX.set(rawX / Math.max(rect.width, 1) - 0.5);
+      mouseNormY.set(rawY / Math.max(rect.height, 1) - 0.5);
+
+      const now = performance.now();
+      if (now - lastSpawnRef.current < 55) return;
+      lastSpawnRef.current = now;
+
+      const gridSize = 56;
+      const snappedX = Math.floor(rawX / gridSize) * gridSize;
+      const snappedY = Math.floor(rawY / gridSize) * gridSize;
+
+      const id = ++counterRef.current;
+      const [tag, subTag] = BLUEPRINT_TAGS[id % BLUEPRINT_TAGS.length];
+
+      setTrail((prev) => [
+        ...prev.slice(-7),
+        { id, x: snappedX, y: snappedY, tag, subTag, size: gridSize },
+      ]);
+
+      setTimeout(() => {
+        setTrail((prev) => prev.filter((item) => item.id !== id));
+      }, 900);
+    },
+    [mouseNormX, mouseNormY]
+  );
+
+  const handleMouseLeave = useCallback(() => {
+    mouseNormX.set(0);
+    mouseNormY.set(0);
+  }, [mouseNormX, mouseNormY]);
 
   const scrollToProjects = () => {
     const el = document.getElementById('projects');
@@ -65,18 +113,19 @@ export function Hero() {
       id="hero"
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative min-h-[94vh] bg-[#F3F3EE] text-[#0A0B0E] flex flex-col justify-between px-4 sm:px-8 pt-20 sm:pt-24 pb-6 sm:pb-8 overflow-hidden select-none"
+      onMouseLeave={handleMouseLeave}
+      className="relative min-h-[95vh] bg-[#F3F3EE] text-[#0A0B0E] flex flex-col justify-between px-4 sm:px-8 pt-20 sm:pt-24 pb-6 sm:pb-8 overflow-hidden select-none"
     >
       {/* Subtle Architectural Radial Vignette & Grid */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(circle at 50% 48%, rgba(255,255,255,0.9) 0%, rgba(235,235,228,0.65) 58%, rgba(216,216,208,0.85) 100%)',
+            'radial-gradient(circle at 50% 46%, rgba(255,255,255,0.95) 0%, rgba(235,235,228,0.7) 56%, rgba(212,212,202,0.9) 100%)',
         }}
       />
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.06]"
+        className="absolute inset-0 pointer-events-none opacity-[0.065]"
         style={{
           backgroundImage:
             'linear-gradient(to right, #0A0B0E 1px, transparent 1px), linear-gradient(to bottom, #0A0B0E 1px, transparent 1px)',
@@ -84,74 +133,155 @@ export function Hero() {
         }}
       />
 
-      {/* Interactive Blueprint Wireframe Cursor Trail (00:03-00:05 video reference) */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden z-20 hidden md:block" aria-hidden="true">
+      {/* Stepped Multi-Cell Blueprint Wireframe Cursor Trail (00:03-00:05 video reference) */}
+      <div
+        className="absolute inset-0 pointer-events-none overflow-hidden z-20 hidden md:block"
+        aria-hidden="true"
+      >
         {trail.map((cell) => (
           <motion.div
             key={cell.id}
-            initial={{ opacity: 0.85, scale: 0.92 }}
-            animate={{ opacity: 0, scale: 1.04 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
+            initial={{ opacity: 0.9, scale: 0.9 }}
+            animate={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 0.85, ease: 'easeOut' }}
             style={{
               transform: `translate3d(${cell.x}px, ${cell.y}px, 0)`,
-              width: cell.size * 2,
-              height: cell.size * 1.5,
             }}
-            className="absolute top-0 left-0 border border-[#0A0B0E]/35 bg-[#0A0B0E]/[0.03] flex flex-col justify-between p-1.5"
+            className="absolute top-0 left-0"
           >
-            <div className="flex items-center justify-between text-[9px] font-mono text-[#0A0B0E]/70 leading-none">
-              <span>+</span>
-              <span>{cell.tag}</span>
-              <span>+</span>
+            {/* Main Blueprint Square */}
+            <div
+              style={{ width: cell.size * 2, height: cell.size * 1.5 }}
+              className="border border-[#0A0B0E]/45 bg-[#0A0B0E]/[0.035] flex flex-col justify-between p-1.5 relative"
+            >
+              <div className="flex items-center justify-between text-[9px] font-mono font-bold text-[#0A0B0E]/75 leading-none">
+                <span>+</span>
+                <span>{cell.tag}</span>
+                <span>+</span>
+              </div>
+              <div className="border-t border-dashed border-[#0A0B0E]/30 my-auto" />
+              <div className="flex items-center justify-between text-[8px] font-mono text-[#0A0B0E]/60 leading-none">
+                <span>+</span>
+                <span>
+                  X:{Math.round(cell.x)} Y:{Math.round(cell.y)}
+                </span>
+                <span>+</span>
+              </div>
             </div>
-            <div className="border-t border-dashed border-[#0A0B0E]/25 my-auto" />
-            <div className="flex items-center justify-between text-[8px] font-mono text-[#0A0B0E]/55 leading-none">
-              <span>+</span>
-              <span>
-                {Math.round(cell.x)}:{Math.round(cell.y)}
-              </span>
-              <span>+</span>
+
+            {/* Stepped Satellite Sub-Cell (creates the exact L-grid wireframe from 00:04) */}
+            <div
+              style={{
+                width: cell.size,
+                height: cell.size,
+                transform: `translate3d(${cell.size * 2}px, -${cell.size * 0.5}px, 0)`,
+              }}
+              className="border border-[#0A0B0E]/35 bg-white/40 flex flex-col justify-between p-1"
+            >
+              <div className="flex justify-between text-[7px] font-mono text-[#0A0B0E]/65 leading-none">
+                <span>+</span>
+                <span>+</span>
+              </div>
+              <div className="text-[7px] font-mono text-center text-[#0A0B0E]/70 leading-none truncate">
+                {cell.subTag}
+              </div>
+              <div className="flex justify-between text-[7px] font-mono text-[#0A0B0E]/65 leading-none">
+                <span>+</span>
+                <span>+</span>
+              </div>
             </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Top Editorial Metadata Row (00:03 reference: ВИДЕОГРАФ И РЕЖИССЁР | АЛМАТЫ · 2026) */}
-      <div className="relative z-10 max-w-[1440px] w-full mx-auto flex items-center justify-between text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.14em] text-[#0A0B0E]/80 border-b border-[#0A0B0E]/10 pb-3">
+      {/* Top Editorial Metadata Row (00:03 reference) */}
+      <motion.div
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="relative z-10 max-w-[1440px] w-full mx-auto flex items-center justify-between text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.14em] text-[#0A0B0E]/80 border-b border-[#0A0B0E]/15 pb-3"
+      >
         <span>FULLSTACK & AI ИНЖЕНЕР-ИНТЕГРАТОР</span>
-        <span className="hidden sm:inline text-[#0A0B0E]/50">• ОТКРЫТЫЙ КОД НА GITHUB •</span>
+        <span className="hidden sm:inline-flex items-center gap-2 text-[#0A0B0E]/65">
+          <span className="w-2 h-2 rounded-full bg-emerald-600 animate-ping" />
+          <span>ДОСТУПЕН ДЛЯ ПРОЕКТОВ • GITHUB VERIFIED</span>
+        </span>
         <span>АЛМАТЫ · 2026</span>
-      </div>
+      </motion.div>
 
-      {/* Center Giant Display Wordmark + Mirrored Reflection (00:02-00:05 reference) */}
-      <div className="relative z-10 max-w-[1440px] w-full mx-auto my-auto py-8 sm:py-12 flex flex-col items-center justify-center text-center">
-        {/* Main Giant Wordmark */}
+      {/* Center Giant 3D Kinetic Display Wordmark + Counter-Parallax Reflection */}
+      <div className="relative z-10 max-w-[1440px] w-full mx-auto my-auto py-6 sm:py-10 flex flex-col items-center justify-center text-center perspective-stage">
+        {/* Main Giant Wordmark with per-character 3D stagger & hover lift */}
         <motion.h1
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="font-display font-black uppercase tracking-[-0.04em] leading-[0.86] text-[#0A0B0E] w-full text-center"
-          style={{ fontSize: 'clamp(3.5rem, 15.2vw, 13.5rem)' }}
+          style={{
+            rotateX: wordRotateX,
+            rotateY: wordRotateY,
+            fontSize: 'clamp(3.6rem, 15.2vw, 13.5rem)',
+          }}
+          className="font-display font-black uppercase tracking-[-0.04em] leading-[0.86] text-[#0A0B0E] w-full flex items-center justify-center preserve-3d"
+          aria-label="ALIM.DEV"
         >
-          ALIM.DEV
+          {HERO_LETTERS.map((char, idx) => (
+            <motion.span
+              key={idx}
+              initial={{ opacity: 0, y: 60, rotateX: -75 }}
+              animate={{ opacity: 1, y: 0, rotateX: 0 }}
+              whileHover={{
+                y: -12,
+                scale: 1.06,
+                transition: { type: 'spring', stiffness: 450, damping: 18 },
+              }}
+              transition={{
+                type: 'spring',
+                stiffness: 220,
+                damping: 22,
+                delay: 0.08 + idx * 0.045,
+              }}
+              className="inline-block cursor-default"
+            >
+              {char}
+            </motion.span>
+          ))}
         </motion.h1>
 
-        {/* Upside-down Mirrored Shadow Reflection right below the wordmark */}
-        <div
+        {/* Upside-down Mirrored Shadow Reflection with counter-parallax glide */}
+        <motion.div
           aria-hidden="true"
+          style={{
+            x: reflectionX,
+            fontSize: 'clamp(3.6rem, 15.2vw, 13.5rem)',
+          }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.9, delay: 0.35 }}
           className="font-display font-black uppercase tracking-[-0.04em] leading-[0.86] text-[#0A0B0E] w-full text-center text-reflection -mt-1 sm:-mt-2"
-          style={{ fontSize: 'clamp(3.5rem, 15.2vw, 13.5rem)' }}
         >
           ALIM.DEV
-        </div>
+        </motion.div>
 
-        {/* Concise Editorial Pitch & Action Bar */}
+        {/* Kinetic Role Flip Pill + Editorial Pitch + Magnetic Buttons */}
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="mt-4 sm:mt-6 max-w-2xl mx-auto flex flex-col items-center gap-5"
+          transition={{ duration: 0.6, delay: 0.35 }}
+          className="mt-4 sm:mt-6 max-w-2xl mx-auto flex flex-col items-center gap-4"
         >
+          {/* Animated Role Flip Badge */}
+          <div className="h-8 px-4 rounded-full bg-[#0A0B0E]/[0.06] border border-[#0A0B0E]/15 flex items-center justify-center overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.span
+                key={roleIdx}
+                initial={{ y: 18, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -18, opacity: 0 }}
+                transition={{ type: 'spring', stiffness: 320, damping: 26 }}
+                className="font-mono text-[11px] sm:text-xs font-bold text-[#0A0B0E] tracking-wide"
+              >
+                ▸ {KINETIC_ROLES[roleIdx]}
+              </motion.span>
+            </AnimatePresence>
+          </div>
+
           <p className="text-xs sm:text-sm md:text-base text-[#0A0B0E]/80 font-medium leading-relaxed px-2">
             Разрабатываю боевые B2B-сервисы, двусторонние интеграции с{' '}
             <strong className="font-bold text-[#0A0B0E]">1С:Предприятие 8.3</strong>,{' '}
@@ -159,28 +289,37 @@ export function Hero() {
             <strong className="font-bold text-[#0A0B0E]">Kaspi.kz</strong>, а также автономных AI-агентов и веб-системы на Next.js и FastAPI.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <a
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+            <motion.a
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.96 }}
+              data-cursor-label="WHATSAPP ↗"
               href="https://wa.me/77786078732"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Написать Алиму в WhatsApp"
-              className="px-6 py-3 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm tracking-wide uppercase flex items-center gap-2 transition-all shadow-lg shadow-black/15 cursor-pointer"
+              className="px-6 py-3 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm tracking-wide uppercase flex items-center gap-2 transition-colors shadow-xl shadow-black/15 cursor-pointer"
             >
               <Phone className="w-3.5 h-3.5" />
               <span>Обсудить проект в WhatsApp</span>
-            </a>
+            </motion.a>
 
-            <button
+            <motion.button
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.96 }}
+              data-cursor-label="ПРОЕКТЫ ↓"
               onClick={scrollToProjects}
               aria-label="Смотреть все проекты"
-              className="px-6 py-3 rounded-full bg-white/80 hover:bg-white text-[#0A0B0E] border border-[#0A0B0E]/20 font-bold text-xs sm:text-sm tracking-wide uppercase flex items-center gap-2 transition-all cursor-pointer"
+              className="px-6 py-3 rounded-full bg-white/90 hover:bg-white text-[#0A0B0E] border border-[#0A0B0E]/20 font-bold text-xs sm:text-sm tracking-wide uppercase flex items-center gap-2 transition-colors shadow-sm cursor-pointer"
             >
               <span>Смотреть проекты (6)</span>
               <ArrowDownRight className="w-4 h-4" />
-            </button>
+            </motion.button>
 
-            <a
+            <motion.a
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.96 }}
+              data-cursor-label="GITHUB ↗"
               href="https://github.com/Alik200000"
               target="_blank"
               rel="noopener noreferrer"
@@ -189,12 +328,12 @@ export function Hero() {
             >
               <Github className="w-4 h-4" />
               <span>@Alik200000</span>
-            </a>
+            </motion.a>
           </div>
         </motion.div>
       </div>
 
-      {/* Bottom Editorial Metadata Strip (00:05 reference: FASHION · HORECA · TRAVEL · РИЛСЫ | СЪЁМКА · МОНТАЖ · ЦВЕТ) */}
+      {/* Bottom Editorial Metadata Strip (00:05 reference) */}
       <div className="relative z-10 max-w-[1440px] w-full mx-auto pt-3 border-t border-[#0A0B0E]/15 flex flex-col sm:flex-row items-center justify-between gap-2 text-[10px] sm:text-xs font-mono font-bold uppercase tracking-[0.14em] text-[#0A0B0E]/80">
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
           <span>B2B E-COMMERCE</span>
