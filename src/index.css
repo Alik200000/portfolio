@@ -130,6 +130,28 @@
       animation-timeline: view(block);
       animation-range: entry 0% entry 85%, exit 15% exit 100%;
     }
+
+    @keyframes mobileCarouselCenterScale {
+      0% {
+        scale: 0.92;
+        opacity: 0.78;
+      }
+      50% {
+        scale: 1;
+        opacity: 1;
+      }
+      100% {
+        scale: 0.92;
+        opacity: 0.78;
+      }
+    }
+
+    @media (max-width: 1023px) {
+      .mobile-carousel-card {
+        animation: mobileCarouselCenterScale auto linear both;
+        animation-timeline: view(inline);
+      }
+    }
   }
 }
 

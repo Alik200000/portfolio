@@ -60,21 +60,21 @@ export function Hero() {
     return () => clearInterval(timer);
   }, []);
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
+  const spawnBlueprintAt = useCallback(
+    (clientX: number, clientY: number) => {
       if (!containerRef.current) return;
       const rect = containerRef.current.getBoundingClientRect();
-      const rawX = e.clientX - rect.left;
-      const rawY = e.clientY - rect.top;
+      const rawX = clientX - rect.left;
+      const rawY = clientY - rect.top;
 
       mouseNormX.set(rawX / Math.max(rect.width, 1) - 0.5);
       mouseNormY.set(rawY / Math.max(rect.height, 1) - 0.5);
 
       const now = performance.now();
-      if (now - lastSpawnRef.current < 55) return;
+      if (now - lastSpawnRef.current < 60) return;
       lastSpawnRef.current = now;
 
-      const gridSize = 56;
+      const gridSize = window.innerWidth < 640 ? 44 : 56;
       const snappedX = Math.floor(rawX / gridSize) * gridSize;
       const snappedY = Math.floor(rawY / gridSize) * gridSize;
 
@@ -82,15 +82,32 @@ export function Hero() {
       const [tag, subTag] = BLUEPRINT_TAGS[id % BLUEPRINT_TAGS.length];
 
       setTrail((prev) => [
-        ...prev.slice(-7),
+        ...prev.slice(-6),
         { id, x: snappedX, y: snappedY, tag, subTag, size: gridSize },
       ]);
 
       setTimeout(() => {
         setTrail((prev) => prev.filter((item) => item.id !== id));
-      }, 900);
+      }, 850);
     },
     [mouseNormX, mouseNormY]
+  );
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      spawnBlueprintAt(e.clientX, e.clientY);
+    },
+    [spawnBlueprintAt]
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent<HTMLElement>) => {
+      if (e.touches.length > 0) {
+        const t = e.touches[0];
+        spawnBlueprintAt(t.clientX, t.clientY);
+      }
+    },
+    [spawnBlueprintAt]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -113,8 +130,9 @@ export function Hero() {
       id="hero"
       ref={containerRef}
       onMouseMove={handleMouseMove}
+      onTouchMove={handleTouchMove}
       onMouseLeave={handleMouseLeave}
-      className="relative min-h-[95vh] bg-[#F3F3EE] text-[#0A0B0E] flex flex-col justify-between px-4 sm:px-8 pt-20 sm:pt-24 pb-6 sm:pb-8 overflow-hidden select-none"
+      className="relative min-h-[92vh] sm:min-h-[95vh] bg-[#F3F3EE] text-[#0A0B0E] flex flex-col justify-between px-4 sm:px-8 pt-16 sm:pt-24 pb-5 sm:pb-8 overflow-hidden select-none"
     >
       {/* Subtle Architectural Radial Vignette & Grid */}
       <div
@@ -133,9 +151,9 @@ export function Hero() {
         }}
       />
 
-      {/* Stepped Multi-Cell Blueprint Wireframe Cursor Trail (00:03-00:05 video reference) */}
+      {/* Stepped Multi-Cell Blueprint Wireframe Trail (works on Desktop mouse & Mobile touch) */}
       <div
-        className="absolute inset-0 pointer-events-none overflow-hidden z-20 hidden md:block"
+        className="absolute inset-0 pointer-events-none overflow-hidden z-20"
         aria-hidden="true"
       >
         {trail.map((cell) => (
@@ -210,13 +228,13 @@ export function Hero() {
       </motion.div>
 
       {/* Center Giant 3D Kinetic Display Wordmark + Counter-Parallax Reflection */}
-      <div className="relative z-10 max-w-[1440px] w-full mx-auto my-auto py-6 sm:py-10 flex flex-col items-center justify-center text-center perspective-stage">
+      <div className="relative z-10 max-w-[1440px] w-full mx-auto my-auto py-4 sm:py-10 flex flex-col items-center justify-center text-center perspective-stage">
         {/* Main Giant Wordmark with per-character 3D stagger & hover lift */}
         <motion.h1
           style={{
             rotateX: wordRotateX,
             rotateY: wordRotateY,
-            fontSize: 'clamp(3.6rem, 15.2vw, 13.5rem)',
+            fontSize: 'clamp(2.85rem, 16vw, 13.5rem)',
           }}
           className="font-display font-black uppercase tracking-[-0.04em] leading-[0.86] text-[#0A0B0E] w-full flex items-center justify-center preserve-3d"
           aria-label="ALIM.DEV"
@@ -249,7 +267,7 @@ export function Hero() {
           aria-hidden="true"
           style={{
             x: reflectionX,
-            fontSize: 'clamp(3.6rem, 15.2vw, 13.5rem)',
+            fontSize: 'clamp(2.85rem, 16vw, 13.5rem)',
           }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -264,71 +282,70 @@ export function Hero() {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.35 }}
-          className="mt-4 sm:mt-6 max-w-2xl mx-auto flex flex-col items-center gap-4"
+          className="mt-3 sm:mt-6 max-w-2xl w-full mx-auto flex flex-col items-center gap-3.5 sm:gap-4"
         >
-          {/* Animated Role Flip Badge */}
-          <div className="h-8 px-4 rounded-full bg-[#0A0B0E]/[0.06] border border-[#0A0B0E]/15 flex items-center justify-center overflow-hidden">
+          {/* Animated Role Flip Badge (mobile-friendly wrapping) */}
+          <div className="min-h-[2.25rem] w-full sm:w-auto max-w-md sm:max-w-none px-3.5 py-1.5 rounded-2xl sm:rounded-full bg-[#0A0B0E]/[0.06] border border-[#0A0B0E]/15 flex items-center justify-center overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.span
                 key={roleIdx}
-                initial={{ y: 18, opacity: 0 }}
+                initial={{ y: 14, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -18, opacity: 0 }}
+                exit={{ y: -14, opacity: 0 }}
                 transition={{ type: 'spring', stiffness: 320, damping: 26 }}
-                className="font-mono text-[11px] sm:text-xs font-bold text-[#0A0B0E] tracking-wide"
+                className="font-mono text-[11px] sm:text-xs font-bold text-[#0A0B0E] tracking-wide text-center leading-snug"
               >
                 ▸ {KINETIC_ROLES[roleIdx]}
               </motion.span>
             </AnimatePresence>
           </div>
 
-          <p className="text-xs sm:text-sm md:text-base text-[#0A0B0E]/80 font-medium leading-relaxed px-2">
+          <p className="text-xs sm:text-sm md:text-base text-[#0A0B0E]/80 font-medium leading-relaxed px-1 sm:px-2">
             Разрабатываю боевые B2B-сервисы, двусторонние интеграции с{' '}
             <strong className="font-bold text-[#0A0B0E]">1С:Предприятие 8.3</strong>,{' '}
             <strong className="font-bold text-[#0A0B0E]">Битрикс24</strong> и{' '}
             <strong className="font-bold text-[#0A0B0E]">Kaspi.kz</strong>, а также автономных AI-агентов и веб-системы на Next.js и FastAPI.
           </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+          <div className="w-full sm:w-auto flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-center gap-2.5 sm:gap-3 pt-1">
             <motion.a
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.96 }}
-              data-cursor-label="WHATSAPP ↗"
+              whileHover={{ scale: 1.04, y: -2 }}
+              whileTap={{ scale: 0.97 }}
               href="https://wa.me/77786078732"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Написать Алиму в WhatsApp"
-              className="px-6 py-3 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm tracking-wide uppercase flex items-center gap-2 transition-colors shadow-xl shadow-black/15 cursor-pointer"
+              className="w-full sm:w-auto px-6 py-3.5 sm:py-3 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-white font-bold text-xs sm:text-sm tracking-wide uppercase flex items-center justify-center gap-2 transition-colors shadow-xl shadow-black/15 cursor-pointer"
             >
               <Phone className="w-3.5 h-3.5" />
               <span>Обсудить проект в WhatsApp</span>
             </motion.a>
 
-            <motion.button
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.96 }}
-              data-cursor-label="ПРОЕКТЫ ↓"
-              onClick={scrollToProjects}
-              aria-label="Смотреть все проекты"
-              className="px-6 py-3 rounded-full bg-white/90 hover:bg-white text-[#0A0B0E] border border-[#0A0B0E]/20 font-bold text-xs sm:text-sm tracking-wide uppercase flex items-center gap-2 transition-colors shadow-sm cursor-pointer"
-            >
-              <span>Смотреть проекты (6)</span>
-              <ArrowDownRight className="w-4 h-4" />
-            </motion.button>
+            <div className="grid grid-cols-2 sm:flex items-center gap-2.5 sm:gap-3">
+              <motion.button
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                onClick={scrollToProjects}
+                aria-label="Смотреть все проекты"
+                className="px-4 sm:px-6 py-3 rounded-full bg-white/90 hover:bg-white text-[#0A0B0E] border border-[#0A0B0E]/20 font-bold text-xs sm:text-sm tracking-wide uppercase flex items-center justify-center gap-1.5 transition-colors shadow-sm cursor-pointer"
+              >
+                <span>Проекты (6)</span>
+                <ArrowDownRight className="w-4 h-4 shrink-0" />
+              </motion.button>
 
-            <motion.a
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.96 }}
-              data-cursor-label="GITHUB ↗"
-              href="https://github.com/Alik200000"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Открыть GitHub профиль Alik200000"
-              className="px-4 py-3 rounded-full bg-transparent hover:bg-[#0A0B0E]/5 text-[#0A0B0E] border border-[#0A0B0E]/15 font-mono font-bold text-xs flex items-center gap-2 transition-colors cursor-pointer"
-            >
-              <Github className="w-4 h-4" />
-              <span>@Alik200000</span>
-            </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.04, y: -2 }}
+                whileTap={{ scale: 0.97 }}
+                href="https://github.com/Alik200000"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Открыть GitHub профиль Alik200000"
+                className="px-4 py-3 rounded-full bg-transparent hover:bg-[#0A0B0E]/5 text-[#0A0B0E] border border-[#0A0B0E]/15 font-mono font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <Github className="w-4 h-4 shrink-0" />
+                <span>@Alik200000</span>
+              </motion.a>
+            </div>
           </div>
         </motion.div>
       </div>

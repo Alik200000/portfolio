@@ -509,9 +509,13 @@ export function ProjectsShowcase() {
 
           {/* 3D Stage */}
           {fanMode === 'arc' ? (
-            /* 00:21-00:22 Reference: Curved Horizontal 3D Arc Fan of Vertical Cards */
-            <div className="perspective-stage py-6 sm:py-10">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 items-center">
+            /* 00:21-00:22 Reference: Curved Horizontal 3D Arc Fan on Desktop + Touch Snap Carousel on Mobile */
+            <div className="perspective-stage py-4 sm:py-10">
+              <div className="lg:hidden mb-3 flex items-center justify-between text-[11px] font-mono text-neutral-400">
+                <span>← Листайте проекты вбок →</span>
+                <span>6 кейсов</span>
+              </div>
+              <div className="flex lg:grid lg:grid-cols-6 overflow-x-auto lg:overflow-visible snap-x snap-mandatory gap-4 pb-4 -mx-4 px-4 lg:mx-0 lg:px-0 no-scrollbar items-center">
                 {projects.map((proj, index) => {
                   // Calculate symmetric arc angles across the 6 cards (-25deg to +25deg)
                   const offsetFromCenter = index - 2.5;
@@ -524,7 +528,6 @@ export function ProjectsShowcase() {
                   return (
                     <motion.div
                       key={proj.id}
-                      data-cursor-label="КЕЙС ↗"
                       onMouseEnter={() => setFocusedIndex(index)}
                       onClick={() => setActiveModalProject(proj)}
                       animate={{
@@ -536,12 +539,12 @@ export function ProjectsShowcase() {
                       style={{
                         transform: `perspective(1200px) rotateY(${rotateY}deg)`,
                       }}
-                      className={`group relative rounded-2xl aspect-[3/4] p-5 flex flex-col justify-between cursor-pointer border transition-colors duration-300 overflow-hidden bg-gradient-to-b ${
+                      className={`group relative w-[78vw] max-w-[290px] sm:w-[250px] lg:w-auto shrink-0 snap-center mobile-carousel-card max-lg:!transform-none rounded-2xl aspect-[3/4] p-5 flex flex-col justify-between cursor-pointer border transition-colors duration-300 overflow-hidden bg-gradient-to-b ${
                         proj.accentGradient
                       } ${
                         isFocused
                           ? 'border-white shadow-2xl shadow-white/15 z-20'
-                          : 'border-white/15 opacity-85 hover:opacity-100 z-10'
+                          : 'border-white/15 opacity-90 hover:opacity-100 z-10'
                       }`}
                     >
                       {/* Animated Scanline Sweep on focused card */}
@@ -593,29 +596,31 @@ export function ProjectsShowcase() {
             </div>
           ) : (
             /* 00:18-00:20 Reference: 3D Rotating Cylindrical Ring */
-            <div className="flex flex-col items-center py-10">
+            <div className="flex flex-col items-center py-6 sm:py-10 overflow-hidden">
               <div
                 onMouseEnter={() => setCylinderPaused(true)}
                 onMouseLeave={() => setCylinderPaused(false)}
-                className="perspective-stage w-full h-[360px] flex items-center justify-center relative"
+                className="perspective-stage w-full h-[310px] sm:h-[360px] flex items-center justify-center relative"
               >
                 <div
-                  className="preserve-3d relative w-[240px] h-[300px] transition-transform duration-150 ease-linear"
+                  className="preserve-3d relative w-[185px] h-[245px] sm:w-[240px] sm:h-[300px] transition-transform duration-150 ease-linear"
                   style={{
                     transform: `rotateX(-6deg) rotateY(${cylinderAngle}deg)`,
                   }}
                 >
                   {projects.map((proj, idx) => {
                     const itemAngle = idx * 60;
+                    const isSmallScreen =
+                      typeof window !== 'undefined' && window.innerWidth < 640;
+                    const radiusZ = isSmallScreen ? 195 : 310;
                     return (
                       <div
                         key={proj.id}
-                        data-cursor-label="КЕЙС ↗"
                         onClick={() => setActiveModalProject(proj)}
                         style={{
-                          transform: `rotateY(${itemAngle}deg) translateZ(310px)`,
+                          transform: `rotateY(${itemAngle}deg) translateZ(${radiusZ}px)`,
                         }}
-                        className={`absolute inset-0 rounded-2xl p-5 bg-gradient-to-b ${proj.accentGradient} border border-white/25 shadow-2xl flex flex-col justify-between cursor-pointer hover:border-white transition-colors`}
+                        className={`absolute inset-0 rounded-2xl p-4 sm:p-5 bg-gradient-to-b ${proj.accentGradient} border border-white/25 shadow-2xl flex flex-col justify-between cursor-pointer hover:border-white transition-colors`}
                       >
                         <div className="flex items-center justify-between text-[10px] font-mono text-neutral-300">
                           <span>0{idx + 1}</span>
@@ -804,7 +809,7 @@ export function ProjectsShowcase() {
             <div
               role="tablist"
               aria-label="Фильтровать все работы по направлению"
-              className="flex flex-wrap gap-2"
+              className="flex overflow-x-auto sm:flex-wrap gap-2 -mx-4 px-4 sm:mx-0 sm:px-0 pb-1 no-scrollbar"
             >
               {categories.map((cat) => {
                 const isActive = selectedFilter === cat.id;
@@ -814,7 +819,7 @@ export function ProjectsShowcase() {
                     role="tab"
                     aria-selected={isActive}
                     onClick={() => setSelectedFilter(cat.id as any)}
-                    className={`px-5 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+                    className={`shrink-0 px-4 sm:px-5 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
                       isActive
                         ? 'bg-white text-[#07080B] border-white shadow-lg'
                         : 'bg-transparent text-neutral-300 border-white/20 hover:border-white/50 hover:text-white'

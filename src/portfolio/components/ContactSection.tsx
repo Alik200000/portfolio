@@ -404,7 +404,7 @@ export function ContactSection({ onOpenLegal }: ContactSectionProps) {
                           setFormState({ ...formState, name: e.target.value });
                           if (formError) setFormError(null);
                         }}
-                        className="w-full px-1 py-3.5 bg-transparent border-b border-white/20 focus:border-white text-white placeholder-neutral-500 focus:outline-none text-sm transition-colors"
+                        className="w-full px-1 py-3.5 bg-transparent border-b border-white/20 focus:border-white text-white placeholder-neutral-500 focus:outline-none text-base sm:text-sm transition-colors"
                       />
                     </div>
 
@@ -426,7 +426,7 @@ export function ContactSection({ onOpenLegal }: ContactSectionProps) {
                           setFormState({ ...formState, email: e.target.value });
                           if (formError) setFormError(null);
                         }}
-                        className="w-full py-3.5 bg-transparent text-white placeholder-neutral-500 focus:outline-none text-sm"
+                        className="w-full py-3.5 bg-transparent text-white placeholder-neutral-500 focus:outline-none text-base sm:text-sm"
                       />
                     </div>
 
@@ -439,7 +439,7 @@ export function ContactSection({ onOpenLegal }: ContactSectionProps) {
                         id="contact-channel"
                         value={contactChannel}
                         onChange={(e) => setContactChannel(e.target.value)}
-                        className="w-full px-1 py-3 bg-[#111319] border-b border-white/20 focus:border-white text-white text-sm focus:outline-none cursor-pointer"
+                        className="w-full px-1 py-3 bg-[#111319] border-b border-white/20 focus:border-white text-white text-base sm:text-sm focus:outline-none cursor-pointer"
                       >
                         <option value="Написать в WhatsApp">Написать в WhatsApp</option>
                         <option value="Написать в Telegram">Написать в Telegram</option>
@@ -462,7 +462,7 @@ export function ContactSection({ onOpenLegal }: ContactSectionProps) {
                           setFormState({ ...formState, message: e.target.value });
                           if (formError) setFormError(null);
                         }}
-                        className="w-full px-1 py-3.5 bg-transparent border-b border-white/20 focus:border-white text-white placeholder-neutral-500 focus:outline-none text-sm transition-colors"
+                        className="w-full px-1 py-3.5 bg-transparent border-b border-white/20 focus:border-white text-white placeholder-neutral-500 focus:outline-none text-base sm:text-sm transition-colors"
                       />
                     </div>
 
@@ -470,7 +470,7 @@ export function ContactSection({ onOpenLegal }: ContactSectionProps) {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="px-8 py-3.5 rounded-full bg-white hover:bg-neutral-200 text-[#07080B] font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+                        className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white hover:bg-neutral-200 text-[#07080B] font-bold text-sm flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
                       >
                         <SendHorizontal className="w-4 h-4" />
                         <span>Отправить</span>

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Navbar } from './portfolio/components/Navbar';
 import { EditorialPreloader } from './portfolio/components/EditorialPreloader';
-import { EditorialCursor } from './portfolio/components/EditorialCursor';
 import { Hero } from './portfolio/components/Hero';
 import { StatsCounter } from './portfolio/components/StatsCounter';
 import { ProjectsShowcase } from './portfolio/components/ProjectsShowcase';
@@ -28,9 +27,6 @@ export function App() {
       <div className="min-h-screen bg-[#07080B] text-slate-100 selection:bg-white selection:text-[#07080B] relative overflow-x-hidden font-sans">
         {/* 0. Swiss Editorial Preloader (00:00-00:01 video reference) */}
         <EditorialPreloader />
-
-        {/* 0.5. Magnetic Editorial Cursor Follower */}
-        <EditorialCursor />
 
         {/* 1. Top Scroll Progress Bar */}
         <ScrollProgressBar />

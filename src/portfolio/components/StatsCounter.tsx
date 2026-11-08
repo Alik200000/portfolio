@@ -68,11 +68,11 @@ export function StatsCounter() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="lg:col-span-4 text-center lg:text-right"
+              className="lg:col-span-4 text-center lg:text-right max-lg:!transform-none"
             >
               <span
                 className="font-display font-black uppercase tracking-[-0.04em] leading-none text-white select-none inline-block"
-                style={{ fontSize: 'clamp(3.75rem, 9.5vw, 8.2rem)' }}
+                style={{ fontSize: 'clamp(3rem, 12vw, 8.2rem)' }}
               >
                 ОБО
               </span>
@@ -154,11 +154,11 @@ export function StatsCounter() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="lg:col-span-4 text-center lg:text-left"
+              className="lg:col-span-4 text-center lg:text-left max-lg:!transform-none"
             >
               <span
                 className="font-display font-black uppercase tracking-[-0.04em] leading-none text-white select-none inline-block"
-                style={{ fontSize: 'clamp(3.75rem, 9.5vw, 8.2rem)' }}
+                style={{ fontSize: 'clamp(3rem, 12vw, 8.2rem)' }}
               >
                 МНЕ
               </span>
@@ -365,22 +365,22 @@ export function StatsCounter() {
         </div>
 
         {/* 4. Scroll-Driven Kinetic Dual Filled + Outlined Stroke Headline (00:14 reference) */}
-        <div className="mt-20 sm:mt-28 text-center select-none overflow-hidden">
+        <div className="mt-16 sm:mt-28 text-center select-none overflow-hidden">
           <motion.div
             style={{
               x: topHeadlineX,
-              fontSize: 'clamp(2.8rem, 11vw, 9.5rem)',
+              fontSize: 'clamp(2.1rem, 10.5vw, 9.5rem)',
             }}
-            className="font-display font-black uppercase tracking-[-0.03em] leading-[0.9] text-white"
+            className="font-display font-black uppercase tracking-[-0.03em] leading-[0.9] text-white max-sm:!transform-none"
           >
             FULLSTACK
           </motion.div>
           <motion.div
             style={{
               x: bottomHeadlineX,
-              fontSize: 'clamp(2.8rem, 11vw, 9.5rem)',
+              fontSize: 'clamp(2.1rem, 10.5vw, 9.5rem)',
             }}
-            className="font-display font-black uppercase tracking-[-0.03em] leading-[0.9] text-outline-stroke mt-1 cursor-default"
+            className="font-display font-black uppercase tracking-[-0.03em] leading-[0.9] text-outline-stroke mt-1 cursor-default max-sm:!transform-none"
           >
             ИНТЕГРАТОР
           </motion.div>
