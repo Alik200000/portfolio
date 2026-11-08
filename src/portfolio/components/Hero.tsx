@@ -8,25 +8,6 @@ import {
 } from 'framer-motion';
 import { ArrowDownRight, Github, Phone } from 'lucide-react';
 
-interface BlueprintCluster {
-  id: number;
-  x: number;
-  y: number;
-  tag: string;
-  subTag: string;
-  size: number;
-}
-
-const BLUEPRINT_TAGS = [
-  ['1С:OData 8.3', 'SYNC // OK'],
-  ['Bitrix24 REST', 'BATCH 50/REQ'],
-  ['Kaspi XML 2.0', 'TOP-1 GUARD'],
-  ['Gemini Vision', 'OCR MATRIX'],
-  ['Next.js 16 SSR', 'EDGE READY'],
-  ['FastAPI Async', '23/23 PASS'],
-  ['АБК FinTech', 'DELTA 0.0%'],
-];
-
 const KINETIC_ROLES = [
   'Двусторонняя синхронизация 1С:Предприятие 8.3 ↔ Битрикс24',
   'Автоматический репрайсинг и удержание Топ-1 в Kaspi.kz',
@@ -37,11 +18,8 @@ const KINETIC_ROLES = [
 const HERO_LETTERS = ['A', 'L', 'I', 'M', '.', 'D', 'E', 'V'];
 
 export function Hero() {
-  const [trail, setTrail] = useState<BlueprintCluster[]>([]);
   const [roleIdx, setRoleIdx] = useState(0);
   const containerRef = useRef<HTMLElement | null>(null);
-  const lastSpawnRef = useRef<number>(0);
-  const counterRef = useRef<number>(0);
 
   // Mouse-driven 3D parallax values for giant typography
   const mouseNormX = useMotionValue(0);
@@ -60,54 +38,16 @@ export function Hero() {
     return () => clearInterval(timer);
   }, []);
 
-  const spawnBlueprintAt = useCallback(
-    (clientX: number, clientY: number) => {
-      if (!containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
-      const rawX = clientX - rect.left;
-      const rawY = clientY - rect.top;
-
-      mouseNormX.set(rawX / Math.max(rect.width, 1) - 0.5);
-      mouseNormY.set(rawY / Math.max(rect.height, 1) - 0.5);
-
-      const now = performance.now();
-      if (now - lastSpawnRef.current < 60) return;
-      lastSpawnRef.current = now;
-
-      const gridSize = window.innerWidth < 640 ? 44 : 56;
-      const snappedX = Math.floor(rawX / gridSize) * gridSize;
-      const snappedY = Math.floor(rawY / gridSize) * gridSize;
-
-      const id = ++counterRef.current;
-      const [tag, subTag] = BLUEPRINT_TAGS[id % BLUEPRINT_TAGS.length];
-
-      setTrail((prev) => [
-        ...prev.slice(-6),
-        { id, x: snappedX, y: snappedY, tag, subTag, size: gridSize },
-      ]);
-
-      setTimeout(() => {
-        setTrail((prev) => prev.filter((item) => item.id !== id));
-      }, 850);
-    },
-    [mouseNormX, mouseNormY]
-  );
-
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
-      spawnBlueprintAt(e.clientX, e.clientY);
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const rawX = e.clientX - rect.left;
+      const rawY = e.clientY - rect.top;
+      mouseNormX.set(rawX / Math.max(rect.width, 1) - 0.5);
+      mouseNormY.set(rawY / Math.max(rect.height, 1) - 0.5);
     },
-    [spawnBlueprintAt]
-  );
-
-  const handleTouchMove = useCallback(
-    (e: React.TouchEvent<HTMLElement>) => {
-      if (e.touches.length > 0) {
-        const t = e.touches[0];
-        spawnBlueprintAt(t.clientX, t.clientY);
-      }
-    },
-    [spawnBlueprintAt]
+    [mouseNormX, mouseNormY]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -130,7 +70,6 @@ export function Hero() {
       id="hero"
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      onTouchMove={handleTouchMove}
       onMouseLeave={handleMouseLeave}
       className="relative min-h-[92vh] sm:min-h-[95vh] bg-[#F3F3EE] text-[#0A0B0E] flex flex-col justify-between px-4 sm:px-8 pt-16 sm:pt-24 pb-5 sm:pb-8 overflow-hidden select-none"
     >
@@ -150,67 +89,6 @@ export function Hero() {
           backgroundSize: '56px 56px',
         }}
       />
-
-      {/* Stepped Multi-Cell Blueprint Wireframe Trail (works on Desktop mouse & Mobile touch) */}
-      <div
-        className="absolute inset-0 pointer-events-none overflow-hidden z-20"
-        aria-hidden="true"
-      >
-        {trail.map((cell) => (
-          <motion.div
-            key={cell.id}
-            initial={{ opacity: 0.9, scale: 0.9 }}
-            animate={{ opacity: 0, scale: 1.05 }}
-            transition={{ duration: 0.85, ease: 'easeOut' }}
-            style={{
-              transform: `translate3d(${cell.x}px, ${cell.y}px, 0)`,
-            }}
-            className="absolute top-0 left-0"
-          >
-            {/* Main Blueprint Square */}
-            <div
-              style={{ width: cell.size * 2, height: cell.size * 1.5 }}
-              className="border border-[#0A0B0E]/45 bg-[#0A0B0E]/[0.035] flex flex-col justify-between p-1.5 relative"
-            >
-              <div className="flex items-center justify-between text-[9px] font-mono font-bold text-[#0A0B0E]/75 leading-none">
-                <span>+</span>
-                <span>{cell.tag}</span>
-                <span>+</span>
-              </div>
-              <div className="border-t border-dashed border-[#0A0B0E]/30 my-auto" />
-              <div className="flex items-center justify-between text-[8px] font-mono text-[#0A0B0E]/60 leading-none">
-                <span>+</span>
-                <span>
-                  X:{Math.round(cell.x)} Y:{Math.round(cell.y)}
-                </span>
-                <span>+</span>
-              </div>
-            </div>
-
-            {/* Stepped Satellite Sub-Cell (creates the exact L-grid wireframe from 00:04) */}
-            <div
-              style={{
-                width: cell.size,
-                height: cell.size,
-                transform: `translate3d(${cell.size * 2}px, -${cell.size * 0.5}px, 0)`,
-              }}
-              className="border border-[#0A0B0E]/35 bg-white/40 flex flex-col justify-between p-1"
-            >
-              <div className="flex justify-between text-[7px] font-mono text-[#0A0B0E]/65 leading-none">
-                <span>+</span>
-                <span>+</span>
-              </div>
-              <div className="text-[7px] font-mono text-center text-[#0A0B0E]/70 leading-none truncate">
-                {cell.subTag}
-              </div>
-              <div className="flex justify-between text-[7px] font-mono text-[#0A0B0E]/65 leading-none">
-                <span>+</span>
-                <span>+</span>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
 
       {/* Top Editorial Metadata Row (00:03 reference) */}
       <motion.div
