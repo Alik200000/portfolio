@@ -24,8 +24,8 @@ export function App() {
 
   return (
     <PortfolioErrorBoundary>
-      <div className="min-h-screen bg-[#07080B] text-slate-100 selection:bg-white selection:text-[#07080B] relative overflow-x-hidden font-sans">
-        {/* 0. Swiss Editorial Preloader (00:00-00:01 video reference) */}
+      <div className="min-h-screen bg-[#F5F5F0] text-[#0A0B0E] selection:bg-[#0A0B0E] selection:text-white relative overflow-x-hidden font-sans">
+        {/* 0. Swiss Editorial Preloader (Light Theme) */}
         <EditorialPreloader />
 
         {/* 1. Top Scroll Progress Bar */}
@@ -36,19 +36,19 @@ export function App() {
 
         {/* 3. Main Editorial Content Flow */}
         <main className="relative z-10">
-          {/* 00:02-00:05: Light Editorial Hero with Mirrored Wordmark & Blueprint Cursor Trail */}
+          {/* Light Editorial Hero */}
           <Hero />
 
-          {/* 00:06-00:14: "ОБО МНЕ" Split Reveal, Bento Grid, Inline Pill Capsules, Marquee & Stroke Headline */}
+          {/* "ОБО МНЕ" Light Editorial Split Reveal, Bento Grid, Marquee & Stroke Headline */}
           <StatsCounter />
 
-          {/* 00:15-00:34 & 00:42-00:49: "ГЛАВНЫЙ ПРОЕКТ", 3D Curved Fan & Ring, 360° Wheel & Sticky "ВСЕ РАБОТЫ" */}
+          {/* "ГЛАВНЫЙ ПРОЕКТ", 3D Curved Fan & Ring, 360° Wheel & Sticky "ВСЕ РАБОТЫ" (Light Theme) */}
           <ProjectsShowcase />
 
-          {/* 00:35-00:37: Light Editorial 4-Column "ТЕХНИКА & СТЕК" Section */}
+          {/* Light Editorial 4-Column "ТЕХНИКА & СТЕК" Section */}
           <TechUniverse />
 
-          {/* 00:38-00:41: Editorial Directory & Minimalist Contact Card */}
+          {/* Light Editorial Directory & Contact Card */}
           <ContactSection onOpenLegal={handleOpenLegal} />
         </main>
 
@@ -58,7 +58,7 @@ export function App() {
         {/* 5. Footer with Legal Navigation Links */}
         <Footer onOpenLegal={handleOpenLegal} />
 
-        {/* 6. Cookie Consent Banner (Reel 4: @davydovit) */}
+        {/* 6. Cookie Consent Banner */}
         <CookieConsent onOpenLegal={handleOpenLegal} />
 
         {/* 7. Interactive Legal & Compliance Modal */}

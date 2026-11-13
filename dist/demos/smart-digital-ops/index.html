@@ -1,0 +1,1924 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Digital Group — Ops & Profit Intelligence System</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    .metric-card {
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.04);
+    }
+    .modal-backdrop {
+      background-color: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(4px);
+    }
+    @keyframes pulse-dot {
+      0% { transform: scale(0.9); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.6; }
+      100% { transform: scale(0.9); opacity: 1; }
+    }
+    .pulse-dot {
+      animation: pulse-dot 2s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen antialiased selection:bg-indigo-500 selection:text-white pb-24">
+
+  <!-- TOP APP BAR -->
+  <header class="border-b border-slate-200/80 bg-white/95 backdrop-blur sticky top-0 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap items-center justify-between gap-4">
+      <div class="flex items-center space-x-3.5">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-blue-500 flex items-center justify-center font-black text-white text-xl shadow-md shadow-indigo-500/20">
+          SD
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-bold text-lg text-slate-900 tracking-tight">Smart Digital Group</h1>
+            <span class="text-[11px] px-2 py-0.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 font-semibold">Ops & Profit Core</span>
+          </div>
+          <p class="text-xs text-slate-500">Сквозной конвейер: Лид → КП → Сделка → Производство → Задачи → P&L</p>
+        </div>
+      </div>
+
+      <!-- SYSTEM STATUS & ACTIONS -->
+      <div class="flex items-center gap-2.5 text-xs">
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 font-medium">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 pulse-dot"></span>
+          <span>Live Production DB</span>
+        </div>
+        <button onclick="exportPnlCsv()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium border border-slate-200 transition flex items-center gap-1.5 cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span>Экспорт P&L (CSV)</span>
+        </button>
+        <button onclick="openNewProjectModal()" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-xs shadow-indigo-600/20 transition flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+          <span>Новый проект</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+
+    <!-- SUB-BANNER / NAVIGATION TABS -->
+    <div class="mb-6 p-4 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 text-xs font-bold text-indigo-600 uppercase tracking-wider mb-1">
+          <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
+          <span>Единый центр управления компанией</span>
+        </div>
+        <p class="text-xs text-slate-600">
+          Управление полным бизнес-циклом: Лиды, Производство, Задачи, Фин. результат, Клиенты и Дебиторка.
+        </p>
+      </div>
+
+      <!-- TABS -->
+      <div class="flex items-center gap-1 bg-slate-100 p-1.5 rounded-xl border border-slate-200 text-xs overflow-x-auto" id="nav-tabs">
+        <button onclick="switchTab('dashboard')" id="tab-dashboard" class="px-3 py-1.5 rounded-lg font-semibold transition-all bg-white text-indigo-700 shadow-xs border border-slate-200">
+          Сводный дашборд
+        </button>
+        <button onclick="switchTab('crm')" id="tab-crm" class="px-3 py-1.5 rounded-lg font-medium transition-all text-slate-600 hover:text-slate-900">
+          CRM воронка
+        </button>
+        <button onclick="switchTab('projects')" id="tab-projects" class="px-3 py-1.5 rounded-lg font-medium transition-all text-slate-600 hover:text-slate-900">
+          Проекты и задачи
+        </button>
+        <button onclick="switchTab('clients')" id="tab-clients" class="px-3 py-1.5 rounded-lg font-medium transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1">
+          Клиенты (LTV)
+        </button>
+        <button onclick="switchTab('invoices')" id="tab-invoices" class="px-3 py-1.5 rounded-lg font-medium transition-all text-slate-600 hover:text-slate-900">
+          Счета и дебиторка
+        </button>
+        <button onclick="switchTab('ai-generator')" id="tab-ai-generator" class="px-3 py-1.5 rounded-lg font-medium transition-all text-slate-600 hover:text-slate-900 flex items-center gap-1">
+          Генератор КП и смет
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 1: EXECUTIVE DASHBOARD (WITH SVG CHARTS) -->
+    <section id="content-dashboard" class="space-y-6">
+      
+      <!-- TOP METRIC CARDS -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <!-- Metric 1: Total Revenue -->
+        <div class="metric-card p-5 rounded-2xl bg-white border border-slate-200 shadow-xs relative overflow-hidden">
+          <div class="flex items-center justify-between text-xs text-slate-500 mb-2 font-medium">
+            <span>Сколько продали (Выручка)</span>
+            <span class="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200" id="kpi-projects-count">-- проектов</span>
+          </div>
+          <div class="text-3xl font-black text-slate-900 tracking-tight font-mono" id="kpi-revenue">-- ₸</div>
+          <div class="flex items-center justify-between text-xs text-slate-500 mt-2.5 pt-2.5 border-t border-slate-100">
+            <span>Сумма договоров</span>
+            <span class="text-indigo-600 font-semibold" id="kpi-active-projects">-- в работе</span>
+          </div>
+        </div>
+
+        <!-- Metric 2: Real Expenses -->
+        <div class="metric-card p-5 rounded-2xl bg-white border border-slate-200 shadow-xs relative overflow-hidden">
+          <div class="flex items-center justify-between text-xs text-slate-500 mb-2 font-medium">
+            <span>Сколько реально потратили</span>
+            <span class="text-slate-600 font-mono text-[11px] bg-slate-100 px-1.5 py-0.5 rounded">Себестоимость</span>
+          </div>
+          <div class="text-3xl font-black text-slate-900 tracking-tight font-mono" id="kpi-costs">-- ₸</div>
+          <div class="w-full bg-slate-100 h-2 rounded-full mt-2.5 overflow-hidden">
+            <div id="kpi-cost-bar" class="bg-indigo-600 h-full rounded-full transition-all duration-500" style="width: 50%"></div>
+          </div>
+          <div class="flex items-center justify-between text-[11px] text-slate-500 mt-2">
+            <span>ФОТ часов + Подрядчики + Overhead 15%</span>
+          </div>
+        </div>
+
+        <!-- Metric 3: Net Profit & Margin -->
+        <div class="metric-card p-5 rounded-2xl bg-white border border-slate-200 shadow-xs relative overflow-hidden">
+          <div class="flex items-center justify-between text-xs text-slate-500 mb-2 font-medium">
+            <span>Фактическая чистая прибыль</span>
+            <span class="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200" id="kpi-margin-badge">Маржа --%</span>
+          </div>
+          <div class="text-3xl font-black text-emerald-600 tracking-tight font-mono" id="kpi-profit">-- ₸</div>
+          <div class="flex items-center justify-between text-xs text-slate-500 mt-2.5 pt-2.5 border-t border-slate-100">
+            <span>Денежный остаток бизнеса</span>
+            <span class="text-emerald-700 font-bold" id="kpi-margin-text">--%</span>
+          </div>
+        </div>
+
+        <!-- Metric 4: Receivables & Overdue -->
+        <div class="metric-card p-5 rounded-2xl bg-white border border-slate-200 shadow-xs relative overflow-hidden">
+          <div class="flex items-center justify-between text-xs text-slate-500 mb-2 font-medium">
+            <span>Дебиторская задолженность</span>
+            <span class="text-amber-800 font-bold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">Остаток оплат</span>
+          </div>
+          <div class="text-3xl font-black text-amber-600 tracking-tight font-mono" id="kpi-receivables">-- ₸</div>
+          <div class="flex items-center justify-between text-xs text-rose-600 mt-2.5 pt-2.5 border-t border-slate-100">
+            <span class="flex items-center gap-1 font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+              Просрочено:
+            </span>
+            <span class="font-bold font-mono" id="kpi-overdue">-- ₸</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- VISUAL CHARTS SECTION (DONUT & REVENUE TREND) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- DONUT CHART: COST STRUCTURE -->
+        <div class="lg:col-span-5 p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Структура себестоимости и маржи</h3>
+                <p class="text-xs text-slate-500">Куда уходит каждый тенге выручки</p>
+              </div>
+              <span class="text-xs text-slate-500 font-mono bg-slate-100 px-2 py-0.5 rounded">P&L Split</span>
+            </div>
+
+            <!-- Donut Visual & Legend -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-6 py-2">
+              <div class="relative w-36 h-36 shrink-0 flex items-center justify-center">
+                <svg viewBox="0 0 36 36" class="w-full h-full -rotate-90">
+                  <!-- Background ring -->
+                  <circle cx="18" cy="18" r="15.9155" fill="none" stroke="#f1f5f9" stroke-width="4.5"></circle>
+                  <!-- Labor slice (Blue) -->
+                  <circle id="donut-labor" cx="18" cy="18" r="15.9155" fill="none" stroke="#4f46e5" stroke-width="4.5" stroke-dasharray="35 65" stroke-dashoffset="0"></circle>
+                  <!-- Direct Other / API (Cyan) -->
+                  <circle id="donut-other" cx="18" cy="18" r="15.9155" fill="none" stroke="#06b6d4" stroke-width="4.5" stroke-dasharray="15 85" stroke-dashoffset="-35"></circle>
+                  <!-- Overhead (Purple) -->
+                  <circle id="donut-overhead" cx="18" cy="18" r="15.9155" fill="none" stroke="#8b5cf6" stroke-width="4.5" stroke-dasharray="10 90" stroke-dashoffset="-50"></circle>
+                  <!-- Net Profit (Emerald) -->
+                  <circle id="donut-profit" cx="18" cy="18" r="15.9155" fill="none" stroke="#10b981" stroke-width="4.5" stroke-dasharray="40 60" stroke-dashoffset="-60"></circle>
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                  <span class="text-[10px] text-slate-400 font-medium">Маржа</span>
+                  <span id="donut-center-margin" class="text-sm font-black text-emerald-700 font-mono">--%</span>
+                </div>
+              </div>
+
+              <!-- Legend -->
+              <div class="space-y-2 text-xs w-full">
+                <div class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5 text-slate-600">
+                    <span class="w-2.5 h-2.5 rounded-full bg-indigo-600"></span>
+                    Прямой ФОТ часов
+                  </span>
+                  <span id="legend-labor" class="font-mono font-bold text-slate-800">-- ₸</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5 text-slate-600">
+                    <span class="w-2.5 h-2.5 rounded-full bg-cyan-500"></span>
+                    Подрядчики & API
+                  </span>
+                  <span id="legend-other" class="font-mono font-bold text-slate-800">-- ₸</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="flex items-center gap-1.5 text-slate-600">
+                    <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span>
+                    Overhead (Офис/софт)
+                  </span>
+                  <span id="legend-overhead" class="font-mono font-bold text-slate-800">-- ₸</span>
+                </div>
+                <div class="flex items-center justify-between pt-1 border-t border-slate-100">
+                  <span class="flex items-center gap-1.5 font-bold text-emerald-700">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    Чистая прибыль
+                  </span>
+                  <span id="legend-profit" class="font-mono font-bold text-emerald-700">-- ₸</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-3 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+            Контроль чистой прибыли и рентабельности по всем контрактам компании.
+          </div>
+        </div>
+
+        <!-- BAR CHART: REVENUE DYNAMICS (6 MONTHS) -->
+        <div class="lg:col-span-7 p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Динамика выручки и прибыли (Май – Октябрь)</h3>
+                <p class="text-xs text-slate-500">Помесячный тренд масштабирования компании</p>
+              </div>
+              <div class="flex items-center gap-3 text-xs">
+                <span class="flex items-center gap-1 text-slate-600"><span class="w-2 h-2 rounded-full bg-indigo-600"></span> Выручка</span>
+                <span class="flex items-center gap-1 text-slate-600"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Прибыль</span>
+              </div>
+            </div>
+
+            <!-- Simple Elegant Bar Graph -->
+            <div class="h-40 flex items-end justify-between gap-2 pt-4 px-2" id="monthly-bar-chart">
+              <!-- Dynamically populated bars -->
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Рост выручки за полгода: <strong class="text-slate-800">+82%</strong></span>
+            <span class="text-emerald-700 font-bold">Высокая рентабельность</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BOTTOM SECTION: DIRECTIONS BREAKDOWN & LIVE ALERTS -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- DIRECTIONS & SERVICES (5 COLS) -->
+        <div class="lg:col-span-5 p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Прибыльность по направлениям</h3>
+                <p class="text-xs text-slate-500">Где бизнес зарабатывает максимум</p>
+              </div>
+              <span class="text-xs text-slate-500 font-mono bg-slate-100 px-2 py-0.5 rounded">Live Real-time</span>
+            </div>
+
+            <div id="directions-container" class="space-y-3">
+              <!-- Dynamically populated from API -->
+            </div>
+          </div>
+
+          <div class="mt-4 p-3.5 rounded-xl bg-indigo-50 border border-indigo-200 text-xs">
+            <span class="font-bold text-indigo-900">Аналитика направления:</span>
+            <p class="text-slate-700 text-[11px] mt-1 leading-relaxed">
+              Направление автоматизации демонстрирует оптимальный цикл согласования и повышенную маржинальность за счет модульной архитектуры.
+            </p>
+          </div>
+        </div>
+
+        <!-- LIVE PROFIT LEAKAGE ALERTS (7 COLS) -->
+        <div class="lg:col-span-7 p-5 rounded-2xl bg-white border border-slate-200 shadow-xs flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                <h3 class="text-sm font-bold text-slate-900">Детектор финансовых рисков и утечек</h3>
+              </div>
+              <span class="text-xs text-slate-500 font-mono">Авто-мониторинг</span>
+            </div>
+
+            <div id="alerts-container" class="space-y-2.5 max-h-[280px] overflow-y-auto pr-1">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+            <span>Алерты формируются на основе фактических часов и сроков оплат счетов.</span>
+            <button onclick="switchTab('projects')" class="text-indigo-600 font-bold hover:underline">
+              Перейти к проектам →
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 2: CRM PIPELINE (KANBAN & AUTOMATED HANDOFF) -->
+    <section id="content-crm" class="hidden space-y-6">
+      <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-5 border-b border-slate-200">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Воронка продаж и автоматический Handoff в производство</h3>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Сквозной процесс: Лид → Контакт → Встреча → КП → Договор. Переводите сделку в «Won», чтобы за 1 клик создать проект с декомпозицией задач.
+            </p>
+          </div>
+          <button onclick="openNewLeadModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition flex items-center gap-1.5 self-start sm:self-auto">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <span>Добавить Лид</span>
+          </button>
+        </div>
+
+        <!-- KANBAN BOARD -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-3.5" id="kanban-board">
+          <!-- 1. Lead -->
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-between min-h-[420px]">
+            <div>
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200">
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">1. Новый Лид</span>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white text-slate-700 font-bold border border-slate-200" id="count-stage-lead">0</span>
+              </div>
+              <div id="col-stage-lead" class="space-y-2.5"></div>
+            </div>
+          </div>
+
+          <!-- 2. Meeting -->
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-between min-h-[420px]">
+            <div>
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200">
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">2. Встреча / Бриф</span>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white text-slate-700 font-bold border border-slate-200" id="count-stage-meeting">0</span>
+              </div>
+              <div id="col-stage-meeting" class="space-y-2.5"></div>
+            </div>
+          </div>
+
+          <!-- 3. KP -->
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-between min-h-[420px]">
+            <div>
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200">
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">3. КП / Смета</span>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white text-slate-700 font-bold border border-slate-200" id="count-stage-kp">0</span>
+              </div>
+              <div id="col-stage-kp" class="space-y-2.5"></div>
+            </div>
+          </div>
+
+          <!-- 4. Contract -->
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex flex-col justify-between min-h-[420px]">
+            <div>
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-slate-200">
+                <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">4. Договор</span>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white text-slate-700 font-bold border border-slate-200" id="count-stage-contract">0</span>
+              </div>
+              <div id="col-stage-contract" class="space-y-2.5"></div>
+            </div>
+          </div>
+
+          <!-- 5. Won / Handoff -->
+          <div class="p-3 rounded-xl bg-emerald-50/60 border border-emerald-200 flex flex-col justify-between min-h-[420px]">
+            <div>
+              <div class="flex items-center justify-between mb-3 pb-2 border-b border-emerald-200">
+                <span class="text-xs font-bold text-emerald-800 uppercase tracking-wider">5. В производстве</span>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-white text-emerald-700 font-bold border border-emerald-200" id="count-stage-won">0</span>
+              </div>
+              <div id="col-stage-won" class="space-y-2.5"></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: PROJECTS REGISTRY & TASKS -->
+    <section id="content-projects" class="hidden space-y-6">
+      <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-5 border-b border-slate-200">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Реестр проектов, часов и задач</h3>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Постановка и контроль задач: отслеживайте статус спринтов, логируйте часы и формируйте акты в 1 клик.
+            </p>
+          </div>
+          <div class="flex items-center gap-2">
+            <input type="text" id="project-filter-input" oninput="renderProjectsTable()" placeholder="Поиск проекта..."
+              class="bg-slate-50 border border-slate-300 rounded-lg px-3 py-1.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 w-48">
+            <button onclick="openNewProjectModal()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition">
+              + Проект
+            </button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs" id="projects-table">
+            <thead>
+              <tr class="border-b border-slate-200 text-slate-500 font-semibold">
+                <th class="pb-3">Проект / Клиент</th>
+                <th class="pb-3">Направление</th>
+                <th class="pb-3">Сумма договора</th>
+                <th class="pb-3">Часы (План / Факт)</th>
+                <th class="pb-3">Себестоимость</th>
+                <th class="pb-3">Чистая прибыль</th>
+                <th class="pb-3">Маржа %</th>
+                <th class="pb-3 text-right">Управление</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100" id="projects-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: CLIENTS ANALYTICS (LTV & PROFITABILITY) - NEW! -->
+    <section id="content-clients" class="hidden space-y-6">
+      <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-5 border-b border-slate-200">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Аналитика доходности клиентов (Client LTV & Profitability)</h3>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Прямой ответ на вопрос собственника: «Сколько заработал каждый проект и клиент? Кто приносит основную прибыль?».
+            </p>
+          </div>
+          <span class="text-xs px-3 py-1 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200 font-mono font-bold">
+            Client Unit-Economics
+          </span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs" id="clients-table">
+            <thead>
+              <tr class="border-b border-slate-200 text-slate-500 font-semibold">
+                <th class="pb-3">Клиент / Компания</th>
+                <th class="pb-3">Проектов</th>
+                <th class="pb-3">LTV Выручка</th>
+                <th class="pb-3">Себестоимость</th>
+                <th class="pb-3">Чистая прибыль</th>
+                <th class="pb-3">Средняя маржа</th>
+                <th class="pb-3">Текущий долг</th>
+                <th class="pb-3 text-right">Категория клиента</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100" id="clients-table-body">
+              <!-- Dynamically populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: INVOICES & RECEIVABLES -->
+    <section id="content-invoices" class="hidden space-y-6">
+      <div class="p-5 rounded-2xl bg-white border border-slate-200 shadow-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 mb-5 border-b border-slate-200">
+          <div>
+            <h3 class="text-base font-bold text-slate-900">Контроль счетов, оплат и дебиторской задолженности</h3>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Учет графика платежей, авансов и автоматическая фиксация кассовых разрывов.
+            </p>
+          </div>
+          <button onclick="openNewInvoiceModal()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition flex items-center gap-1.5">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+            <span>Выставить счет</span>
+          </button>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs" id="invoices-table">
+            <thead>
+              <tr class="border-b border-slate-200 text-slate-500 font-semibold">
+                <th class="pb-3">Номер счета</th>
+                <th class="pb-3">Клиент</th>
+                <th class="pb-3">Сумма</th>
+                <th class="pb-3">Срок оплаты</th>
+                <th class="pb-3">Дата оплаты</th>
+                <th class="pb-3">Статус</th>
+                <th class="pb-3 text-right">Действие</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100" id="invoices-table-body">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: AI PROPOSAL GENERATOR -->
+    <section id="content-ai-generator" class="hidden space-y-6">
+      <div class="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="w-3 h-3 rounded-full bg-indigo-600"></span>
+              <h3 class="text-base font-bold text-slate-900">AI-Генератор Коммерческих Предложений и Смет</h3>
+            </div>
+            <p class="text-xs text-slate-500 mt-1">
+              Автоматический расчет часов, внутренней себестоимости и формирование готового КП по брифу клиента.
+            </p>
+          </div>
+          <span class="text-xs px-3 py-1 rounded-md bg-indigo-50 text-indigo-700 border border-indigo-200 font-mono font-bold">
+            Algorithmic Core
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pt-6">
+          
+          <!-- INPUT PROMPT -->
+          <div class="lg:col-span-5 space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-700 mb-1.5">
+                Введите бриф или выберите готовый шаблон задачи:
+              </label>
+              <div class="flex flex-wrap gap-2 mb-3">
+                <button onclick="setBriefTemplate('chatbot')" class="text-xs px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium transition border border-slate-200">
+                  Telegram AI Ассистент
+                </button>
+                <button onclick="setBriefTemplate('n8n')" class="text-xs px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium transition border border-slate-200">
+                  Интеграция CRM и 1С
+                </button>
+                <button onclick="setBriefTemplate('erp')" class="text-xs px-2.5 py-1 rounded-md bg-slate-100 hover:bg-slate-200 text-slate-800 font-medium transition border border-slate-200">
+                  B2B Портал / ERP
+                </button>
+              </div>
+              <textarea id="ai-brief-input" rows="5" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 leading-relaxed font-sans"></textarea>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Целевая маржа</label>
+                <select id="ai-margin-select" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:outline-none">
+                  <option value="0.40">40% (Базовая)</option>
+                  <option value="0.50" selected>50% (Премиум / AI)</option>
+                  <option value="0.60">60% (Высокая маржа)</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-600 mb-1">Срочность</label>
+                <select id="ai-speed-select" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:outline-none">
+                  <option value="1.0">Стандартный срок</option>
+                  <option value="1.25">Срочный спринт (+25%)</option>
+                </select>
+              </div>
+            </div>
+
+            <button onclick="generateAiProposal()" class="w-full py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md shadow-indigo-600/20 transition flex items-center justify-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              <span>Сформировать КП и рассчитать смету</span>
+            </button>
+          </div>
+
+          <!-- GENERATED OUTPUT -->
+          <div class="lg:col-span-7 p-5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col justify-between" id="ai-output-box">
+            <div id="ai-proposal-content" class="text-xs text-slate-700 space-y-3">
+              <div class="p-8 text-center text-slate-400">
+                Выберите шаблон слева или введите описание задачи и нажмите «Сформировать КП».
+              </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between">
+              <span class="text-[11px] text-slate-500">Автоматический расчет трудозатрат и маржинальности</span>
+              <button onclick="window.print()" class="px-3.5 py-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-medium transition">
+                Печать / Экспорт в PDF
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================================================== -->
+  <!-- MODALS -->
+  <!-- ==================================================== -->
+
+  <!-- MODAL: PROJECT TASKS & SPRINTS (NEW!) -->
+  <div id="modal-project-tasks" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-2xl w-full p-6 flex flex-col max-h-[85vh]">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+        <div>
+          <h4 class="font-bold text-sm text-slate-900" id="tasks-modal-project-title">Задачи проекта</h4>
+          <span class="text-[11px] text-slate-500">Постановка задач, назначение ролей и учет выполнения</span>
+        </div>
+        <button onclick="closeModal('modal-project-tasks')" class="text-slate-400 hover:text-slate-600 text-xl font-bold">&times;</button>
+      </div>
+
+      <input type="hidden" id="tasks-modal-project-id">
+
+      <!-- ADD NEW TASK FORM -->
+      <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 mb-4 text-xs space-y-2">
+        <span class="font-bold text-slate-800">Поставить новую задачу в спринт:</span>
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+          <input type="text" id="new-task-title" placeholder="Описание задачи..." class="sm:col-span-6 bg-white border border-slate-300 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 focus:outline-none">
+          <select id="new-task-role" class="sm:col-span-3 bg-white border border-slate-300 rounded-lg px-2 py-1.5 text-xs text-slate-900">
+            <option value="ai">AI Developer</option>
+            <option value="dev">Backend Dev</option>
+            <option value="pm">Project Manager</option>
+            <option value="qa">QA Engineer</option>
+          </select>
+          <input type="number" id="new-task-hours" placeholder="План ч." value="15" class="sm:col-span-2 bg-white border border-slate-300 rounded-lg px-2 py-1.5 text-xs text-slate-900 font-mono">
+          <button onclick="submitNewTask()" class="sm:col-span-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-bold text-sm">+</button>
+        </div>
+      </div>
+
+      <!-- TASKS LIST -->
+      <div class="overflow-y-auto space-y-2 pr-1 flex-1" id="project-tasks-list">
+        <!-- Dynamically populated -->
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+        <span>Статусы задач автоматически синхронизируются с себестоимостью проекта.</span>
+        <button onclick="closeModal('modal-project-tasks')" class="px-4 py-1.5 rounded-lg bg-slate-100 text-slate-700 font-medium hover:bg-slate-200">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: LOG TIME -->
+  <div id="modal-log-time" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+        <h4 class="font-bold text-sm text-slate-900" id="modal-log-title">Зафиксировать часы по проекту</h4>
+        <button onclick="closeModal('modal-log-time')" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+      </div>
+
+      <input type="hidden" id="log-project-id">
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Специалист / Роль</label>
+          <select id="log-role" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+            <option value="ai">AI & Automation Engineer (12 000 ₸/ч)</option>
+            <option value="dev">Backend & Integrator (14 000 ₸/ч)</option>
+            <option value="pm">Project Manager (9 000 ₸/ч)</option>
+            <option value="qa">UI/UX & QA (8 000 ₸/ч)</option>
+          </select>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Отработано часов</label>
+            <input type="number" id="log-hours" value="8" min="0.5" step="0.5" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-mono text-slate-900">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Дата</label>
+            <input type="date" id="log-date" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Комментарий к задаче</label>
+          <input type="text" id="log-note" placeholder="Что сделано (напр. разработка webhook или фикс бага)" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 mt-6 pt-3 border-t border-slate-100">
+        <button onclick="closeModal('modal-log-time')" class="px-3.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">Отмена</button>
+        <button onclick="submitTimeLog()" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold">Сохранить часы</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NEW PROJECT -->
+  <div id="modal-new-project" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-lg w-full p-6">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+        <h4 class="font-bold text-sm text-slate-900">Добавить новый проект</h4>
+        <button onclick="closeModal('modal-new-project')" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Название проекта</label>
+          <input type="text" id="new-prj-title" placeholder="напр. CRM + Telegram AI Bot" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Клиент / Компания</label>
+            <input type="text" id="new-prj-client" placeholder="напр. Almaty Auto Group" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Направление</label>
+            <select id="new-prj-direction" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+              <option value="ai">AI & Автоматизация</option>
+              <option value="web">Web & Low-code</option>
+              <option value="marketing">Performance Маркетинг</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Сумма договора, ₸</label>
+            <input type="number" id="new-prj-price" value="5000000" step="100000" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-mono text-slate-900">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Плановый лимит часов</label>
+            <input type="number" id="new-prj-hours" value="80" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-mono text-slate-900">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Подрядчики и серверы, ₸</label>
+            <input type="number" id="new-prj-direct-other" value="300000" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-mono text-slate-900">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Накладные расходы (Overhead %)</label>
+            <input type="number" id="new-prj-overhead" value="15" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-mono text-slate-900">
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 mt-6 pt-3 border-t border-slate-100">
+        <button onclick="closeModal('modal-new-project')" class="px-3.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">Отмена</button>
+        <button onclick="submitNewProject()" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold">Создать проект</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NEW LEAD -->
+  <div id="modal-new-lead" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+        <h4 class="font-bold text-sm text-slate-900">Добавить новый лид в CRM</h4>
+        <button onclick="closeModal('modal-new-lead')" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Название потребности</label>
+          <input type="text" id="new-lead-title" placeholder="напр. Автоматизация отдела продаж" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Компания</label>
+            <input type="text" id="new-lead-company" placeholder="напр. KazLogistics" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Контактное лицо</label>
+            <input type="text" id="new-lead-contact" placeholder="Айбек" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Телефон / WhatsApp</label>
+            <input type="text" id="new-lead-phone" placeholder="+7 701 ..." class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Плановый бюджет, ₸</label>
+            <input type="number" id="new-lead-budget" value="4500000" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-mono text-slate-900">
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Направление</label>
+          <select id="new-lead-direction" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+            <option value="ai">AI & Автоматизация</option>
+            <option value="web">Web & Low-code</option>
+            <option value="marketing">Performance Маркетинг</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 mt-6 pt-3 border-t border-slate-100">
+        <button onclick="closeModal('modal-new-lead')" class="px-3.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">Отмена</button>
+        <button onclick="submitNewLead()" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold">Сохранить лид</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: NEW INVOICE -->
+  <div id="modal-new-invoice" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-xl max-w-md w-full p-6">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+        <h4 class="font-bold text-sm text-slate-900">Выставить счет</h4>
+        <button onclick="closeModal('modal-new-invoice')" class="text-slate-400 hover:text-slate-600 text-lg font-bold">&times;</button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Привязать к проекту</label>
+          <select id="new-inv-project" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+            <!-- Populated via JS -->
+          </select>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Сумма счета, ₸</label>
+          <input type="number" id="new-inv-amount" value="2500000" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 font-mono text-slate-900">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Срок оплаты (дедлайн)</label>
+          <input type="date" id="new-inv-due-date" class="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-slate-900">
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 mt-6 pt-3 border-t border-slate-100">
+        <button onclick="closeModal('modal-new-invoice')" class="px-3.5 py-1.5 rounded-lg bg-slate-100 text-slate-700 text-xs font-medium">Отмена</button>
+        <button onclick="submitNewInvoice()" class="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold">Выставить</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    // =========================================================================
+    // CLIENT-SIDE STATIC ENGINE (Works 100% on Render Static Site without Node)
+    // =========================================================================
+    const STORAGE_KEY = 'smart_digital_ops_static_db_v2';
+    const initialStaticDb = {
+      settings: {
+        companyName: "Smart Digital Group",
+        currency: "₸",
+        defaultOverheadPercent: 15,
+        roles: [
+          { id: "ai", name: "AI & Automation Engineer", defaultRate: 12000 },
+          { id: "dev", name: "Backend & Integrator", defaultRate: 14000 },
+          { id: "pm", name: "Project Manager / Analyst", defaultRate: 9000 },
+          { id: "qa", name: "UI/UX & QA", defaultRate: 8000 }
+        ]
+      },
+      leads: [
+        { id: "lead-101", title: "Единая витрина DWH + BI Дашборды (Superset/PowerBI)", company: "Freedom Broker KZ", contactName: "Данияр С.", phone: "+7 701 555 12 34", stage: "contract", budget: 8500000, direction: "ai", createdAt: "2026-11-05" },
+        { id: "lead-102", title: "Автоматизация сквозной аналитики и CRM-воронки", company: "Kcell Digital", contactName: "Айгерим М.", phone: "+7 702 888 44 11", stage: "kp", budget: 5400000, direction: "ai", createdAt: "2026-11-08" },
+        { id: "lead-103", title: "B2B-портал дистрибуции + шлюз 1С:УТ 8.3", company: "Alatau Food Trade", contactName: "Тимур К.", phone: "+7 777 321 90 00", stage: "meeting", budget: 6200000, direction: "web", createdAt: "2026-11-10" },
+        { id: "lead-104", title: "AI-агент контроля остатков и репрайсинга Kaspi", company: "TechnoDom Seller", contactName: "Руслан Б.", phone: "+7 705 111 22 33", stage: "lead", budget: 3800000, direction: "ai", createdAt: "2026-11-12" }
+      ],
+      projects: [
+        {
+          id: "prj-201",
+          title: "Корпоративный каталог данных DWH & BI P&L Дашборд",
+          client: "Esentai FinTech Holding",
+          direction: "ai",
+          price: 9200000,
+          paidAmount: 9200000,
+          planHours: 140,
+          directOtherCosts: 420000,
+          overheadPercent: 15,
+          status: "active",
+          createdAt: "2026-10-15",
+          tasks: [
+            { id: "tsk-201-1", title: "Проектирование дерева метрик, SLA и Data Lineage", role: "pm", assignee: "Data Analyst", planHours: 35, factHours: 32, status: "done" },
+            { id: "tsk-201-2", title: "Разработка SQL-витрин в PostgreSQL / Greenplum", role: "dev", assignee: "DWH Engineer", planHours: 55, factHours: 48, status: "done" },
+            { id: "tsk-201-3", title: "Сборка интерактивного дашборда и дизайн-гайда", role: "ai", assignee: "BI Lead", planHours: 50, factHours: 38, status: "in_progress" }
+          ],
+          timelogs: [
+            { id: "log-1", date: "2026-10-25", role: "pm", hours: 32, rate: 9000, note: "Документация витрин и SLA" },
+            { id: "log-2", date: "2026-11-02", role: "dev", hours: 48, rate: 14000, note: "SQL ETL пайплайны" },
+            { id: "log-3", date: "2026-11-09", role: "ai", hours: 38, rate: 12000, note: "Дашборд P&L и юнит-экономики" }
+          ]
+        },
+        {
+          id: "prj-202",
+          title: "Интеграция 1С:Предприятие 8.3 с B2B маркетплейсом",
+          client: "ТОО Alatau Trade",
+          direction: "web",
+          price: 6500000,
+          paidAmount: 4500000,
+          planHours: 110,
+          directOtherCosts: 310000,
+          overheadPercent: 15,
+          status: "active",
+          createdAt: "2026-10-20",
+          tasks: [
+            { id: "tsk-202-1", title: "Шлюз синхронизации номенклатуры CommerceML 3.1", role: "dev", assignee: "Backend Dev", planHours: 60, factHours: 55, status: "done" },
+            { id: "tsk-202-2", title: "Личный кабинет оптового клиента и выгрузка ЭСФ", role: "qa", assignee: "Frontend / QA", planHours: 50, factHours: 42, status: "in_progress" }
+          ],
+          timelogs: [
+            { id: "log-4", date: "2026-11-01", role: "dev", hours: 55, rate: 14000, note: "1С обмен" },
+            { id: "log-5", date: "2026-11-07", role: "qa", hours: 42, rate: 8000, note: "UI и тесты" }
+          ]
+        },
+        {
+          id: "prj-203",
+          title: "AI-система динамического ценообразования и парсинга",
+          client: "Kaspi Top Sellers Group",
+          direction: "ai",
+          price: 4800000,
+          paidAmount: 2400000,
+          planHours: 80,
+          directOtherCosts: 280000,
+          overheadPercent: 15,
+          status: "active",
+          createdAt: "2026-10-28",
+          tasks: [
+            { id: "tsk-203-1", title: "Алгоритм удержания стоп-цены и XML-фид", role: "ai", assignee: "AI Engineer", planHours: 80, factHours: 94, status: "in_progress" }
+          ],
+          timelogs: [
+            { id: "log-6", date: "2026-11-10", role: "ai", hours: 94, rate: 12000, note: "Доработка парсера (Scope Creep)" }
+          ]
+        }
+      ],
+      invoices: [
+        { id: "inv-301", projectId: "prj-201", number: "СЧ-801", amount: 9200000, status: "paid", dueDate: "2026-10-25", paidDate: "2026-10-22", client: "Esentai FinTech Holding" },
+        { id: "inv-302", projectId: "prj-202", number: "СЧ-802", amount: 4500000, status: "paid", dueDate: "2026-10-30", paidDate: "2026-10-29", client: "ТОО Alatau Trade" },
+        { id: "inv-303", projectId: "prj-202", number: "СЧ-803", amount: 2000000, status: "pending", dueDate: "2026-11-25", paidDate: null, client: "ТОО Alatau Trade" },
+        { id: "inv-304", projectId: "prj-203", number: "СЧ-804", amount: 2400000, status: "overdue", dueDate: "2026-11-01", paidDate: null, client: "Kaspi Top Sellers Group" }
+      ]
+    };
+
+    function getStaticDb() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(initialStaticDb));
+          return JSON.parse(JSON.stringify(initialStaticDb));
+        }
+        return JSON.parse(raw);
+      } catch (e) {
+        return JSON.parse(JSON.stringify(initialStaticDb));
+      }
+    }
+
+    function saveStaticDb(db) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
+      } catch (e) {}
+    }
+
+    function calcProjectFin(p) {
+      let totalHours = 0;
+      let laborCost = 0;
+      if (p.timelogs && Array.isArray(p.timelogs)) {
+        for (const log of p.timelogs) {
+          totalHours += Number(log.hours) || 0;
+          laborCost += (Number(log.hours) || 0) * (Number(log.rate) || 12000);
+        }
+      }
+      const directOther = Number(p.directOtherCosts) || 0;
+      const directTotal = laborCost + directOther;
+      const overheadPct = Number(p.overheadPercent) || 15;
+      const overheadCost = directTotal * (overheadPct / 100);
+      const totalCost = directTotal + overheadCost;
+      const price = Number(p.price) || 0;
+      const netProfit = price - totalCost;
+      const marginPercent = price > 0 ? (netProfit / price) * 100 : 0;
+      const planHours = Number(p.planHours) || 1;
+      const hourOverrunPercent = planHours > 0 ? Math.max(0, ((totalHours - planHours) / planHours) * 100) : 0;
+      const debt = Math.max(0, price - (Number(p.paidAmount) || 0));
+      return {
+        totalHours, laborCost, directOther, directTotal, overheadCost, totalCost, netProfit,
+        marginPercent: Number(marginPercent.toFixed(1)),
+        hourOverrunPercent: Number(hourOverrunPercent.toFixed(1)),
+        debt
+      };
+    }
+
+    function calcClientAnalytics(db) {
+      const clientsMap = {};
+      (db.projects || []).forEach(p => {
+        const clientName = p.client || "Неизвестный клиент";
+        if (!clientsMap[clientName]) {
+          clientsMap[clientName] = { name: clientName, projectsCount: 0, totalRevenue: 0, totalCost: 0, netProfit: 0, totalDebt: 0, activeProjects: 0 };
+        }
+        const fin = calcProjectFin(p);
+        clientsMap[clientName].projectsCount += 1;
+        clientsMap[clientName].totalRevenue += Number(p.price) || 0;
+        clientsMap[clientName].totalCost += fin.totalCost;
+        clientsMap[clientName].netProfit += fin.netProfit;
+        clientsMap[clientName].totalDebt += fin.debt;
+        if (p.status === 'active') clientsMap[clientName].activeProjects += 1;
+      });
+      return Object.values(clientsMap).map(c => {
+        const margin = c.totalRevenue > 0 ? Number(((c.netProfit / c.totalRevenue) * 100).toFixed(1)) : 0;
+        let tier = "Стандарт";
+        if (margin >= 50 && c.totalDebt === 0) tier = "VIP / Золотой";
+        else if (c.totalDebt > 1000000) tier = "Зона риска";
+        return { ...c, marginPercent: margin, tier };
+      }).sort((a, b) => b.netProfit - a.netProfit);
+    }
+
+    const originalFetch = window.fetch.bind(window);
+    window.fetch = async function(input, init = {}) {
+      const urlStr = typeof input === 'string' ? input : (input.url || '');
+      if (!urlStr.includes('/api/')) {
+        return originalFetch(input, init);
+      }
+      const path = urlStr.split('/api/')[1].split('?')[0];
+      const method = (init.method || 'GET').toUpperCase();
+      const body = init.body ? (typeof init.body === 'string' ? JSON.parse(init.body) : {}) : {};
+      const db = getStaticDb();
+      const jsonResp = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } });
+
+      if (path === 'dashboard' && method === 'GET') {
+        let totalRevenue = 0, totalCosts = 0, totalLaborCost = 0, totalDirectOther = 0, totalOverhead = 0, totalPaid = 0;
+        const directions = {
+          ai: { name: "AI, DWH & Автоматизация", revenue: 0, cost: 0, count: 0 },
+          web: { name: "Web / 1С / B2B Порталы", revenue: 0, cost: 0, count: 0 },
+          marketing: { name: "BI & Продуктовая аналитика", revenue: 0, cost: 0, count: 0 }
+        };
+        const leakageAlerts = [];
+        const projectsWithFinancials = db.projects.map(p => {
+          const fin = calcProjectFin(p);
+          totalRevenue += Number(p.price) || 0;
+          totalCosts += fin.totalCost;
+          totalLaborCost += fin.laborCost;
+          totalDirectOther += fin.directOther;
+          totalOverhead += fin.overheadCost;
+          totalPaid += Number(p.paidAmount) || 0;
+          const dirKey = p.direction && directions[p.direction] ? p.direction : 'web';
+          directions[dirKey].revenue += Number(p.price) || 0;
+          directions[dirKey].cost += fin.totalCost;
+          directions[dirKey].count += 1;
+          if (fin.hourOverrunPercent > 10) {
+            leakageAlerts.push({
+              type: "overrun", severity: "high", projectId: p.id, projectTitle: p.title, client: p.client,
+              message: `Превышение часов: план ${p.planHours}ч, факт ${fin.totalHours}ч (+${fin.hourOverrunPercent}%). Маржа: ${fin.marginPercent}%.`
+            });
+          }
+          const overdueInv = db.invoices.find(inv => inv.projectId === p.id && inv.status === 'overdue');
+          if (overdueInv) {
+            leakageAlerts.push({
+              type: "debt_overdue", severity: "high", projectId: p.id, projectTitle: p.title, client: p.client,
+              message: `Просрочен счет ${overdueInv.number} на сумму ${overdueInv.amount.toLocaleString()} ₸ (SLA оплаты превышен).`
+            });
+          }
+          return { ...p, financials: fin };
+        });
+        const netProfit = totalRevenue - totalCosts;
+        const avgMarginPercent = totalRevenue > 0 ? Number(((netProfit / totalRevenue) * 100).toFixed(1)) : 0;
+        const totalReceivables = Math.max(0, totalRevenue - totalPaid);
+        const overdueReceivables = db.invoices.filter(i => i.status === 'overdue').reduce((s, i) => s + (Number(i.amount) || 0), 0);
+        const directionsBreakdown = Object.keys(directions).map(key => {
+          const d = directions[key];
+          const profit = d.revenue - d.cost;
+          const margin = d.revenue > 0 ? Number(((profit / d.revenue) * 100).toFixed(1)) : 0;
+          return { key, name: d.name, revenue: d.revenue, cost: d.cost, profit, margin, count: d.count };
+        });
+        const monthlyTrend = [
+          { month: "Июн", revenue: 11200000, profit: 6400000 },
+          { month: "Июл", revenue: 13500000, profit: 7800000 },
+          { month: "Авг", revenue: 14900000, profit: 8900000 },
+          { month: "Сен", revenue: 16800000, profit: 10200000 },
+          { month: "Окт", revenue: 18400000, profit: 11500000 },
+          { month: "Ноя (Тек)", revenue: totalRevenue, profit: netProfit }
+        ];
+        const costStructure = {
+          laborCost: totalLaborCost,
+          laborPercent: totalCosts > 0 ? Math.round((totalLaborCost / totalCosts) * 100) : 0,
+          directOther: totalDirectOther,
+          directOtherPercent: totalCosts > 0 ? Math.round((totalDirectOther / totalCosts) * 100) : 0,
+          overhead: totalOverhead,
+          overheadPercent: totalCosts > 0 ? Math.round((totalOverhead / totalCosts) * 100) : 0,
+          netProfit, marginPercent: avgMarginPercent
+        };
+        return jsonResp({
+          kpi: {
+            totalRevenue, totalCosts, netProfit, avgMarginPercent, totalReceivables, overdueReceivables,
+            activeProjectsCount: db.projects.filter(p => p.status === 'active').length,
+            totalProjectsCount: db.projects.length
+          },
+          costStructure, monthlyTrend, directions: directionsBreakdown, leakageAlerts, projects: projectsWithFinancials
+        });
+      }
+
+      if (path === 'clients' && method === 'GET') return jsonResp(calcClientAnalytics(db));
+      if (path === 'projects' && method === 'GET') return jsonResp(db.projects.map(p => ({ ...p, financials: calcProjectFin(p) })));
+      if (path === 'projects' && method === 'POST') {
+        const np = {
+          id: "prj-" + Date.now(), title: body.title || "Новый проект", client: body.client || "Клиент",
+          direction: body.direction || "ai", price: Number(body.price) || 0, paidAmount: 0,
+          planHours: Number(body.planHours) || 80, directOtherCosts: Number(body.directOtherCosts) || 0,
+          overheadPercent: Number(body.overheadPercent) || 15, status: "active",
+          tasks: [
+            { id: "tsk-" + Date.now() + "-1", title: "Аудит метрик и схема архитектуры", role: "ai", assignee: "Data / AI Lead", planHours: 25, factHours: 0, status: "todo" },
+            { id: "tsk-" + Date.now() + "-2", title: "Разработка витрин и интеграций", role: "dev", assignee: "Backend / DWH", planHours: 55, factHours: 0, status: "todo" }
+          ],
+          timelogs: [], createdAt: new Date().toISOString().split('T')[0]
+        };
+        db.projects.unshift(np);
+        saveStaticDb(db);
+        return jsonResp({ ...np, financials: calcProjectFin(np) }, 201);
+      }
+
+      const prjTaskMatch = path.match(/^projects\/([^\/]+)\/tasks\/([^\/]+)$/);
+      if (prjTaskMatch && method === 'PUT') {
+        const prj = db.projects.find(p => p.id === prjTaskMatch[1]);
+        if (prj && prj.tasks) {
+          const t = prj.tasks.find(x => x.id === prjTaskMatch[2]);
+          if (t) Object.assign(t, body);
+          saveStaticDb(db);
+          return jsonResp(t || {});
+        }
+      }
+
+      const prjTasksCreate = path.match(/^projects\/([^\/]+)\/tasks$/);
+      if (prjTasksCreate && method === 'POST') {
+        const prj = db.projects.find(p => p.id === prjTasksCreate[1]);
+        if (prj) {
+          const nt = { id: "tsk-" + Date.now(), title: body.title, role: body.role || "ai", assignee: body.assignee || "Инженер", planHours: Number(body.planHours) || 10, factHours: 0, status: "todo" };
+          prj.tasks = prj.tasks || [];
+          prj.tasks.push(nt);
+          saveStaticDb(db);
+          return jsonResp(nt, 201);
+        }
+      }
+
+      const prjTimelog = path.match(/^projects\/([^\/]+)\/timelogs$/);
+      if (prjTimelog && method === 'POST') {
+        const prj = db.projects.find(p => p.id === prjTimelog[1]);
+        if (prj) {
+          const role = body.role || 'ai';
+          const rate = role === 'dev' ? 14000 : (role === 'ai' ? 12000 : (role === 'pm' ? 9000 : 8000));
+          const log = { id: "log-" + Date.now(), date: body.date || new Date().toISOString().split('T')[0], role, hours: Number(body.hours) || 0, rate, note: body.note || "" };
+          prj.timelogs = prj.timelogs || [];
+          prj.timelogs.push(log);
+          saveStaticDb(db);
+          return jsonResp({ success: true, timelog: log, projectFinancials: calcProjectFin(prj) }, 201);
+        }
+      }
+
+      const prjSingle = path.match(/^projects\/([^\/]+)$/);
+      if (prjSingle && method === 'DELETE') {
+        db.projects = db.projects.filter(p => p.id !== prjSingle[1]);
+        saveStaticDb(db);
+        return jsonResp({ success: true });
+      }
+
+      if (path === 'leads' && method === 'GET') return jsonResp(db.leads);
+      if (path === 'leads' && method === 'POST') {
+        const nl = { id: "lead-" + Date.now(), title: body.title || "Лид", company: body.company || "Компания", contactName: body.contactName || "", phone: body.phone || "", stage: body.stage || "lead", budget: Number(body.budget) || 0, direction: body.direction || "ai", createdAt: new Date().toISOString().split('T')[0] };
+        db.leads.unshift(nl);
+        saveStaticDb(db);
+        return jsonResp(nl, 201);
+      }
+
+      const leadConvert = path.match(/^leads\/([^\/]+)\/convert-to-project$/);
+      if (leadConvert && method === 'POST') {
+        const lead = db.leads.find(l => l.id === leadConvert[1]);
+        if (lead) {
+          const budget = lead.budget || 5000000;
+          const estimatedHours = Math.round(budget / 35000);
+          const np = {
+            id: "prj-" + Date.now(), title: lead.title, client: lead.company, direction: lead.direction || "ai",
+            price: budget, paidAmount: Math.round(budget * 0.5), planHours: estimatedHours,
+            directOtherCosts: Math.round(budget * 0.08), overheadPercent: 15, status: "active",
+            tasks: [
+              { id: "tsk-" + Date.now() + "-1", title: "Аудит метрик и архитектура витрин", role: "ai", assignee: "AI / Data Lead", planHours: Math.round(estimatedHours * 0.3), factHours: 0, status: "in_progress" },
+              { id: "tsk-" + Date.now() + "-2", title: "Разработка ядра и дашбордов", role: "dev", assignee: "Backend / BI", planHours: Math.round(estimatedHours * 0.7), factHours: 0, status: "todo" }
+            ],
+            timelogs: [], createdAt: new Date().toISOString().split('T')[0]
+          };
+          const ni = { id: "inv-" + Date.now(), projectId: np.id, number: "СЧ-" + Math.floor(100 + Math.random() * 900), amount: Math.round(budget * 0.5), status: "paid", dueDate: new Date().toISOString().split('T')[0], paidDate: new Date().toISOString().split('T')[0], client: lead.company };
+          db.projects.unshift(np);
+          db.invoices.unshift(ni);
+          lead.stage = "won";
+          saveStaticDb(db);
+          return jsonResp({ success: true, message: "Handoff завершен! Проект создан, декомпозирован на задачи, аванс 50% зачислен в кассу.", project: np, invoice: ni }, 201);
+        }
+      }
+
+      const leadSingle = path.match(/^leads\/([^\/]+)$/);
+      if (leadSingle && method === 'PUT') {
+        const idx = db.leads.findIndex(l => l.id === leadSingle[1]);
+        if (idx !== -1) { db.leads[idx] = { ...db.leads[idx], ...body }; saveStaticDb(db); return jsonResp(db.leads[idx]); }
+      }
+      if (leadSingle && method === 'DELETE') {
+        db.leads = db.leads.filter(l => l.id !== leadSingle[1]);
+        saveStaticDb(db);
+        return jsonResp({ success: true });
+      }
+
+      if (path === 'invoices' && method === 'GET') return jsonResp(db.invoices);
+      if (path === 'invoices' && method === 'POST') {
+        const ni = { id: "inv-" + Date.now(), projectId: body.projectId || null, number: "СЧ-" + Math.floor(100 + Math.random() * 900), amount: Number(body.amount) || 0, status: "pending", dueDate: body.dueDate || "2026-11-30", paidDate: null, client: body.client || "Клиент" };
+        db.invoices.unshift(ni);
+        saveStaticDb(db);
+        return jsonResp(ni, 201);
+      }
+
+      const invPay = path.match(/^invoices\/([^\/]+)\/pay$/);
+      if (invPay && method === 'PUT') {
+        const inv = db.invoices.find(i => i.id === invPay[1]);
+        if (inv) {
+          inv.status = "paid";
+          inv.paidDate = new Date().toISOString().split('T')[0];
+          if (inv.projectId) {
+            const prj = db.projects.find(p => p.id === inv.projectId);
+            if (prj) prj.paidAmount = (Number(prj.paidAmount) || 0) + Number(inv.amount);
+          }
+          saveStaticDb(db);
+          return jsonResp({ success: true, invoice: inv });
+        }
+      }
+
+      if (path === 'ai/generate-kp' && method === 'POST') {
+        const brief = (body.brief || '').toLowerCase();
+        let baseHours = 80;
+        if (brief.includes('erp') || brief.includes('портал') || brief.includes('dwh')) baseHours = 160;
+        else if (brief.includes('crm') || brief.includes('n8n') || brief.includes('интеграци')) baseHours = 110;
+        else if (brief.includes('бот') || brief.includes('ai')) baseHours = 75;
+        const directLabor = baseHours * 12500;
+        const directOther = Math.round(directLabor * 0.15);
+        const overhead = Math.round((directLabor + directOther) * 0.15);
+        const costPrice = directLabor + directOther + overhead;
+        const targetMargin = Number(body.margin) || 0.45;
+        const clientPrice = Math.round((costPrice / (1 - targetMargin)) * Number(body.speedMultiplier || 1));
+        const estimatedProfit = clientPrice - costPrice;
+        return jsonResp({
+          title: "Коммерческое предложение: Внедрение Data / AI & Automation",
+          summary: body.brief,
+          financials: { clientPrice, costPrice, estimatedProfit, marginPercent: Math.round((estimatedProfit / clientPrice) * 100), totalHours: baseHours },
+          phases: [
+            { name: "Этап 1: Системный аудит метрик и архитектура DWH/API", duration: "5 рабочих дней" },
+            { name: "Этап 2: Разработка ядра витрин, ETL и бизнес-логики", duration: "10 рабочих дней" },
+            { name: "Этап 3: Сборка BI-дашборда и интеграция с CRM/1С", duration: "5 рабочих дней" },
+            { name: "Этап 4: Документирование Lineage/SLA и передача в прод", duration: "4 рабочих дня" }
+          ],
+          terms: "Предоплата 50%, постоплата 50% после подписания акта сдачи-приемки работ."
+        });
+      }
+
+      return jsonResp({ ok: true });
+    };
+
+    function exportPnlCsv() {
+      const db = getStaticDb();
+      let csv = "ID;Проект;Клиент;Направление;Выручка;Себестоимость;Прибыль;Маржа %;Часы факт;План часов;Статус\n";
+      db.projects.forEach(p => {
+        const fin = calcProjectFin(p);
+        csv += `"${p.id}";"${p.title}";"${p.client}";"${p.direction}";${p.price};${fin.totalCost};${fin.netProfit};${fin.marginPercent}%;${fin.totalHours};${p.planHours};"${p.status}"\n`;
+      });
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'smart_digital_pnl_report.csv';
+      link.click();
+    }
+
+    function openProjectDocument(projectId, type = 'act') {
+      const db = getStaticDb();
+      const project = db.projects.find(p => p.id === projectId);
+      if (!project) return;
+      const dateStr = new Date().toLocaleDateString('ru-RU');
+      const priceFormatted = (Number(project.price) || 0).toLocaleString() + " ₸";
+      const html = `<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>Акт - ${project.title}</title><style>body{font-family:sans-serif;padding:40px;color:#1e293b;max-width:800px;margin:auto}.header{display:flex;justify-content:space-between;border-bottom:2px solid #0f172a;padding-bottom:15px;margin-bottom:25px}.title{font-size:20px;font-weight:bold;text-align:center;margin:30px 0}table{width:100%;border-collapse:collapse;margin:20px 0}th,td{border:1px solid #cbd5e1;padding:10px;font-size:13px;text-align:left}th{background:#f8fafc}.signatures{display:flex;justify-content:space-between;margin-top:60px}.sig-box{width:45%;border-top:1px solid #334155;padding-top:10px;font-size:13px}@media print{.no-print{display:none}}</style></head><body><div class="no-print" style="text-align:right"><button onclick="window.print()" style="padding:10px 20px;background:#4f46e5;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:bold">🖨 Печать / PDF</button></div><div class="header"><div><strong>ТОО "Smart Digital Group"</strong><br>г. Алматы, БИН: 210440029148</div><div>Дата: ${dateStr}<br>г. Алматы</div></div><div class="title">АКТ ВЫПОЛНЕННЫХ РАБОТ № ${project.id.replace('prj-','')}</div><p>Исполнитель: <strong>ТОО "Smart Digital Group"</strong> и Заказчик: <strong>${project.client}</strong> подтверждают выполнение работ:</p><table><thead><tr><th>№</th><th>Наименование услуги</th><th>Часы</th><th>Сумма, ₸</th></tr></thead><tbody><tr><td>1</td><td><strong>${project.title}</strong></td><td>${project.planHours} ч</td><td><strong>${priceFormatted}</strong></td></tr></tbody></table><div class="signatures"><div class="sig-box"><strong>Исполнитель:</strong> ТОО "Smart Digital Group"</div><div class="sig-box"><strong>Заказчик:</strong> ${project.client}</div></div></body></html>`;
+      const win = window.open('', '_blank');
+      if (win) { win.document.write(html); win.document.close(); }
+    }
+    let appData = {
+      dashboard: null,
+      projects: [],
+      leads: [],
+      clients: [],
+      invoices: []
+    };
+
+    function formatKZT(num) {
+      return Math.round(Number(num) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + " ₸";
+    }
+
+    function switchTab(tabId) {
+      const tabs = ['dashboard', 'crm', 'projects', 'clients', 'invoices', 'ai-generator'];
+      tabs.forEach(t => {
+        const content = document.getElementById('content-' + t);
+        const btn = document.getElementById('tab-' + t);
+        if (content) {
+          if (t === tabId) content.classList.remove('hidden');
+          else content.classList.add('hidden');
+        }
+        if (btn) {
+          if (t === tabId) {
+            btn.className = "px-3 py-1.5 rounded-lg font-semibold transition-all bg-white text-indigo-700 shadow-xs border border-slate-200";
+          } else {
+            btn.className = "px-3 py-1.5 rounded-lg font-medium transition-all text-slate-600 hover:text-slate-900";
+          }
+        }
+      });
+      if (tabId === 'crm') renderKanban();
+      if (tabId === 'projects') renderProjectsTable();
+      if (tabId === 'clients') renderClientsTable();
+      if (tabId === 'invoices') renderInvoicesTable();
+    }
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    // ------------------------------------------------------------------
+    // API FETCHING & DATA REFRESH
+    // ------------------------------------------------------------------
+    async function loadAllData() {
+      try {
+        const [dashRes, projRes, leadsRes, clientsRes, invRes] = await Promise.all([
+          fetch('/api/dashboard').then(r => r.json()),
+          fetch('/api/projects').then(r => r.json()),
+          fetch('/api/leads').then(r => r.json()),
+          fetch('/api/clients').then(r => r.json()),
+          fetch('/api/invoices').then(r => r.json())
+        ]);
+
+        appData.dashboard = dashRes;
+        appData.projects = projRes;
+        appData.leads = leadsRes;
+        appData.clients = clientsRes;
+        appData.invoices = invRes;
+
+        renderDashboard();
+      } catch (err) {
+        console.error("Failed to load API data:", err);
+      }
+    }
+
+    function renderDashboard() {
+      if (!appData.dashboard) return;
+      const { kpi, costStructure, monthlyTrend, directions, leakageAlerts } = appData.dashboard;
+
+      document.getElementById('kpi-revenue').innerText = formatKZT(kpi.totalRevenue);
+      document.getElementById('kpi-projects-count').innerText = `${kpi.totalProjectsCount} проектов`;
+      document.getElementById('kpi-active-projects').innerText = `${kpi.activeProjectsCount} в работе`;
+
+      document.getElementById('kpi-costs').innerText = formatKZT(kpi.totalCosts);
+      const costPct = kpi.totalRevenue > 0 ? (kpi.totalCosts / kpi.totalRevenue) * 100 : 0;
+      document.getElementById('kpi-cost-bar').style.width = Math.min(100, costPct) + '%';
+
+      document.getElementById('kpi-profit').innerText = formatKZT(kpi.netProfit);
+      document.getElementById('kpi-margin-badge').innerText = `Маржа ${kpi.avgMarginPercent}%`;
+      document.getElementById('kpi-margin-text').innerText = `${kpi.avgMarginPercent}%`;
+
+      document.getElementById('kpi-receivables').innerText = formatKZT(kpi.totalReceivables);
+      document.getElementById('kpi-overdue').innerText = formatKZT(kpi.overdueReceivables);
+
+      // Render Donut Chart Values
+      if (costStructure) {
+        document.getElementById('donut-center-margin').innerText = `${costStructure.marginPercent}%`;
+        document.getElementById('legend-labor').innerText = `${formatKZT(costStructure.laborCost)} (${costStructure.laborPercent}%)`;
+        document.getElementById('legend-other').innerText = `${formatKZT(costStructure.directOther)} (${costStructure.directOtherPercent}%)`;
+        document.getElementById('legend-overhead').innerText = `${formatKZT(costStructure.overhead)} (${costStructure.overheadPercent}%)`;
+        document.getElementById('legend-profit').innerText = `${formatKZT(costStructure.netProfit)}`;
+
+        // Adjust SVG stroke-dasharray percentages
+        const pLabor = costStructure.laborPercent;
+        const pOther = costStructure.directOtherPercent;
+        const pOverhead = costStructure.overheadPercent;
+        const pProfit = Math.max(0, 100 - (pLabor + pOther + pOverhead));
+
+        document.getElementById('donut-labor').setAttribute('stroke-dasharray', `${pLabor} ${100 - pLabor}`);
+        document.getElementById('donut-other').setAttribute('stroke-dasharray', `${pOther} ${100 - pOther}`);
+        document.getElementById('donut-other').setAttribute('stroke-dashoffset', `-${pLabor}`);
+        document.getElementById('donut-overhead').setAttribute('stroke-dasharray', `${pOverhead} ${100 - pOverhead}`);
+        document.getElementById('donut-overhead').setAttribute('stroke-dashoffset', `-${pLabor + pOther}`);
+        document.getElementById('donut-profit').setAttribute('stroke-dasharray', `${pProfit} ${100 - pProfit}`);
+        document.getElementById('donut-profit').setAttribute('stroke-dashoffset', `-${pLabor + pOther + pOverhead}`);
+      }
+
+      // Render Monthly Trend Bars
+      if (monthlyTrend) {
+        const maxVal = Math.max(...monthlyTrend.map(m => m.revenue)) || 1;
+        const barContainer = document.getElementById('monthly-bar-chart');
+        barContainer.innerHTML = monthlyTrend.map(m => {
+          const revHeight = maxVal > 1 ? Math.round((m.revenue / maxVal) * 120) : 4;
+          const profHeight = maxVal > 1 ? Math.round((m.profit / maxVal) * 120) : 4;
+          return `
+            <div class="flex-1 flex flex-col items-center gap-1 group">
+              <div class="w-full flex items-end justify-center gap-1 h-32">
+                <div class="w-3.5 bg-indigo-600 rounded-t transition-all duration-300 group-hover:bg-indigo-500" style="height: ${Math.max(4, revHeight)}px" title="Выручка: ${formatKZT(m.revenue)}"></div>
+                <div class="w-3.5 bg-emerald-500 rounded-t transition-all duration-300 group-hover:bg-emerald-400" style="height: ${Math.max(4, profHeight)}px" title="Прибыль: ${formatKZT(m.profit)}"></div>
+              </div>
+              <span class="text-[10px] text-slate-500 font-medium truncate">${m.month}</span>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render Directions
+      const dirContainer = document.getElementById('directions-container');
+      if (!directions || directions.length === 0) {
+        dirContainer.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs col-span-full border border-dashed border-slate-200 rounded-xl">Направления отобразятся при появлении проектов</div>`;
+      } else {
+        dirContainer.innerHTML = directions.map(d => `
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="flex justify-between items-center text-xs mb-1">
+              <span class="text-slate-900 font-bold">${d.name} (${d.count})</span>
+              <span class="text-emerald-700 font-bold font-mono bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">${d.margin}% маржа</span>
+            </div>
+            <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mb-1">
+              <div class="bg-indigo-600 h-full rounded-full" style="width: ${Math.min(100, d.margin)}%"></div>
+            </div>
+            <div class="flex justify-between text-[11px] text-slate-600">
+              <span>Выручка: ${formatKZT(d.revenue)}</span>
+              <span class="text-slate-900 font-semibold">Прибыль: ${formatKZT(d.profit)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render Alerts
+      const alertsContainer = document.getElementById('alerts-container');
+      if (leakageAlerts.length === 0) {
+        alertsContainer.innerHTML = `<div class="p-4 rounded-xl bg-emerald-50 text-emerald-800 text-xs border border-emerald-200">Утечек не обнаружено. Все проекты выполняются в пределах сметы.</div>`;
+      } else {
+        alertsContainer.innerHTML = leakageAlerts.map(a => `
+          <div class="p-3 rounded-xl ${a.type === 'overrun' ? 'bg-rose-50 border border-rose-200' : 'bg-amber-50 border border-amber-200'} flex items-start gap-3">
+            <div class="mt-0.5 w-2 h-2 rounded-full ${a.type === 'overrun' ? 'bg-rose-500' : 'bg-amber-500'} shrink-0"></div>
+            <div class="text-xs">
+              <div class="font-bold text-slate-900 flex items-center gap-1.5">
+                <span>${escapeHtml(a.projectTitle)}</span>
+                <span class="text-[10px] text-slate-500 font-normal">(${escapeHtml(a.client)})</span>
+              </div>
+              <p class="text-slate-700 text-[11px] mt-0.5">${a.message}</p>
+            </div>
+          </div>
+        `).join('');
+      }
+    }
+
+    // ------------------------------------------------------------------
+    // CLIENTS ANALYTICS TABLE (NEW!)
+    // ------------------------------------------------------------------
+    function escapeHtml(str) {
+      return String(str ?? '').replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function renderClientsTable() {
+      const tbody = document.getElementById('clients-table-body');
+      if (!appData.clients || appData.clients.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-slate-400 text-xs">Нет данных о клиентах. Они появятся автоматически при добавлении проектов.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = appData.clients.map(c => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="py-3.5">
+            <div class="font-bold text-slate-900">${escapeHtml(c.name)}</div>
+            <span class="text-[11px] text-slate-500">${c.activeProjects} активных проектов</span>
+          </td>
+          <td class="py-3.5 font-mono font-semibold text-slate-700">${c.projectsCount}</td>
+          <td class="py-3.5 font-mono font-bold text-slate-900">${formatKZT(c.totalRevenue)}</td>
+          <td class="py-3.5 font-mono text-slate-600">${formatKZT(c.totalCost)}</td>
+          <td class="py-3.5 font-mono font-bold text-emerald-700">${formatKZT(c.netProfit)}</td>
+          <td class="py-3.5">
+            <span class="px-2 py-0.5 rounded font-mono font-bold text-xs ${c.marginPercent >= 50 ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-slate-100 text-slate-700'}">
+              ${c.marginPercent}%
+            </span>
+          </td>
+          <td class="py-3.5 font-mono ${c.totalDebt > 0 ? 'text-amber-700 font-bold' : 'text-slate-400'}">
+            ${c.totalDebt > 0 ? formatKZT(c.totalDebt) : '0 ₸'}
+          </td>
+          <td class="py-3.5 text-right">
+            <span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${
+              c.tier.includes('VIP') ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' :
+              (c.tier.includes('риска') ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-slate-100 text-slate-700')
+            }">
+              ${c.tier}
+            </span>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // ------------------------------------------------------------------
+    // CRM KANBAN & AUTOMATED HANDOFF
+    // ------------------------------------------------------------------
+    function renderKanban() {
+      const stages = ['lead', 'meeting', 'kp', 'contract', 'won'];
+      stages.forEach(s => {
+        const col = document.getElementById('col-stage-' + s);
+        const count = document.getElementById('count-stage-' + s);
+        const leadsInStage = appData.leads.filter(l => l.stage === s);
+        if (count) count.innerText = leadsInStage.length;
+
+        if (col) {
+          if (leadsInStage.length === 0) {
+            col.innerHTML = `<div class="p-4 text-center text-slate-300 text-[11px] border border-dashed border-slate-200 rounded-xl">Лидов нет</div>`;
+          } else {
+            col.innerHTML = leadsInStage.map(l => `
+            <div class="p-3 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+              <div class="flex items-start justify-between gap-1">
+                <span class="font-bold text-slate-900 text-xs">${l.title}</span>
+                <button onclick="deleteLead('${l.id}')" class="text-slate-300 hover:text-rose-500 text-xs">×</button>
+              </div>
+              <div class="text-[11px] text-slate-500">${l.company} • ${l.contactName || ''}</div>
+              <div class="text-xs font-mono font-bold text-indigo-700">${formatKZT(l.budget)}</div>
+              
+              <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
+                <span class="text-slate-400 font-mono">${l.createdAt}</span>
+                ${s !== 'won' ? `
+                  <button onclick="advanceLeadStage('${l.id}', '${s}')" class="px-2 py-0.5 rounded bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold border border-indigo-200 transition">
+                    ${s === 'contract' ? 'В производство' : 'Далее →'}
+                  </button>
+                ` : `
+                  <span class="text-emerald-700 font-bold">В производстве</span>
+                `}
+              </div>
+            </div>
+          `).join('');
+          }
+        }
+      });
+    }
+
+    async function advanceLeadStage(leadId, currentStage) {
+      const order = ['lead', 'meeting', 'kp', 'contract', 'won'];
+      const nextIdx = order.indexOf(currentStage) + 1;
+      if (nextIdx >= order.length) return;
+      const nextStage = order[nextIdx];
+
+      if (nextStage === 'won') {
+        if (!confirm("Запустить автоматический Handoff в производство? Будет создан проект с декомпозицией задач и зачислен аванс 50%.")) return;
+        const res = await fetch(`/api/leads/${leadId}/convert-to-project`, { method: 'POST' }).then(r => r.json());
+        alert(res.message);
+        await loadAllData();
+        renderKanban();
+        return;
+      }
+
+      await fetch(`/api/leads/${leadId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ stage: nextStage })
+      });
+      await loadAllData();
+      renderKanban();
+    }
+
+    async function deleteLead(id) {
+      if (!confirm("Удалить лид?")) return;
+      await fetch(`/api/leads/${id}`, { method: 'DELETE' });
+      await loadAllData();
+      renderKanban();
+    }
+
+    function openNewLeadModal() { openModal('modal-new-lead'); }
+    async function submitNewLead() {
+      const body = {
+        title: document.getElementById('new-lead-title').value,
+        company: document.getElementById('new-lead-company').value,
+        contactName: document.getElementById('new-lead-contact').value,
+        phone: document.getElementById('new-lead-phone').value,
+        budget: Number(document.getElementById('new-lead-budget').value),
+        direction: document.getElementById('new-lead-direction').value,
+        stage: 'lead'
+      };
+      await fetch('/api/leads', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      closeModal('modal-new-lead');
+      await loadAllData();
+      renderKanban();
+    }
+
+    // ------------------------------------------------------------------
+    // PROJECTS & TASKS MANAGEMENT
+    // ------------------------------------------------------------------
+    function renderProjectsTable() {
+      const q = (document.getElementById('project-filter-input').value || '').toLowerCase();
+      const tbody = document.getElementById('projects-table-body');
+      const filtered = appData.projects.filter(p => p.title.toLowerCase().includes(q) || p.client.toLowerCase().includes(q));
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center text-slate-400 text-xs">Нет проектов в реестре. Нажмите "+ Новый проект" или переведите выигранный лид из CRM!</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => {
+        const fin = p.financials || {};
+        const isOverrun = fin.hourOverrunPercent > 10;
+        const tasksCount = (p.tasks || []).length;
+        const doneTasksCount = (p.tasks || []).filter(t => t.status === 'done').length;
+
+        return `
+          <tr class="hover:bg-slate-50 transition ${isOverrun ? 'bg-rose-50/20' : ''}">
+            <td class="py-3.5">
+              <div class="font-bold text-slate-900">${p.title}</div>
+              <span class="text-[11px] text-slate-500">${p.client}</span>
+            </td>
+            <td class="py-3.5">
+              <span class="px-2 py-0.5 rounded text-[11px] font-semibold ${p.direction === 'ai' ? 'bg-indigo-50 text-indigo-700 border border-indigo-200' : 'bg-slate-100 text-slate-700'}">
+                ${p.direction === 'ai' ? 'AI / Automation' : (p.direction === 'web' ? 'Web Low-code' : 'Marketing')}
+              </span>
+            </td>
+            <td class="py-3.5 font-mono text-slate-900 font-semibold">${formatKZT(p.price)}</td>
+            <td class="py-3.5">
+              <div class="font-mono text-slate-700 font-medium">
+                ${p.planHours}ч / <span class="${isOverrun ? 'text-rose-600 font-bold' : 'text-slate-900 font-bold'}">${fin.totalHours}ч</span>
+              </div>
+              ${isOverrun ? `<span class="text-[10px] text-rose-600 font-bold">+${fin.hourOverrunPercent}% превышение</span>` : `<span class="text-[10px] text-slate-400">В графике</span>`}
+            </td>
+            <td class="py-3.5 font-mono text-slate-700">${formatKZT(fin.totalCost)}</td>
+            <td class="py-3.5 font-mono font-bold ${fin.netProfit < 0 ? 'text-rose-600' : 'text-emerald-600'}">
+              ${formatKZT(fin.netProfit)}
+            </td>
+            <td class="py-3.5">
+              <span class="px-2 py-0.5 rounded font-mono font-bold text-xs ${fin.marginPercent < 25 ? 'bg-amber-50 text-amber-800 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}">
+                ${fin.marginPercent}%
+              </span>
+            </td>
+            <td class="py-3.5 text-right space-x-1">
+              <button onclick="openProjectTasksModal('${p.id}')" class="px-2.5 py-1 rounded-md bg-white hover:bg-slate-100 text-slate-800 font-semibold text-xs border border-slate-200 shadow-xs transition" title="Задачи и спринты">
+                Задачи (${doneTasksCount}/${tasksCount})
+              </button>
+              <button onclick="openLogTimeModal('${p.id}', '${p.title}')" class="px-2 py-1 rounded-md bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold text-xs border border-indigo-200 transition" title="Зафиксировать часы">
+                + Часы
+              </button>
+              <button onclick="openProjectDocument('${p.id}', 'act')" class="px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold text-xs border border-emerald-200 transition cursor-pointer" title="Акт выполненных работ">
+                Акт
+              </button>
+              <button onclick="deleteProject('${p.id}')" class="px-2 py-1 rounded text-slate-400 hover:text-rose-600 transition text-xs font-semibold">
+                Удалить
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // PROJECT TASKS MODAL LOGIC
+    function openProjectTasksModal(projectId) {
+      const project = appData.projects.find(p => p.id === projectId);
+      if (!project) return;
+
+      document.getElementById('tasks-modal-project-id').value = projectId;
+      document.getElementById('tasks-modal-project-title').innerText = `Задачи проекта: ${project.title}`;
+      renderProjectTasksList(project);
+      openModal('modal-project-tasks');
+    }
+
+    function renderProjectTasksList(project) {
+      const container = document.getElementById('project-tasks-list');
+      const tasks = project.tasks || [];
+
+      if (tasks.length === 0) {
+        container.innerHTML = `<div class="p-4 text-center text-slate-400 text-xs">В этом проекте пока нет задач. Добавьте первую задачу выше.</div>`;
+        return;
+      }
+
+      container.innerHTML = tasks.map(t => `
+        <div class="p-3 rounded-xl bg-white border border-slate-200 shadow-xs flex items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2.5 flex-1 min-w-0">
+            <input type="checkbox" ${t.status === 'done' ? 'checked' : ''} onchange="toggleTaskStatus('${project.id}', '${t.id}', this.checked)" class="w-4 h-4 rounded text-indigo-600 accent-indigo-600 cursor-pointer">
+            <div class="min-w-0 flex-1">
+              <div class="font-bold text-slate-900 truncate ${t.status === 'done' ? 'line-through text-slate-400' : ''}">${t.title}</div>
+              <span class="text-[11px] text-slate-500">${t.assignee} • ${t.role.toUpperCase()}</span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-[11px] text-slate-600">
+              <strong>${t.factHours}ч</strong> / ${t.planHours}ч
+            </span>
+            <select onchange="updateTaskStage('${project.id}', '${t.id}', this.value)" class="text-[11px] bg-slate-50 border border-slate-200 rounded px-2 py-1 text-slate-700">
+              <option value="todo" ${t.status === 'todo' ? 'selected' : ''}>К выполнению</option>
+              <option value="in_progress" ${t.status === 'in_progress' ? 'selected' : ''}>В работе</option>
+              <option value="review" ${t.status === 'review' ? 'selected' : ''}>На проверке</option>
+              <option value="done" ${t.status === 'done' ? 'selected' : ''}>Готово</option>
+            </select>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function submitNewTask() {
+      const projectId = document.getElementById('tasks-modal-project-id').value;
+      const title = document.getElementById('new-task-title').value;
+      const role = document.getElementById('new-task-role').value;
+      const planHours = document.getElementById('new-task-hours').value;
+      if (!title) return;
+
+      await fetch(`/api/projects/${projectId}/tasks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, role, planHours, assignee: role === 'ai' ? 'Инженер автоматизации' : 'Команда разработки' })
+      });
+
+      document.getElementById('new-task-title').value = '';
+      await loadAllData();
+      const updatedPrj = appData.projects.find(p => p.id === projectId);
+      renderProjectTasksList(updatedPrj);
+      renderProjectsTable();
+    }
+
+    async function toggleTaskStatus(projectId, taskId, isChecked) {
+      await updateTaskStage(projectId, taskId, isChecked ? 'done' : 'in_progress');
+    }
+
+    async function updateTaskStage(projectId, taskId, status) {
+      await fetch(`/api/projects/${projectId}/tasks/${taskId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status })
+      });
+      await loadAllData();
+      const updatedPrj = appData.projects.find(p => p.id === projectId);
+      renderProjectTasksList(updatedPrj);
+      renderProjectsTable();
+    }
+
+    // TIMELOG & PROJECT MODAL LOGIC
+    function openLogTimeModal(projectId, projectTitle) {
+      document.getElementById('log-project-id').value = projectId;
+      document.getElementById('modal-log-title').innerText = `Зафиксировать часы: ${projectTitle}`;
+      document.getElementById('log-date').value = new Date().toISOString().split('T')[0];
+      openModal('modal-log-time');
+    }
+
+    async function submitTimeLog() {
+      const projectId = document.getElementById('log-project-id').value;
+      const body = {
+        role: document.getElementById('log-role').value,
+        hours: Number(document.getElementById('log-hours').value),
+        date: document.getElementById('log-date').value,
+        note: document.getElementById('log-note').value
+      };
+
+      await fetch(`/api/projects/${projectId}/timelogs`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      closeModal('modal-log-time');
+      await loadAllData();
+      renderProjectsTable();
+    }
+
+    function openNewProjectModal() { openModal('modal-new-project'); }
+    async function submitNewProject() {
+      const body = {
+        title: document.getElementById('new-prj-title').value,
+        client: document.getElementById('new-prj-client').value,
+        direction: document.getElementById('new-prj-direction').value,
+        price: Number(document.getElementById('new-prj-price').value),
+        planHours: Number(document.getElementById('new-prj-hours').value),
+        directOtherCosts: Number(document.getElementById('new-prj-direct-other').value),
+        overheadPercent: Number(document.getElementById('new-prj-overhead').value)
+      };
+
+      await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      closeModal('modal-new-project');
+      await loadAllData();
+      renderProjectsTable();
+    }
+
+    async function deleteProject(id) {
+      if (!confirm("Удалить проект из реестра?")) return;
+      await fetch(`/api/projects/${id}`, { method: 'DELETE' });
+      await loadAllData();
+      renderProjectsTable();
+    }
+
+    // ------------------------------------------------------------------
+    // INVOICES & RECEIVABLES
+    // ------------------------------------------------------------------
+    function renderInvoicesTable() {
+      const tbody = document.getElementById('invoices-table-body');
+      if (!appData.invoices || appData.invoices.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400 text-xs">Нет выставленных счетов. Нажмите "+ Выставить счет".</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = appData.invoices.map(inv => `
+        <tr class="hover:bg-slate-50 transition">
+          <td class="py-3 font-mono font-bold text-slate-900">${inv.number}</td>
+          <td class="py-3 text-slate-800">${inv.client}</td>
+          <td class="py-3 font-mono font-bold text-slate-900">${formatKZT(inv.amount)}</td>
+          <td class="py-3 font-mono text-slate-500">${inv.dueDate}</td>
+          <td class="py-3 font-mono text-slate-500">${inv.paidDate || '—'}</td>
+          <td class="py-3">
+            <span class="px-2 py-0.5 rounded text-[11px] font-bold ${
+              inv.status === 'paid' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+              (inv.status === 'overdue' ? 'bg-rose-50 text-rose-700 border border-rose-200' : 'bg-amber-50 text-amber-800 border border-amber-200')
+            }">
+              ${inv.status === 'paid' ? 'Оплачен' : (inv.status === 'overdue' ? 'Просрочен!' : 'Ожидает')}
+            </span>
+          </td>
+          <td class="py-3 text-right">
+            ${inv.status !== 'paid' ? `
+              <button onclick="payInvoice('${inv.id}')" class="px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs shadow-xs transition">
+                Подтвердить оплату
+              </button>
+            ` : `<span class="text-emerald-700 font-medium">Закрыт</span>`}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function payInvoice(id) {
+      await fetch(`/api/invoices/${id}/pay`, { method: 'PUT' });
+      await loadAllData();
+      renderInvoicesTable();
+    }
+
+    function openNewInvoiceModal() {
+      if (!appData.projects || appData.projects.length === 0) {
+        alert("Сначала создайте проект в реестре или сконвертируйте лид из CRM, чтобы выставить к нему счет!");
+        return;
+      }
+      const select = document.getElementById('new-inv-project');
+      select.innerHTML = appData.projects.map(p => `<option value="${p.id}" data-client="${p.client}">${p.title} (${p.client})</option>`).join('');
+      document.getElementById('new-inv-due-date').value = new Date(Date.now() + 14 * 86400000).toISOString().split('T')[0];
+      openModal('modal-new-invoice');
+    }
+
+    async function submitNewInvoice() {
+      const select = document.getElementById('new-inv-project');
+      const selectedOpt = select.options[select.selectedIndex];
+      const body = {
+        projectId: select.value,
+        client: selectedOpt ? selectedOpt.getAttribute('data-client') : "Клиент",
+        amount: Number(document.getElementById('new-inv-amount').value),
+        dueDate: document.getElementById('new-inv-due-date').value
+      };
+
+      await fetch('/api/invoices', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      closeModal('modal-new-invoice');
+      await loadAllData();
+      renderInvoicesTable();
+    }
+
+    // ------------------------------------------------------------------
+    // AI PROPOSAL GENERATOR
+    // ------------------------------------------------------------------
+    const briefTemplates = {
+      chatbot: "Разработка многоканального AI-ассистента для отдела продаж (Telegram + WhatsApp). Задачи: интеграция с базой знаний компании, квалификация лида по скоринг-модели, авто-запись на встречу в Google Calendar и фиксация сделки в AmoCRM.",
+      n8n: "Построение сквозной автоматизации на n8n: AmoCRM ↔ ClickUp ↔ 1С/МойСклад. Автоматическое выставление счетов, контроль подписания договоров через СМС/ЭЦП, авто-передача оплаченных сделок в проектный отдел.",
+      erp: "Разработка внутреннего B2B-портала для дилеров на Retool/Next.js + Supabase. Личный кабинет с каталогом, балансом дебиторской задолженности, историей отгрузок и генерацией актов сверки."
+    };
+
+    function setBriefTemplate(key) {
+      document.getElementById('ai-brief-input').value = briefTemplates[key];
+      generateAiProposal();
+    }
+
+    async function generateAiProposal() {
+      const brief = document.getElementById('ai-brief-input').value;
+      if (!brief) return;
+      const margin = document.getElementById('ai-margin-select').value;
+      const speedMultiplier = document.getElementById('ai-speed-select').value;
+
+      const res = await fetch('/api/ai/generate-kp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ brief, margin, speedMultiplier })
+      }).then(r => r.json());
+
+      const content = document.getElementById('ai-proposal-content');
+      content.innerHTML = `
+        <div class="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+          <div class="font-bold text-sm text-slate-900">${res.title}</div>
+          <p class="text-slate-600 text-[11px] leading-relaxed">${res.summary}</p>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="p-3 rounded-xl bg-white border border-slate-200 shadow-xs">
+            <span class="text-[10px] text-slate-500 font-medium">Стоимость для клиента</span>
+            <div class="text-slate-900 font-bold font-mono text-sm mt-0.5">${formatKZT(res.financials.clientPrice)}</div>
+          </div>
+          <div class="p-3 rounded-xl bg-white border border-slate-200 shadow-xs">
+            <span class="text-[10px] text-slate-500 font-medium">Плановые часы команды</span>
+            <div class="text-indigo-600 font-bold font-mono text-sm mt-0.5">${res.financials.totalHours} ч</div>
+          </div>
+          <div class="p-3 rounded-xl bg-white border border-slate-200 shadow-xs">
+            <span class="text-[10px] text-slate-500 font-medium">Плановая маржа</span>
+            <div class="text-emerald-700 font-bold font-mono text-sm mt-0.5">${res.financials.marginPercent}%</div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-white border border-slate-200 shadow-xs">
+          <div class="text-slate-900 font-bold text-xs mb-2">Этапы реализации проекта:</div>
+          <div class="space-y-1.5 text-[11px]">
+            ${res.phases.map((ph, idx) => `
+              <div class="flex items-center justify-between text-slate-700">
+                <span>${ph.name}</span>
+                <span class="font-mono text-slate-500">${ph.duration}</span>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-[11px] text-emerald-800 font-medium">
+          Условия: ${res.terms}
+        </div>
+      `;
+    }
+
+    // Init on startup
+    window.addEventListener('DOMContentLoaded', () => {
+      loadAllData();
+      setBriefTemplate('chatbot');
+    });
+  </script>
+</body>
+</html>

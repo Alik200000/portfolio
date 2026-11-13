@@ -3,14 +3,14 @@ import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ArrowUpRight, Cpu, Database, Pause, Play, Terminal } from 'lucide-react';
 
 const MARQUEE_ITEMS = [
+  'SQL & PYTHON DWH / ETL',
+  'BI ДАШБОРДЫ & МЕТРИКИ P&L',
   '1С:ПРЕДПРИЯТИЕ 8.3',
   'БИТРИКС24 CRM',
-  'KASPI MERCHANT',
+  'KASPI MERCHANT API',
   'WILDBERRIES API',
   'GEMINI VISION AI',
   'NEXT.JS 16 & FASTAPI',
-  'GOOGLE SHEETS & EXCEL',
-  'WAZZUP24 & GREEN-API',
 ];
 
 export function StatsCounter() {
@@ -27,12 +27,10 @@ export function StatsCounter() {
     damping: 26,
   });
 
-  // 00:06-00:09 Split Reveal: ОБО moves left, МНЕ moves right, center card scales down smoothly
   const oboX = useTransform(smoothProgress, [0.05, 0.28], [70, 0]);
   const mneX = useTransform(smoothProgress, [0.05, 0.28], [-70, 0]);
   const centerCardScale = useTransform(smoothProgress, [0.05, 0.28], [1.12, 1]);
 
-  // 00:14 Dual Headline kinetic horizontal parallax
   const topHeadlineX = useTransform(smoothProgress, [0.55, 0.95], [-40, 35]);
   const bottomHeadlineX = useTransform(smoothProgress, [0.55, 0.95], [40, -35]);
   const barScaleX = useTransform(smoothProgress, [0.6, 0.92], [0.2, 1]);
@@ -46,19 +44,19 @@ export function StatsCounter() {
     <section
       id="experience"
       ref={sectionRef}
-      className="relative z-20 bg-[#07080B] text-white pt-20 sm:pt-28 pb-16 overflow-hidden border-b border-white/10"
+      className="relative z-20 bg-[#FAF9F5] text-[#0A0B0E] pt-20 sm:pt-28 pb-16 overflow-hidden border-b border-black/15"
     >
-      {/* Subtle monochrome architectural grid texture backdrop (00:06-00:09 reference) */}
+      {/* Subtle monochrome architectural grid texture backdrop */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[0.045]"
+        className="absolute inset-0 pointer-events-none opacity-[0.06]"
         style={{
           backgroundImage:
-            'radial-gradient(circle at 50% 22%, rgba(255,255,255,0.4) 0%, transparent 60%), repeating-linear-gradient(90deg, rgba(255,255,255,0.12) 0px, rgba(255,255,255,0.12) 1px, transparent 1px, transparent 80px)',
+            'radial-gradient(circle at 50% 22%, rgba(10,11,14,0.18) 0%, transparent 60%), repeating-linear-gradient(90deg, rgba(10,11,14,0.12) 0px, rgba(10,11,14,0.12) 1px, transparent 1px, transparent 80px)',
         }}
       />
 
       <div className="max-w-[1380px] mx-auto px-4 sm:px-8 relative z-10">
-        {/* 1. Scroll-Driven Split Editorial Reveal: ОБО [Portrait/Profile Card] МНЕ (00:07-00:09 reference) */}
+        {/* 1. Scroll-Driven Split Editorial Reveal: ОБО [Portrait/Profile Card] МНЕ */}
         <div className="relative py-8 sm:py-14 flex flex-col items-center">
           <div className="w-full grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-4">
             {/* Left Giant Word: ОБО */}
@@ -71,14 +69,14 @@ export function StatsCounter() {
               className="lg:col-span-4 text-center lg:text-right max-lg:!transform-none"
             >
               <span
-                className="font-display font-black uppercase tracking-[-0.04em] leading-none text-white select-none inline-block"
+                className="font-display font-black uppercase tracking-[-0.04em] leading-none text-[#0A0B0E] select-none inline-block"
                 style={{ fontSize: 'clamp(3rem, 12vw, 8.2rem)' }}
               >
                 ОБО
               </span>
             </motion.div>
 
-            {/* Center Vertical Monochromatic Editorial Card with Scanline Sweep */}
+            {/* Center Vertical Light Editorial Card */}
             <motion.div
               style={{ scale: centerCardScale }}
               initial={{ opacity: 0, y: 24 }}
@@ -90,29 +88,23 @@ export function StatsCounter() {
               <motion.div
                 whileHover={{ y: -8, rotateY: 4, rotateX: -3 }}
                 transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-                className="w-full max-w-[330px] aspect-[4/5] rounded-2xl bg-gradient-to-b from-neutral-800/90 via-neutral-900 to-[#0A0C10] border border-white/20 p-6 flex flex-col justify-between relative overflow-hidden shadow-2xl"
+                className="w-full max-w-[330px] aspect-[4/5] rounded-2xl bg-gradient-to-b from-white via-[#FAF9F5] to-[#EFEFEA] border border-slate-300 p-6 flex flex-col justify-between relative overflow-hidden shadow-xl"
               >
-                {/* Animated Scanline Sweep */}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-transparent via-white/10 to-transparent scanline-sweep"
-                />
-
                 {/* Monochromatic architectural grid lines */}
                 <div
-                  className="absolute inset-0 opacity-15 pointer-events-none"
+                  className="absolute inset-0 opacity-20 pointer-events-none"
                   style={{
                     backgroundImage:
-                      'linear-gradient(to right, rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.2) 1px, transparent 1px)',
+                      'linear-gradient(to right, rgba(10,11,14,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(10,11,14,0.08) 1px, transparent 1px)',
                     backgroundSize: '28px 28px',
                   }}
                 />
 
                 {/* Top Card Status */}
-                <div className="relative z-10 flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-neutral-300">
+                <div className="relative z-10 flex items-center justify-between text-[10px] font-mono uppercase tracking-widest text-slate-600 font-semibold">
                   <span>ALIM • KZ</span>
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/10 text-emerald-300">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-800 font-bold">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
                     ONLINE
                   </span>
                 </div>
@@ -121,26 +113,26 @@ export function StatsCounter() {
                 <div className="relative z-10 my-auto py-4 flex flex-col items-center text-center">
                   <motion.div
                     whileHover={{ scale: 1.08, rotate: -4 }}
-                    className="w-20 h-20 rounded-2xl bg-white text-[#07080B] flex items-center justify-center font-display font-black text-4xl tracking-tighter shadow-xl mb-4"
+                    className="w-20 h-20 rounded-2xl bg-[#0A0B0E] text-[#F5F5F0] flex items-center justify-center font-display font-black text-4xl tracking-tighter shadow-lg mb-4"
                   >
                     A
                   </motion.div>
-                  <div className="font-display font-extrabold text-xl text-white tracking-tight">
+                  <div className="font-display font-extrabold text-xl text-[#0A0B0E] tracking-tight">
                     Алим (Alik200000)
                   </div>
-                  <div className="font-mono text-xs text-neutral-400 mt-1">
-                    Fullstack & AI Automation Engineer
+                  <div className="font-mono text-xs text-slate-600 mt-1 font-medium">
+                    Data / BI Analyst & Fullstack Engineer
                   </div>
-                  <div className="mt-4 w-full rounded-xl bg-black/60 border border-white/10 p-3 text-left font-mono text-[11px] text-neutral-300 space-y-1">
-                    <div className="text-neutral-500">// Специализация</div>
+                  <div className="mt-4 w-full rounded-xl bg-white border border-slate-300 p-3 text-left font-mono text-[11px] text-slate-800 space-y-1 shadow-xs">
+                    <div className="text-slate-500">// Специализация</div>
+                    <div>• SQL, Python, BI-дашборды & P&L</div>
                     <div>• 1С:Предприятие 8.3 & Битрикс24</div>
-                    <div>• Kaspi.kz & Wildberries API</div>
-                    <div>• Gemini AI & Next.js 16</div>
+                    <div>• Kaspi.kz, WB API & Gemini AI</div>
                   </div>
                 </div>
 
                 {/* Bottom Card Footer */}
-                <div className="relative z-10 flex items-center justify-between pt-3 border-t border-white/10 text-[10px] font-mono text-neutral-400">
+                <div className="relative z-10 flex items-center justify-between pt-3 border-t border-slate-300 text-[10px] font-mono text-slate-600 font-semibold">
                   <span>АЛМАТЫ / АСТАНА</span>
                   <span>GITHUB VERIFIED</span>
                 </div>
@@ -157,7 +149,7 @@ export function StatsCounter() {
               className="lg:col-span-4 text-center lg:text-left max-lg:!transform-none"
             >
               <span
-                className="font-display font-black uppercase tracking-[-0.04em] leading-none text-white select-none inline-block"
+                className="font-display font-black uppercase tracking-[-0.04em] leading-none text-[#0A0B0E] select-none inline-block"
                 style={{ fontSize: 'clamp(3rem, 12vw, 8.2rem)' }}
               >
                 МНЕ
@@ -165,15 +157,15 @@ export function StatsCounter() {
             </motion.div>
           </div>
 
-          {/* Caption Line below ОБО МНЕ (00:09 reference) */}
-          <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-2 mt-8 pt-4 border-t border-white/10 text-xs font-mono uppercase tracking-wider text-neutral-400">
-            <span>АЛИМ • РАЗРАБОТЧИК B2B-СИСТЕМ И ИНТЕГРАЦИЙ</span>
+          {/* Caption Line below ОБО МНЕ */}
+          <div className="w-full flex flex-col sm:flex-row items-center justify-between gap-2 mt-8 pt-4 border-t border-black/15 text-xs font-mono uppercase tracking-wider text-slate-600 font-medium">
+            <span>АЛИМ • АНАЛИТИКА ДАННЫХ, BI-ДАШБОРДЫ И B2B-СИСТЕМЫ</span>
             <a
               href="https://github.com/Alik200000"
               target="_blank"
               rel="noopener noreferrer"
               data-cursor-label="GITHUB ↗"
-              className="inline-flex items-center gap-1.5 text-white hover:text-neutral-300 transition-colors"
+              className="inline-flex items-center gap-1.5 text-[#0A0B0E] font-bold hover:text-indigo-700 transition-colors"
             >
               <span>ОТКРЫТЫЙ КОД НА GITHUB (ALIK200000)</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
@@ -181,7 +173,7 @@ export function StatsCounter() {
           </div>
         </div>
 
-        {/* 2. Asymmetric Bento Grid with Interactive Inline Pill Capsules (00:10-00:11 reference) */}
+        {/* 2. Asymmetric Bento Grid with Interactive Inline Pill Capsules */}
         <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Left 7 Columns: 2 Top Stat Cards + 1 Bottom Statement Card */}
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -189,21 +181,21 @@ export function StatsCounter() {
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -6, borderColor: 'rgba(255,255,255,0.3)' }}
+              whileHover={{ y: -6 }}
               viewport={{ once: true }}
               transition={{ type: 'spring', stiffness: 300, damping: 24 }}
-              className="rounded-3xl bg-[#111319] border border-white/10 p-6 sm:p-8 flex flex-col justify-between min-h-[210px]"
+              className="rounded-3xl bg-white border border-slate-300 shadow-sm hover:border-slate-500 p-6 sm:p-8 flex flex-col justify-between min-h-[210px] transition-colors"
             >
               <div>
-                <div className="font-display font-black text-4xl sm:text-5xl text-white tracking-tight">
+                <div className="font-display font-black text-4xl sm:text-5xl text-[#0A0B0E] tracking-tight">
                   6+
                 </div>
-                <div className="text-xs font-mono uppercase tracking-wider text-neutral-400 mt-1">
-                  боевых проектов в портфолио
+                <div className="text-xs font-mono uppercase tracking-wider text-slate-600 font-semibold mt-1">
+                  боевых систем и BI-витрин
                 </div>
               </div>
-              <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed mt-6">
-                Коммерческие B2B-сервисы, репрайсеры Kaspi, шлюзы 1С CommerceML 3.1, AI-боты и расширения с открытым кодом.
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mt-6">
+                Управленческие P&L-дашборды, репрайсеры Kaspi с защитой маржи, шлюзы 1С CommerceML 3.1, AI-боты и витрины данных с открытым кодом.
               </p>
             </motion.div>
 
@@ -211,89 +203,89 @@ export function StatsCounter() {
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -6, borderColor: 'rgba(255,255,255,0.3)' }}
+              whileHover={{ y: -6 }}
               viewport={{ once: true }}
               transition={{ type: 'spring', stiffness: 300, damping: 24, delay: 0.08 }}
-              className="rounded-3xl bg-[#111319] border border-white/10 p-6 sm:p-8 flex flex-col justify-between min-h-[210px]"
+              className="rounded-3xl bg-white border border-slate-300 shadow-sm hover:border-slate-500 p-6 sm:p-8 flex flex-col justify-between min-h-[210px] transition-colors"
             >
               <div>
-                <div className="font-display font-black text-4xl sm:text-5xl text-white tracking-tight">
+                <div className="font-display font-black text-4xl sm:text-5xl text-[#0A0B0E] tracking-tight">
                   4
                 </div>
-                <div className="text-xs font-mono uppercase tracking-wider text-neutral-400 mt-1">
+                <div className="text-xs font-mono uppercase tracking-wider text-slate-600 font-semibold mt-1">
                   ключевых направления
                 </div>
               </div>
-              <p className="text-xs sm:text-sm text-neutral-400 leading-relaxed mt-6">
-                B2B E-Commerce (Kaspi/WB), интеграции 1С:Предприятие & Битрикс24, прикладные AI-агенты и Fullstack веб-сервисы.
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mt-6">
+                BI & Data Analytics (SQL, Python, P&L), интеграции 1С:Предприятие & Битрикс24, E-Commerce (Kaspi/WB) и прикладные AI-агенты.
               </p>
             </motion.div>
 
-            {/* Bottom Wide Statement Card with Interactive Inline Pill Badges (00:11 reference) */}
+            {/* Bottom Wide Statement Card */}
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
-              whileHover={{ y: -4, borderColor: 'rgba(255,255,255,0.28)' }}
+              whileHover={{ y: -4 }}
               viewport={{ once: true }}
               transition={{ type: 'spring', stiffness: 280, damping: 24, delay: 0.14 }}
-              className="sm:col-span-2 rounded-3xl bg-[#111319] border border-white/10 p-6 sm:p-8 flex flex-col justify-center"
+              className="sm:col-span-2 rounded-3xl bg-white border border-slate-300 shadow-sm hover:border-slate-500 p-6 sm:p-8 flex flex-col justify-center transition-colors"
             >
-              <h3 className="font-display font-black text-2xl sm:text-3xl md:text-4xl uppercase tracking-tight leading-[1.2] text-white">
-                <span>СОЗДАЮ </span>
+              <h3 className="font-display font-black text-2xl sm:text-3xl md:text-4xl uppercase tracking-tight leading-[1.2] text-[#0A0B0E]">
+                <span>ОЦИФРОВЫВАЮ </span>
                 <motion.span
                   whileHover={{ scale: 1.12, rotate: -3 }}
                   aria-hidden="true"
-                  className="inline-flex items-center gap-1.5 align-middle mx-1 px-3 py-1 rounded-full bg-white/10 border border-white/25 text-xs font-mono text-neutral-100 cursor-default"
+                  className="inline-flex items-center gap-1.5 align-middle mx-1 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-300 text-xs font-mono text-emerald-900 font-bold cursor-default"
                 >
-                  <Database className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>1С · CRM</span>
+                  <Database className="w-3.5 h-3.5 text-emerald-700" />
+                  <span>SQL · DWH · 1С</span>
                 </motion.span>
                 <motion.span
                   whileHover={{ scale: 1.12, rotate: 3 }}
                   aria-hidden="true"
-                  className="inline-flex items-center gap-1.5 align-middle mx-1 px-3 py-1 rounded-full bg-white text-[#07080B] text-xs font-mono font-bold cursor-default shadow-md"
+                  className="inline-flex items-center gap-1.5 align-middle mx-1 px-3 py-1 rounded-full bg-[#0A0B0E] text-[#F5F5F0] text-xs font-mono font-bold cursor-default shadow-sm"
                 >
                   <Cpu className="w-3.5 h-3.5" />
-                  <span>AI · API</span>
+                  <span>BI · PYTHON · AI</span>
                 </motion.span>
                 <br />
-                <span>СИСТЕМЫ, КОТОРЫЕ ПЕРЕДАЮТ БИЗНЕСУ БОЛЬШЕ</span>
+                <span>МЕТРИКИ И ПРОЦЕССЫ ДЛЯ ПРИНЯТИЯ РЕШЕНИЙ</span>
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-400 mt-3 max-w-xl">
-                Вместо шаблонных сайтов — двусторонняя синхронизация с 1С и Битрикс24, автоматическое удержание Топ-1 в Kaspi Магазине и ИИ-контроль отделов продаж.
+              <p className="text-xs sm:text-sm text-slate-700 mt-3 max-w-xl">
+                Превращаю сырые данные из 1С, Битрикс24 и Kaspi в прозрачные витрины данных, интерактивные P&L-дашборды и автоматизированные конвейеры.
               </p>
             </motion.div>
           </div>
 
-          {/* Right 5 Columns: Tall "Обсудим ваш проект" Editorial Feature Card (00:10-00:11 reference) */}
+          {/* Right 5 Columns: Tall "Обсудим вашу задачу" Editorial Feature Card */}
           <motion.div
             initial={{ opacity: 0, x: 24 }}
             whileInView={{ opacity: 1, x: 0 }}
             whileHover={{ y: -6 }}
             viewport={{ once: true }}
             transition={{ type: 'spring', stiffness: 280, damping: 24 }}
-            className="lg:col-span-5 rounded-3xl bg-gradient-to-br from-[#181B24] via-[#111319] to-[#0B0C10] border border-white/15 p-7 sm:p-9 flex flex-col justify-between relative overflow-hidden min-h-[380px] group"
+            className="lg:col-span-5 rounded-3xl bg-gradient-to-br from-white via-[#F5F5F0] to-[#EAEAE2] border border-slate-300 shadow-md p-7 sm:p-9 flex flex-col justify-between relative overflow-hidden min-h-[380px] group"
           >
             {/* Animated Pulsing Blueprint Rings on Right */}
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 40, repeat: Infinity, ease: 'linear' }}
-              className="absolute -right-10 -bottom-10 w-64 h-64 rounded-full border border-dashed border-white/15 flex items-center justify-center pointer-events-none opacity-45 group-hover:opacity-75 transition-opacity"
+              className="absolute -right-10 -bottom-10 w-64 h-64 rounded-full border border-dashed border-slate-400/60 flex items-center justify-center pointer-events-none opacity-60 group-hover:opacity-90 transition-opacity"
             >
-              <div className="w-44 h-44 rounded-full border border-white/20 flex items-center justify-center">
-                <Terminal className="w-14 h-14 text-white/35" />
+              <div className="w-44 h-44 rounded-full border border-slate-400/50 flex items-center justify-center">
+                <Terminal className="w-14 h-14 text-slate-500/40" />
               </div>
             </motion.div>
 
             <div className="relative z-10 max-w-xs">
-              <span className="inline-block text-[11px] font-mono uppercase tracking-widest text-neutral-400 mb-3">
-                ПРЯМОЙ КОНТАКТ • БЕЗ ПОСРЕДНИКОВ
+              <span className="inline-block text-[11px] font-mono uppercase tracking-widest text-slate-600 font-bold mb-3">
+                ПРЯМОЙ КОНТАКТ • АЛМАТЫ / ГИБРИД
               </span>
-              <h3 className="font-display font-black text-3xl sm:text-4xl text-white tracking-tight leading-tight">
+              <h3 className="font-display font-black text-3xl sm:text-4xl text-[#0A0B0E] tracking-tight leading-tight">
                 Обсудим вашу задачу
               </h3>
-              <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed mt-3">
-                Разработаю архитектуру интеграции 1С / Битрикс24 / Kaspi, запущу Telegram-бота или соберу современное веб-приложение под ваш бизнес.
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mt-3">
+                Построю систему метрик и BI-дашборд, настрою витрины DWH и интеграцию 1С / Битрикс24 / Kaspi или запущу AI-автоматизацию.
               </p>
             </div>
 
@@ -303,7 +295,7 @@ export function StatsCounter() {
                 whileTap={{ scale: 0.96 }}
                 data-cursor-label="КОНТАКТ ↓"
                 onClick={scrollToContact}
-                className="px-6 py-3 rounded-full bg-white hover:bg-neutral-200 text-[#07080B] font-bold text-xs sm:text-sm flex items-center gap-2 transition-colors cursor-pointer shadow-xl"
+                className="px-6 py-3 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-[#F5F5F0] font-bold text-xs sm:text-sm flex items-center gap-2 transition-colors cursor-pointer shadow-md"
               >
                 <span>Связаться</span>
                 <ArrowUpRight className="w-4 h-4" />
@@ -313,7 +305,7 @@ export function StatsCounter() {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor-label="WHATSAPP ↗"
-                className="px-4 py-3 rounded-full bg-white/10 hover:bg-white/15 text-white border border-white/15 font-mono text-xs transition-colors"
+                className="px-4 py-3 rounded-full bg-white hover:bg-slate-100 text-[#0A0B0E] border border-slate-300 font-mono font-bold text-xs transition-colors shadow-xs"
               >
                 WhatsApp ↗
               </a>
@@ -321,27 +313,26 @@ export function StatsCounter() {
           </motion.div>
         </div>
 
-        {/* 3. "ЭКОСИСТЕМА ИНТЕГРАЦИЙ" Infinite Marquee Ticker (00:12-00:13 reference) */}
-        <div className="mt-20 sm:mt-28 pt-10 border-t border-white/10">
+        {/* 3. "ЭКОСИСТЕМА ИНТЕГРАЦИЙ" Infinite Marquee Ticker */}
+        <div className="mt-20 sm:mt-28 pt-10 border-t border-black/15">
           <div className="flex items-center justify-between gap-4 mb-6">
-            <h3 className="font-display font-black text-2xl sm:text-4xl uppercase tracking-tight text-white">
-              ЭКОСИСТЕМА ИНТЕГРАЦИЙ
+            <h3 className="font-display font-black text-2xl sm:text-4xl uppercase tracking-tight text-[#0A0B0E]">
+              ЭКОСИСТЕМА ДАННЫХ И ИНТЕГРАЦИЙ
             </h3>
 
-            {/* Pause/Play mechanism required by modern-web-guidance `motion` accessibility rule */}
             <button
               type="button"
               onClick={() => setMarqueePaused((prev) => !prev)}
               aria-pressed={marqueePaused}
               aria-label={marqueePaused ? 'Возобновить бегущую строку' : 'Остановить бегущую строку'}
-              className="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-neutral-300 text-xs font-mono flex items-center gap-1.5 cursor-pointer transition-colors"
+              className="px-3 py-1.5 rounded-full bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer transition-colors shadow-xs"
             >
               {marqueePaused ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
               <span>{marqueePaused ? 'Старт' : 'Пауза'}</span>
             </button>
           </div>
 
-          <div className="relative overflow-hidden py-5 border-y border-white/10">
+          <div className="relative overflow-hidden py-5 border-y border-black/15 bg-white/60">
             <div
               className={`editorial-marquee-track items-center gap-10 sm:gap-16 ${
                 marqueePaused ? 'editorial-marquee-paused' : ''
@@ -352,10 +343,10 @@ export function StatsCounter() {
                   key={`${item}-${idx}`}
                   className="flex items-center gap-10 sm:gap-16 shrink-0"
                 >
-                  <span className="font-display font-extrabold text-xl sm:text-3xl tracking-wider uppercase text-neutral-300 hover:text-white transition-colors">
+                  <span className="font-display font-extrabold text-xl sm:text-3xl tracking-wider uppercase text-slate-700 hover:text-[#0A0B0E] transition-colors">
                     {item}
                   </span>
-                  <span className="text-neutral-600 font-mono text-lg" aria-hidden="true">
+                  <span className="text-slate-400 font-mono text-lg" aria-hidden="true">
                     ✦
                   </span>
                 </div>
@@ -364,16 +355,16 @@ export function StatsCounter() {
           </div>
         </div>
 
-        {/* 4. Scroll-Driven Kinetic Dual Filled + Outlined Stroke Headline (00:14 reference) */}
+        {/* 4. Scroll-Driven Kinetic Dual Filled + Outlined Stroke Headline */}
         <div className="mt-16 sm:mt-28 text-center select-none overflow-hidden">
           <motion.div
             style={{
               x: topHeadlineX,
               fontSize: 'clamp(2.1rem, 10.5vw, 9.5rem)',
             }}
-            className="font-display font-black uppercase tracking-[-0.03em] leading-[0.9] text-white max-sm:!transform-none"
+            className="font-display font-black uppercase tracking-[-0.03em] leading-[0.9] text-[#0A0B0E] max-sm:!transform-none"
           >
-            FULLSTACK
+            DATA & BI
           </motion.div>
           <motion.div
             style={{
@@ -385,11 +376,11 @@ export function StatsCounter() {
             ИНТЕГРАТОР
           </motion.div>
 
-          {/* Animated Scroll-Linked Progress Bar from 00:14 */}
-          <div className="mt-8 w-full h-3 sm:h-4 rounded-sm bg-white/15 relative overflow-hidden">
+          {/* Animated Scroll-Linked Progress Bar */}
+          <div className="mt-8 w-full h-3 sm:h-4 rounded-sm bg-black/10 relative overflow-hidden">
             <motion.div
               style={{ scaleX: barScaleX, transformOrigin: 'left center' }}
-              className="absolute inset-0 bg-white"
+              className="absolute inset-0 bg-[#0A0B0E]"
             />
           </div>
         </div>

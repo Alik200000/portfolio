@@ -9,9 +9,7 @@ import {
   RotateCw,
   Pause,
   Play,
-  Sparkles,
   ChevronLeft,
-  ChevronRight,
 } from 'lucide-react';
 import { ProjectDetailModal, DetailedProject } from './ProjectDetailModal';
 
@@ -27,30 +25,30 @@ interface ShowcaseProject extends DetailedProject {
 const projects: ShowcaseProject[] = [
   {
     id: 'smart-digital-ops',
-    title: 'Smart Digital Ops & Profit Intelligence',
-    shortCode: 'ERP / P&L CORE',
+    title: 'Smart Digital Ops & Profit Intelligence (BI / P&L)',
+    shortCode: 'BI / ERP P&L CORE',
     year: '2026',
     category: 'fullstack',
-    categoryLabel: 'В продакшене (Live на Render)',
-    accentGradient: 'from-neutral-800 via-slate-900 to-black',
+    categoryLabel: 'Live Интерактивный BI-Дашборд',
+    accentGradient: 'from-white via-[#FAF9F5] to-[#EFEFEA]',
     tagline:
-      'Сквозная операционная ERP/CRM система автоматизации бизнес-процессов и финансово-управленческого учета для компании Smart Digital Group.',
+      'Система финансово-управленческого учета, Unit-экономики и BI-дашборд контроля маржинальности проектов для Smart Digital Group.',
     points: [
-      'Автоматизированный цикл: Канбан-воронка лидов, AI-генератор смет и КП за 2 секунды, авторазворачивание проекта при закрытии сделки.',
-      'Себестоимость & P&L: логирование часов команды по грейдам, учет прямых затрат (токены OpenAI, сервера), предотвращение кассовых разрывов.',
-      'Деплой: развернут и стабильно работает на платформе Render в боевом режиме.',
+      'Система метрик P&L: оцифровка выручки, прямых ФОТ-затрат по грейдам, инфраструктурных костов и чистой маржи (Net Margin %) в реальном времени.',
+      'Сквозной Data Lineage: Канбан-воронка лидов → автогенерация КП → производственные задачи → экспорт витрины P&L в CSV и печать актов РК.',
+      'Статический интерактивный деплой: работает мгновенно в браузере с локальным хранилищем данных без спящего бэкенда.',
     ],
-    badges: ['Node.js', 'Express', 'REST API', 'Render Production', 'P&L Analytics'],
-    architectureNodes: ['Канбан-воронка сделок', 'AI Cost & P&L Engine', 'Express REST API', 'Render Production'],
+    badges: ['BI Dashboard', 'SQL / P&L Metrics', 'Unit Economics', 'TypeScript', 'Data Lineage'],
+    architectureNodes: ['Канбан-воронка сделок', 'AI Cost & P&L Engine', 'Витрина маржинальности', 'CSV & PDF Экспорт'],
     techSpec: {
-      runtime: 'Node.js 20 LTS',
-      protocol: 'REST / JSON HTTPS',
-      storage: 'PostgreSQL & Cache',
-      security: 'JWT & Strict CORS',
+      runtime: 'Static BI Engine + REST',
+      protocol: 'JSON / CSV / LocalStore',
+      storage: 'PostgreSQL / Client DB',
+      security: 'Role-Based & Strict CORS',
     },
     codeSnippet: {
       language: 'typescript',
-      title: 'Расчет чистой маржинальности и себестоимости сделки',
+      title: 'Расчет чистой маржинальности и себестоимости сделки (Unit Economics)',
       code: `const calculateProjectMargin = (deal: Deal, logs: WorkLog[]) => {
   const directLaborCost = logs.reduce((acc, log) => acc + log.hours * gradeRates[log.grade], 0);
   const directInfrastructureCost = deal.openAiTokensCost + deal.serverHostingCost;
@@ -59,25 +57,25 @@ const projects: ShowcaseProject[] = [
 };`,
     },
     githubUrl: 'https://github.com/Alik200000/smart-digital-ops-core',
-    liveUrl: 'https://smart-digital-ops-core.onrender.com',
+    liveUrl: '/demos/smart-digital-ops/index.html',
   },
   {
     id: 'alatau-food-trade',
-    title: 'Alatau Food Trade (HoReCa B2B & 1С)',
+    title: 'Alatau Food Trade (HoReCa B2B & 1С DWH)',
     shortCode: '1С COMMERCEML 3.1',
     year: '2026',
     category: 'b2b',
     categoryLabel: 'B2B E-Commerce & 1С:Предприятие 8.3',
-    accentGradient: 'from-stone-800 via-neutral-900 to-black',
+    accentGradient: 'from-white via-stone-50 to-stone-100',
     tagline:
-      'Цифровая оптово-розничная платформа поставок продуктов питания и сырья для ресторанов, отелей и кондитерских г. Алматы.',
+      'Цифровая оптово-розничная платформа поставок продуктов питания для сегмента HoReCa г. Алматы с двусторонним обменом 1С.',
     points: [
-      'Стек: Next.js 16 (App Router, Turbopack) + React 19 + TypeScript 5 + Tailwind.',
-      'Интеграция с 1С: шлюз обмена данными по стандарту CommerceML 3.1 с 1С:Предприятие 8.3 (УТ для Казахстана) — синхронизация цен, остатков и заказов.',
-      'B2B-кабинет: управление отсрочкой платежей, выгрузка ЭСФ и актов сверки, автоскидки от объёма.',
+      'Стек: Next.js 16 (Static Export) + React 19 + TypeScript 5 + Tailwind CSS.',
+      'Интеграция с 1С и каталог данных: шлюз обмена по стандарту CommerceML 3.1 с 1С:Предприятие 8.3 (УТ для Казахстана) — синхронизация цен, остатков и заказов.',
+      'B2B-аналитика: управление дебиторской задолженностью, выгрузка ЭСФ и актов сверки, динамические скидки от объёма.',
     ],
     badges: ['Next.js 16', 'React 19', 'TypeScript', '1С:Предприятие 8.3', 'CommerceML 3.1', 'HoReCa'],
-    architectureNodes: ['1C:Предприятие 8.3', 'CommerceML 3.1 Gateway', 'Next.js 16 SSR Hub', 'B2B Клиентский портал'],
+    architectureNodes: ['1C:Предприятие 8.3', 'CommerceML 3.1 Gateway', 'Next.js 16 Static Hub', 'B2B Клиентский портал'],
     techSpec: {
       runtime: 'Next.js 16 / React 19',
       protocol: 'CommerceML 3.1 / XML',
@@ -105,54 +103,55 @@ const projects: ShowcaseProject[] = [
   },
   {
     id: 'kaspi-repricer',
-    title: 'Kaspi Repricer Enterprise',
+    title: 'Kaspi Repricer Enterprise (Analytics & XML)',
     shortCode: 'KASPI TOP-1 ENGINE',
     year: '2026',
     category: 'b2b',
-    categoryLabel: 'B2B SaaS • Kaspi.kz Marketplace',
-    accentGradient: 'from-zinc-800 via-neutral-900 to-black',
-    tagline: 'Автоматический репрайсер и интеллектуальный демпер цен для продавцов Kaspi Магазина.',
+    categoryLabel: 'Live Дашборд • Kaspi.kz Marketplace',
+    accentGradient: 'from-white via-slate-50 to-slate-100',
+    tagline: 'Интерактивный аналитический дашборд и автоматический репрайсер удержания Топ-1 для селлеров Kaspi Магазина.',
     points: [
-      'Захват кнопки «Купить» (Топ-1): алгоритм непрерывно сканирует цены конкурентов и выставляет цену на 1 ₸ ниже лидера.',
-      'Стоп-цена и защита маржи: бот никогда не опустит цену ниже себестоимости и поднимает цену вверх, если дешевый конкурент распродан.',
-      'Инфраструктура: автоматическая генерация защищенного XML-фида для merchant.kaspi.kz, Cloudflare Tunnel, SQLite WAL и Telegram-алерты.',
+      'Захват кнопки «Купить» (Топ-1): алгоритм непрерывно сравнивает цены конкурентов и выставляет цену на 1 ₸ ниже лидера.',
+      'Контроль Unit-экономики и стоп-цены: защита минимального порога рентабельности и журнал истории изменений цен.',
+      'Инфраструктура: генерация XML-фида для merchant.kaspi.kz, SQLite WAL, Python FastAPI и интерактивный светлый веб-дашборд.',
     ],
-    badges: ['Python', 'FastAPI', 'Kaspi XML Feed', 'Cloudflare Tunnel', 'SQLite WAL', 'Telegram API'],
-    architectureNodes: ['Kaspi XML Cron', 'FastAPI Scraper Engine', 'Delta Price Algorithm', 'Cloudflare Tunnel', 'merchant.kaspi.kz'],
+    badges: ['Python', 'FastAPI', 'SQLite WAL', 'Kaspi XML Feed', 'BI Analytics', 'Price Elasticity'],
+    architectureNodes: ['Kaspi XML Cron', 'FastAPI Scraper Engine', 'Delta Price Algorithm', 'Interactive Seller UI'],
     techSpec: {
-      runtime: 'Python 3.11+',
+      runtime: 'Python 3.11+ & Static UI',
       protocol: 'Kaspi XML 2.0 / HTTPS',
       storage: 'SQLite WAL Multi-tenant',
-      security: 'Bearer Auth & Cloudflare WAF',
+      security: 'Bearer Auth & Rate Limit',
     },
     codeSnippet: {
       language: 'python',
       title: 'Алгоритм динамического репрайсинга с защитой стоп-цены',
       code: `async def calculate_optimal_price(item_sku: str, competitor_price: float, min_stop_price: float) -> float:
-    # Защита от демпинга себестоимости
+    # Защита от демпинга ниже порога рентабельности
     if competitor_price - 1.0 < min_stop_price:
         return min_stop_price
     # Выставляем цену на 1 ₸ дешевле ближайшего конкурента
     return max(min_stop_price, competitor_price - 1.0)`,
     },
     githubUrl: 'https://github.com/Alik200000/kaspi-repricer',
+    liveUrl: '/demos/kaspi-repricer/index.html',
   },
   {
     id: 'wb-manager-ai-bot',
-    title: 'Wildberries Manager AI Bot',
+    title: 'Wildberries Manager AI Bot (Supply & Burn Rate)',
     shortCode: 'WB AI AGENT 24/7',
     year: '2026',
     category: 'ai',
-    categoryLabel: 'Telegram Bot • AI Agent',
-    accentGradient: 'from-neutral-800 via-zinc-900 to-black',
-    tagline: 'Автономный 24/7 AI-ассистент и управляющий магазином для селлеров маркетплейса Wildberries.',
+    categoryLabel: 'Telegram Bot • E-Commerce Analytics',
+    accentGradient: 'from-white via-[#FAF9F5] to-stone-100',
+    tagline: 'Автономный 24/7 AI-ассистент и аналитик товарных запасов для селлеров маркетплейса Wildberries.',
     points: [
-      'Автопилот 24/7: автогенерация ответов на отзывы и вопросы покупателей с учетом тональности и контекста товара.',
-      'Контроль Out-of-Stock: расчет скорости продаж (burn rate) и алерты за 5 дней до обнуления остатков для удержания позиций в поиске.',
-      'Утренний брифинг & SEO: сводка вчерашнего дня (заказы, выкупы, чистая маржа) и умный генератор SEO-карточек с ключевыми словами.',
+      'Прогноз Out-of-Stock: расчет скорости продаж (burn rate) по складам и алерты за 5 дней до обнуления остатков для сохранения ранжирования.',
+      'Утренний аналитический брифинг: сводка ключевых показателей вчерашнего дня (заказы, выкупы, логистика, чистая маржа).',
+      'Автопилот отзывов и OCR: автоответы покупателям и распознавание первичных накладных через Gemini Vision.',
     ],
-    badges: ['Python', 'aiogram 3', 'Wildberries API', 'AI Agent', 'AsyncIO'],
-    architectureNodes: ['WB Seller API v3', 'AsyncIO Task Poller', 'Gemini Vision OCR', 'aiogram 3 Bot'],
+    badges: ['Python', 'aiogram 3', 'Wildberries API', 'Supply Analytics', 'AsyncIO'],
+    architectureNodes: ['WB Seller API v3', 'Burn Rate Calculator', 'Gemini Vision OCR', 'aiogram 3 Bot'],
     techSpec: {
       runtime: 'Python 3.11+ AsyncIO',
       protocol: 'Telegram Bot API & WB REST',
@@ -179,20 +178,20 @@ const projects: ShowcaseProject[] = [
     year: '2026',
     category: 'ai',
     categoryLabel: 'Chrome Extension • Gemini Vision',
-    accentGradient: 'from-slate-800 via-neutral-900 to-black',
-    tagline: 'Браузерное расширение с мультимодальным AI-ассистентом для онлайн-платформ ADWAY и Satbayev University.',
+    accentGradient: 'from-white via-slate-50 to-stone-100',
+    tagline: 'Браузерное расширение с мультимодальным AI-ассистентом для инженерных и аналитических задач (SQL, Python, Матрицы).',
     points: [
-      'Gemini Vision (Alt + S): мгновенное распознавание графиков, электрических схем, матриц и формул по выделенной области экрана.',
-      'Генератор кода & решений: пошаговое выполнение инженерных задач и генерация скриптов (Python, C++, SQL).',
-      'Stealth Mode: режим скрытности (Alt + H / Esc), перетаскиваемый draggable-интерфейс и мягкая подсветка ответов.',
+      'Gemini Vision (Alt + S): мгновенное распознавание графиков, схем БД, матриц и математических формул по выделенной области экрана.',
+      'Генератор SQL & Python решений: пошаговое выполнение аналитических задач с пояснением физического смысла формул.',
+      'Stealth HUD: компактный перетаскиваемый интерфейс поверх веб-страницы с локальным хранением настроек.',
     ],
-    badges: ['Chrome Extension', 'Gemini Vision', 'JavaScript', 'Manifest V3', 'EdTech'],
+    badges: ['Chrome Extension', 'Gemini Vision', 'JavaScript', 'Manifest V3', 'SQL & Python'],
     architectureNodes: ['DOM Mutation Observer', 'Chrome Manifest V3', 'Gemini 1.5 Pro Vision', 'Floating HUD Overlay'],
     techSpec: {
       runtime: 'Chrome MV3 / JavaScript',
       protocol: 'Google GenAI API v1',
       storage: 'Chrome Local Storage',
-      security: 'Client-side API Key Vault',
+      security: 'Client-side Vault (.env)',
     },
     codeSnippet: {
       language: 'javascript',
@@ -209,30 +208,30 @@ const projects: ShowcaseProject[] = [
   },
   {
     id: 'bybit-trading-bot',
-    title: 'High-Frequency Trading & ABK Scanner',
+    title: 'High-Frequency Trading & ABK Spread Analytics',
     shortCode: 'ABK FINTECH BOT',
     year: '2026',
     category: 'fullstack',
-    categoryLabel: 'FinTech • Bybit & Binance АБК Скринер',
-    accentGradient: 'from-neutral-800 via-stone-900 to-black',
+    categoryLabel: 'FinTech • Quantitative Analytics',
+    accentGradient: 'from-white via-stone-50 to-slate-100',
     tagline:
-      'Автономный торговый бот и скринер «Арбитража Без Карт» (АБК) для поиска спредов Bybit / Binance и дельта-нейтрального сбора фандинга.',
+      'Количественный скринер «Арбитража Без Карт» (АБК) для анализа межбиржевых спредов Bybit / Binance и дельта-нейтрального фандинга.',
     points: [
-      'АБК Скринер (Арбитраж Без Карт): потоковый межбиржевой мониторинг цен Bybit vs Binance без использования банковских карт физлиц и риска блокировок.',
-      'Дельта-нейтральный фандинг: автоматический расчет годовой ставки APR и выявление аномалий ставки финансирования (Funding Rate Arbitrage).',
-      'Kill-Switch & Риск-менеджмент: динамический Stop-Loss/Take-Profit, расчет 1% риска депозита и блокировка при дневной просадке -3%.',
+      'АБК Скринер (Арбитраж Без Карт): потоковый мониторинг стаканов Bybit vs Binance с вычетом комиссий Taker/Maker и оценкой ликвидности.',
+      'Дельта-нейтральный фандинг: автоматический расчет годовой доходности APR и выявление статистических аномалий Funding Rate.',
+      'Kill-Switch & Риск-менеджмент: жесткое ограничение 1% риска на сделку и автоблокировка при дневной просадке -3%.',
     ],
-    badges: ['Python', 'Bybit API', 'Binance API', 'АБК Арбитраж', 'WebSocket v5', 'AsyncIO'],
+    badges: ['Python', 'Bybit API', 'Binance API', 'Quant Analytics', 'WebSocket v5', 'AsyncIO'],
     architectureNodes: ['Bybit / Binance API', 'ABK Spread Engine', 'Delta Funding Arbitrage', '1% Risk Kill-Switch'],
     techSpec: {
       runtime: 'Python 3.11+ AsyncIO',
       protocol: 'WebSocket v5 & REST',
       storage: 'In-Memory Ring Buffer',
-      security: 'HMAC SHA256 Signature',
+      security: 'HMAC SHA256 (process.env)',
     },
     codeSnippet: {
       language: 'python',
-      title: 'Межбиржевой расчет спреда АБК с вычетом комиссий Taker',
+      title: 'Межбиржевой расчет чистого спреда АБК с вычетом комиссий Taker',
       code: `async def calculate_abk_spread(bybit_bid: float, binance_ask: float) -> dict:
     # Расчет чистого спреда между Bybit и Binance без банковских карт
     raw_spread = ((bybit_bid - binance_ask) / binance_ask) * 100
@@ -245,14 +244,14 @@ const projects: ShowcaseProject[] = [
 ];
 
 const RADIAL_MODULES = [
-  { code: '01', title: '1С OData & CommerceML', sub: 'Синхронизация УТ/БП РК', projectIndex: 1 },
+  { code: '01', title: '1С OData & CommerceML', sub: 'Витрины УТ/БП РК', projectIndex: 1 },
   { code: '02', title: 'Битрикс24 Batch Sync', sub: 'Дедупликация БИН/ИИН', projectIndex: 0 },
   { code: '03', title: 'Kaspi Top-1 Repricer', sub: 'Защита стоп-цены 24/7', projectIndex: 2 },
   { code: '04', title: 'Gemini Vision OCR', sub: 'Накладные и схемы', projectIndex: 4 },
-  { code: '05', title: 'WB AI Автопилот', sub: 'Контроль Out-of-Stock', projectIndex: 3 },
+  { code: '05', title: 'WB Burn-Rate Аналитика', sub: 'Контроль Out-of-Stock', projectIndex: 3 },
   { code: '06', title: 'Bybit / Binance АБК', sub: 'Спреды и Funding APR', projectIndex: 5 },
-  { code: '07', title: 'Smart Digital P&L', sub: 'Маржинальность сделок', projectIndex: 0 },
-  { code: '08', title: '23/23 Security Audit', sub: 'Закон РК & Безопасность', projectIndex: 1 },
+  { code: '07', title: 'Smart Digital BI P&L', sub: 'Маржинальность сделок', projectIndex: 0 },
+  { code: '08', title: 'Data Lineage & Audit', sub: 'Закон РК & Качество', projectIndex: 1 },
 ];
 
 export function ProjectsShowcase() {
@@ -261,10 +260,9 @@ export function ProjectsShowcase() {
   const [fanMode, setFanMode] = useState<'arc' | 'cylinder'>('arc');
   const [cylinderAngle, setCylinderAngle] = useState<number>(0);
   const [cylinderPaused, setCylinderPaused] = useState<boolean>(false);
-  const [focusedIndex, setFocusedIndex] = useState<number>(2);
+  const [focusedIndex, setFocusedIndex] = useState<number>(0);
   const [wheelPaused, setWheelPaused] = useState<boolean>(false);
 
-  // Smooth continuous auto-rotation for 3D Cylinder Ring (00:18-00:20 reference)
   useEffect(() => {
     if (fanMode !== 'cylinder' || cylinderPaused) return;
     const prefersReduced =
@@ -286,8 +284,8 @@ export function ProjectsShowcase() {
   const categories = [
     { id: 'all', label: 'Все проекты (6)' },
     { id: 'b2b', label: 'Kaspi & 1С (2)' },
-    { id: 'ai', label: 'AI & Боты (2)' },
-    { id: 'fullstack', label: 'Web & FinTech (2)' },
+    { id: 'ai', label: 'AI & Аналитика (2)' },
+    { id: 'fullstack', label: 'BI Дашборды & FinTech (2)' },
   ];
 
   const flagship = projects[0];
@@ -297,9 +295,9 @@ export function ProjectsShowcase() {
   return (
     <div id="projects" className="relative">
       {/* =====================================================================
-          PART 1: "ГЛАВНЫЙ ПРОЕКТ" — Light Editorial Split Showcase (00:15-00:16)
+          PART 1: "ГЛАВНЫЙ ПРОЕКТ" — Light Editorial Split Showcase
          ===================================================================== */}
-      <section className="bg-[#EFEFEA] text-[#0A0B0E] py-20 sm:py-28 px-4 sm:px-8 border-b border-black/10">
+      <section className="bg-[#EFEFEA] text-[#0A0B0E] py-20 sm:py-28 px-4 sm:px-8 border-b border-black/15">
         <div className="max-w-[1380px] mx-auto">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
             <h2
@@ -310,27 +308,26 @@ export function ProjectsShowcase() {
               <br />
               ПРОЕКТ
             </h2>
-            <p className="text-xs sm:text-sm font-mono uppercase tracking-wider text-[#0A0B0E]/70 max-w-sm">
-              БОЕВЫЕ КОММЕРЧЕСКИЕ СИСТЕМЫ С ОТКРЫТЫМ ИСХОДНЫМ КОДОМ И PRODUCTION-ДЕПЛОЕМ
+            <p className="text-xs sm:text-sm font-mono uppercase tracking-wider text-slate-700 font-semibold max-w-sm">
+              ИНТЕРАКТИВНЫЕ BI-ДАШБОРДЫ, B2B-СИСТЕМЫ И ВИТРИНЫ ДАННЫХ С ОТКРЫТЫМ КОДОМ
             </p>
           </div>
 
-          {/* Asymmetric 2-Column Editorial Grid (Left Large Flagship + Right 2 Stacked Cards) */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left 7 Cols: Flagship Card */}
-            <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl bg-[#0A0B0E] text-white p-6 sm:p-10 shadow-2xl relative overflow-hidden group">
+            {/* Left 7 Cols: Flagship Card (Light Surface) */}
+            <div className="lg:col-span-7 flex flex-col justify-between rounded-3xl bg-white text-[#0A0B0E] border border-slate-300 p-6 sm:p-10 shadow-xl relative overflow-hidden group">
               <div
-                className="absolute inset-0 opacity-15 pointer-events-none"
+                className="absolute inset-0 opacity-25 pointer-events-none"
                 style={{
                   backgroundImage:
-                    'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.22) 0%, transparent 55%), linear-gradient(to right, rgba(255,255,255,0.08) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.08) 1px, transparent 1px)',
+                    'radial-gradient(circle at 80% 20%, rgba(16,185,129,0.12) 0%, transparent 55%), linear-gradient(to right, rgba(10,11,14,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(10,11,14,0.05) 1px, transparent 1px)',
                   backgroundSize: 'auto, 36px 36px, 36px 36px',
                 }}
               />
 
               <div className="relative z-10">
                 <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-                  <span className="px-3.5 py-1 rounded-full bg-white text-[#0A0B0E] font-mono text-xs font-bold uppercase tracking-wider">
+                  <span className="px-3.5 py-1 rounded-full bg-emerald-50 border border-emerald-300 text-emerald-900 font-mono text-xs font-bold uppercase tracking-wider">
                     {flagship.categoryLabel}
                   </span>
                   <div className="flex items-center gap-2">
@@ -338,7 +335,7 @@ export function ProjectsShowcase() {
                       href={flagship.githubUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs font-mono flex items-center gap-1.5 transition-colors"
+                      className="px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-300 text-[#0A0B0E] text-xs font-mono font-bold flex items-center gap-1.5 transition-colors"
                     >
                       <Github className="w-3.5 h-3.5" />
                       <span>GitHub</span>
@@ -348,19 +345,19 @@ export function ProjectsShowcase() {
                         href={flagship.liveUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-3.5 py-1.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-[#07080B] font-mono font-bold text-xs flex items-center gap-1.5 transition-colors"
+                        className="px-3.5 py-1.5 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-[#F5F5F0] font-mono font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
                       >
                         <ExternalLink className="w-3.5 h-3.5" />
-                        <span>Live на Render</span>
+                        <span>Открыть BI-Дашборд</span>
                       </a>
                     )}
                   </div>
                 </div>
 
-                <h3 className="font-display font-black text-2xl sm:text-4xl tracking-tight text-white mb-3">
+                <h3 className="font-display font-black text-2xl sm:text-4xl tracking-tight text-[#0A0B0E] mb-3">
                   {flagship.title}
                 </h3>
-                <p className="text-sm sm:text-base text-neutral-300 leading-relaxed mb-6 max-w-2xl">
+                <p className="text-sm sm:text-base text-slate-700 leading-relaxed mb-6 max-w-2xl">
                   {flagship.tagline}
                 </p>
 
@@ -369,30 +366,30 @@ export function ProjectsShowcase() {
                   {flagship.architectureNodes.map((node, idx) => (
                     <div
                       key={node}
-                      className="p-3 rounded-2xl bg-white/5 border border-white/10 text-left"
+                      className="p-3 rounded-2xl bg-[#FAF9F5] border border-slate-300 text-left"
                     >
-                      <div className="font-mono text-[10px] text-neutral-400">0{idx + 1}</div>
-                      <div className="font-bold text-xs text-white mt-0.5">{node}</div>
+                      <div className="font-mono text-[10px] text-slate-500 font-bold">0{idx + 1}</div>
+                      <div className="font-bold text-xs text-[#0A0B0E] mt-0.5">{node}</div>
                     </div>
                   ))}
                 </div>
 
-                <ul className="space-y-2 text-xs sm:text-sm text-neutral-300 mb-6">
+                <ul className="space-y-2 text-xs sm:text-sm text-slate-700 mb-6">
                   {flagship.points.map((pt, idx) => (
                     <li key={idx} className="flex items-start gap-2">
-                      <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                      <Check className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                       <span>{pt}</span>
                     </li>
                   ))}
                 </ul>
               </div>
 
-              <div className="relative z-10 pt-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+              <div className="relative z-10 pt-5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
                 <div className="flex flex-wrap gap-1.5">
                   {flagship.badges.map((b) => (
                     <span
                       key={b}
-                      className="px-2.5 py-1 rounded-md bg-white/10 font-mono text-[11px] text-neutral-200"
+                      className="px-2.5 py-1 rounded-md bg-slate-100 border border-slate-300 font-mono text-[11px] text-slate-800 font-semibold"
                     >
                       {b}
                     </span>
@@ -401,7 +398,7 @@ export function ProjectsShowcase() {
 
                 <button
                   onClick={() => setActiveModalProject(flagship)}
-                  className="px-5 py-2.5 rounded-full bg-white hover:bg-neutral-200 text-[#0A0B0E] font-mono font-bold text-xs flex items-center gap-2 transition-colors cursor-pointer"
+                  className="px-5 py-2.5 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-[#F5F5F0] font-mono font-bold text-xs flex items-center gap-2 transition-colors cursor-pointer"
                 >
                   <Layers className="w-3.5 h-3.5" />
                   <span>Схема и код</span>
@@ -415,39 +412,51 @@ export function ProjectsShowcase() {
               {[secondaryA, secondaryB].map((proj) => (
                 <div
                   key={proj.id}
-                  className="flex-1 rounded-3xl bg-white border border-black/10 p-6 sm:p-7 shadow-lg flex flex-col justify-between hover:border-black/30 transition-all"
+                  className="flex-1 rounded-3xl bg-white border border-slate-300 p-6 sm:p-7 shadow-md flex flex-col justify-between hover:border-slate-500 transition-all"
                 >
                   <div>
                     <div className="flex items-center justify-between gap-2 mb-3">
-                      <span className="font-mono text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-[#0A0B0E]/5 text-[#0A0B0E]">
+                      <span className="font-mono text-[11px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-slate-100 border border-slate-300 text-[#0A0B0E]">
                         {proj.shortCode}
                       </span>
-                      <a
-                        href={proj.githubUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="font-mono text-xs font-bold text-[#0A0B0E]/70 hover:text-[#0A0B0E] flex items-center gap-1"
-                      >
-                        <Github className="w-3.5 h-3.5" />
-                        <span>GitHub ↗</span>
-                      </a>
+                      <div className="flex items-center gap-2">
+                        {proj.liveUrl && (
+                          <a
+                            href={proj.liveUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="font-mono text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-300 px-2.5 py-0.5 rounded-full hover:bg-emerald-100 flex items-center gap-1"
+                          >
+                            <span>Live Demo ↗</span>
+                          </a>
+                        )}
+                        <a
+                          href={proj.githubUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="font-mono text-xs font-bold text-slate-700 hover:text-[#0A0B0E] flex items-center gap-1"
+                        >
+                          <Github className="w-3.5 h-3.5" />
+                          <span>GitHub ↗</span>
+                        </a>
+                      </div>
                     </div>
 
                     <h3 className="font-display font-black text-xl sm:text-2xl text-[#0A0B0E] tracking-tight mb-2">
                       {proj.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-[#0A0B0E]/75 leading-relaxed mb-4">
+                    <p className="text-xs sm:text-sm text-slate-700 leading-relaxed mb-4">
                       {proj.tagline}
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-black/10 flex items-center justify-between gap-2">
-                    <span className="font-mono text-[11px] font-bold uppercase text-[#0A0B0E]/60">
+                  <div className="pt-4 border-t border-slate-200 flex items-center justify-between gap-2">
+                    <span className="font-mono text-[11px] font-bold uppercase text-slate-600">
                       {proj.techSpec.protocol}
                     </span>
                     <button
                       onClick={() => setActiveModalProject(proj)}
-                      className="px-4 py-2 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-white font-mono text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
+                      className="px-4 py-2 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-[#F5F5F0] font-mono text-xs font-bold flex items-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <span>Открыть кейс</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
@@ -461,15 +470,14 @@ export function ProjectsShowcase() {
       </section>
 
       {/* =====================================================================
-          PART 2: "ПРОЕКТЫ" — Interactive 3D Cylindrical Ring & Curved Fan (00:17-00:22)
+          PART 2: "ПРОЕКТЫ" — Light Interactive 3D Cylindrical Ring & Curved Fan
          ===================================================================== */}
-      <section className="bg-[#07080B] text-white py-24 sm:py-32 px-4 sm:px-8 overflow-hidden border-b border-white/10">
+      <section className="bg-[#FAF9F5] text-[#0A0B0E] py-24 sm:py-32 px-4 sm:px-8 overflow-hidden border-b border-black/15">
         <div className="max-w-[1380px] mx-auto">
-          {/* Header Row matching 00:18-00:22 */}
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <div>
               <h2
-                className="font-display font-black uppercase tracking-[-0.035em] leading-none text-white"
+                className="font-display font-black uppercase tracking-[-0.035em] leading-none text-[#0A0B0E]"
                 style={{ fontSize: 'clamp(2.8rem, 8vw, 6.5rem)' }}
               >
                 ПРОЕКТЫ
@@ -477,18 +485,17 @@ export function ProjectsShowcase() {
             </div>
 
             <div className="flex flex-col sm:items-end gap-3">
-              <p className="text-xs sm:text-sm text-neutral-400 max-w-xs sm:text-right">
-                B2B-порталы, интеграции с 1С и Kaspi, автономные AI-боты и FinTech-алгоритмы.
+              <p className="text-xs sm:text-sm text-slate-700 max-w-xs sm:text-right">
+                BI-дашборды, витрины данных 1С и Kaspi, автономные AI-боты и количественные алгоритмы.
               </p>
 
-              {/* Switcher between 3D Curved Fan (00:21) and 3D Cylinder Ring (00:19) */}
-              <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-white/5 border border-white/10">
+              <div className="inline-flex items-center gap-1.5 p-1 rounded-full bg-white border border-slate-300 shadow-xs">
                 <button
                   type="button"
                   onClick={() => setFanMode('arc')}
                   aria-pressed={fanMode === 'arc'}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-bold transition-colors cursor-pointer ${
-                    fanMode === 'arc' ? 'bg-white text-[#07080B]' : 'text-neutral-300 hover:text-white'
+                    fanMode === 'arc' ? 'bg-[#0A0B0E] text-[#F5F5F0]' : 'text-slate-700 hover:text-[#0A0B0E]'
                   }`}
                 >
                   3D Веер (Дуга)
@@ -498,7 +505,7 @@ export function ProjectsShowcase() {
                   onClick={() => setFanMode('cylinder')}
                   aria-pressed={fanMode === 'cylinder'}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-mono font-bold transition-colors cursor-pointer ${
-                    fanMode === 'cylinder' ? 'bg-white text-[#07080B]' : 'text-neutral-300 hover:text-white'
+                    fanMode === 'cylinder' ? 'bg-[#0A0B0E] text-[#F5F5F0]' : 'text-slate-700 hover:text-[#0A0B0E]'
                   }`}
                 >
                   3D Кольцо (360°)
@@ -507,17 +514,14 @@ export function ProjectsShowcase() {
             </div>
           </div>
 
-          {/* 3D Stage */}
           {fanMode === 'arc' ? (
-            /* 00:21-00:22 Reference: Curved Horizontal 3D Arc Fan on Desktop + Touch Snap Carousel on Mobile */
             <div className="perspective-stage py-4 sm:py-10">
-              <div className="lg:hidden mb-3 flex items-center justify-between text-[11px] font-mono text-neutral-400">
+              <div className="lg:hidden mb-3 flex items-center justify-between text-[11px] font-mono text-slate-600 font-semibold">
                 <span>← Листайте проекты вбок →</span>
                 <span>6 кейсов</span>
               </div>
               <div className="flex lg:grid lg:grid-cols-6 overflow-x-auto lg:overflow-visible snap-x snap-mandatory gap-4 pb-4 -mx-4 px-4 lg:mx-0 lg:px-0 no-scrollbar items-center">
                 {projects.map((proj, index) => {
-                  // Calculate symmetric arc angles across the 6 cards (-25deg to +25deg)
                   const offsetFromCenter = index - 2.5;
                   const rotateY = offsetFromCenter * -9;
                   const translateY = Math.abs(offsetFromCenter) * 10;
@@ -543,51 +547,41 @@ export function ProjectsShowcase() {
                         proj.accentGradient
                       } ${
                         isFocused
-                          ? 'border-white shadow-2xl shadow-white/15 z-20'
-                          : 'border-white/15 opacity-90 hover:opacity-100 z-10'
+                          ? 'border-[#0A0B0E] shadow-2xl z-20'
+                          : 'border-slate-300 shadow-md opacity-95 hover:opacity-100 z-10'
                       }`}
                     >
-                      {/* Animated Scanline Sweep on focused card */}
-                      {isFocused && (
-                        <div
-                          aria-hidden="true"
-                          className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-transparent via-white/12 to-transparent scanline-sweep"
-                        />
-                      )}
-
-                      {/* Architectural Grid Overlay */}
                       <div
-                        className="absolute inset-0 opacity-15 pointer-events-none"
+                        className="absolute inset-0 opacity-20 pointer-events-none"
                         style={{
                           backgroundImage:
-                            'linear-gradient(to right, rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.2) 1px, transparent 1px)',
+                            'linear-gradient(to right, rgba(10,11,14,0.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(10,11,14,0.06) 1px, transparent 1px)',
                           backgroundSize: '24px 24px',
                         }}
                       />
 
-                      <div className="relative z-10 flex items-center justify-between text-[10px] font-mono text-neutral-300">
+                      <div className="relative z-10 flex items-center justify-between text-[10px] font-mono text-slate-600 font-bold">
                         <span>0{index + 1}</span>
-                        <span className="px-2 py-0.5 rounded-full bg-white/10 text-white">
+                        <span className="px-2 py-0.5 rounded-full bg-white border border-slate-300 text-[#0A0B0E]">
                           {proj.shortCode}
                         </span>
                       </div>
 
-                      {/* Center Play/Inspect Badge like in 00:21 */}
                       <div className="relative z-10 my-auto py-2">
-                        <div className="w-10 h-10 rounded-full bg-white/15 group-hover:bg-white group-hover:text-[#07080B] border border-white/25 flex items-center justify-center transition-all mb-3">
+                        <div className="w-10 h-10 rounded-full bg-[#0A0B0E]/5 group-hover:bg-[#0A0B0E] group-hover:text-[#F5F5F0] border border-slate-300 flex items-center justify-center transition-all mb-3 text-[#0A0B0E]">
                           <ArrowUpRight className="w-4 h-4" />
                         </div>
-                        <h3 className="font-display font-extrabold text-base sm:text-lg text-white leading-snug">
+                        <h3 className="font-display font-extrabold text-base sm:text-lg text-[#0A0B0E] leading-snug">
                           {proj.title}
                         </h3>
-                        <p className="text-[11px] text-neutral-300 line-clamp-3 mt-1.5 leading-relaxed">
+                        <p className="text-[11px] text-slate-700 line-clamp-3 mt-1.5 leading-relaxed">
                           {proj.tagline}
                         </p>
                       </div>
 
-                      <div className="relative z-10 pt-2.5 border-t border-white/10 flex items-center justify-between text-[10px] font-mono text-neutral-400">
+                      <div className="relative z-10 pt-2.5 border-t border-slate-300 flex items-center justify-between text-[10px] font-mono text-slate-600 font-semibold">
                         <span>{proj.techSpec.runtime}</span>
-                        <span className="text-white font-bold">Кейс →</span>
+                        <span className="text-[#0A0B0E] font-bold">Кейс →</span>
                       </div>
                     </motion.div>
                   );
@@ -595,7 +589,6 @@ export function ProjectsShowcase() {
               </div>
             </div>
           ) : (
-            /* 00:18-00:20 Reference: 3D Rotating Cylindrical Ring */
             <div className="flex flex-col items-center py-6 sm:py-10 overflow-hidden">
               <div
                 onMouseEnter={() => setCylinderPaused(true)}
@@ -620,21 +613,21 @@ export function ProjectsShowcase() {
                         style={{
                           transform: `rotateY(${itemAngle}deg) translateZ(${radiusZ}px)`,
                         }}
-                        className={`absolute inset-0 rounded-2xl p-4 sm:p-5 bg-gradient-to-b ${proj.accentGradient} border border-white/25 shadow-2xl flex flex-col justify-between cursor-pointer hover:border-white transition-colors`}
+                        className={`absolute inset-0 rounded-2xl p-4 sm:p-5 bg-gradient-to-b ${proj.accentGradient} border border-slate-300 shadow-xl flex flex-col justify-between cursor-pointer hover:border-[#0A0B0E] transition-colors`}
                       >
-                        <div className="flex items-center justify-between text-[10px] font-mono text-neutral-300">
+                        <div className="flex items-center justify-between text-[10px] font-mono text-slate-600 font-bold">
                           <span>0{idx + 1}</span>
                           <span>{proj.shortCode}</span>
                         </div>
                         <div>
-                          <h3 className="font-display font-bold text-lg text-white leading-tight mb-2">
+                          <h3 className="font-display font-bold text-lg text-[#0A0B0E] leading-tight mb-2">
                             {proj.title}
                           </h3>
-                          <p className="text-xs text-neutral-300 line-clamp-3">
+                          <p className="text-xs text-slate-700 line-clamp-3">
                             {proj.tagline}
                           </p>
                         </div>
-                        <div className="text-[10px] font-mono text-white flex items-center justify-between pt-2 border-t border-white/15">
+                        <div className="text-[10px] font-mono text-[#0A0B0E] font-bold flex items-center justify-between pt-2 border-t border-slate-300">
                           <span>Открыть архитектуру</span>
                           <ArrowUpRight className="w-3.5 h-3.5" />
                         </div>
@@ -644,13 +637,12 @@ export function ProjectsShowcase() {
                 </div>
               </div>
 
-              {/* Cylinder Rotation & Pause Controls */}
               <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                 <button
                   type="button"
                   onClick={() => setCylinderAngle((a) => a + 60)}
                   aria-label="Повернуть 3D-кольцо влево"
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono text-xs flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-full bg-white hover:bg-slate-100 border border-slate-300 text-[#0A0B0E] font-mono font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs"
                 >
                   <ChevronLeft className="w-4 h-4" />
                   <span>Пред.</span>
@@ -660,7 +652,7 @@ export function ProjectsShowcase() {
                   onClick={() => setCylinderPaused((p) => !p)}
                   aria-pressed={cylinderPaused}
                   aria-label={cylinderPaused ? 'Запустить вращение 3D-кольца' : 'Поставить 3D-кольцо на паузу'}
-                  className="px-4 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono text-xs flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-full bg-white hover:bg-slate-100 border border-slate-300 text-[#0A0B0E] font-mono font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-xs"
                 >
                   {cylinderPaused ? <Play className="w-3.5 h-3.5" /> : <Pause className="w-3.5 h-3.5" />}
                   <span>{cylinderPaused ? 'Старт' : 'Пауза'}</span>
@@ -669,7 +661,7 @@ export function ProjectsShowcase() {
                   type="button"
                   onClick={() => setCylinderAngle((a) => a - 60)}
                   aria-label="Повернуть 3D-кольцо вправо"
-                  className="px-4 py-2 rounded-full bg-white hover:bg-neutral-200 text-[#07080B] font-mono font-bold text-xs flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-[#F5F5F0] font-mono font-bold text-xs flex items-center gap-1.5 cursor-pointer shadow-sm"
                 >
                   <span>След. +60°</span>
                   <RotateCw className="w-3.5 h-3.5" />
@@ -681,38 +673,35 @@ export function ProjectsShowcase() {
       </section>
 
       {/* =====================================================================
-          PART 3: "ЛУЧШИЕ АРХИТЕКТУРЫ" — 360° Radial Wheel Collage (00:23-00:24)
+          PART 3: "ЛУЧШИЕ АРХИТЕКТУРЫ" — 360° Radial Wheel Collage (Light)
          ===================================================================== */}
-      <section className="bg-[#F3F3EE] text-[#0A0B0E] py-20 sm:py-28 px-4 sm:px-8 border-b border-black/10 overflow-hidden">
+      <section className="bg-[#F3F3EE] text-[#0A0B0E] py-20 sm:py-28 px-4 sm:px-8 border-b border-black/15 overflow-hidden">
         <div className="max-w-[1380px] mx-auto flex flex-col items-center">
           <div className="w-full flex items-center justify-between mb-8">
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#0A0B0E]/60">
+            <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-700">
               ИНТЕРАКТИВНОЕ КОЛЕСО МОДУЛЕЙ • 360°
             </span>
             <button
               type="button"
               onClick={() => setWheelPaused((p) => !p)}
               aria-pressed={wheelPaused}
-              className="px-3.5 py-1.5 rounded-full bg-[#0A0B0E]/5 hover:bg-[#0A0B0E]/10 border border-[#0A0B0E]/15 text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer"
+              className="px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-100 border border-slate-300 text-[#0A0B0E] text-xs font-mono font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
             >
               {wheelPaused ? <Play className="w-3 h-3" /> : <Pause className="w-3 h-3" />}
               <span>{wheelPaused ? 'Вращать' : 'Пауза'}</span>
             </button>
           </div>
 
-          {/* Desktop 360° Radial Wheel (00:23-00:24 video reference) */}
           <div className="relative w-full max-w-[680px] aspect-square hidden md:flex items-center justify-center my-4">
-            {/* Center Typography: ЛУЧШИЕ АРХИТЕКТУРЫ */}
             <div className="relative z-20 text-center px-6 pointer-events-none">
               <div className="font-display font-black text-3xl lg:text-4xl uppercase tracking-tight text-[#0A0B0E]">
                 ЛУЧШИЕ
               </div>
-              <div className="font-mono text-xs uppercase tracking-[0.2em] text-[#0A0B0E]/70 mt-1">
-                МОДУЛИ И ИНТЕГРАЦИИ
+              <div className="font-mono text-xs uppercase tracking-[0.2em] text-slate-700 font-semibold mt-1">
+                ВИТРИНЫ И МОДУЛИ
               </div>
             </div>
 
-            {/* Orbiting Ring of 8 Cards */}
             <div
               className={`absolute inset-0 radial-wheel-orbit ${
                 wheelPaused ? 'editorial-marquee-paused' : ''
@@ -721,7 +710,7 @@ export function ProjectsShowcase() {
               {RADIAL_MODULES.map((mod, idx) => {
                 const angleDeg = idx * 45;
                 const angleRad = (angleDeg * Math.PI) / 180;
-                const radiusPct = 38; // percent from center
+                const radiusPct = 38;
                 const leftPct = 50 + radiusPct * Math.cos(angleRad);
                 const topPct = 50 + radiusPct * Math.sin(angleRad);
 
@@ -738,18 +727,18 @@ export function ProjectsShowcase() {
                     <button
                       type="button"
                       onClick={() => setActiveModalProject(projects[mod.projectIndex])}
-                      className={`w-full text-left p-3.5 rounded-2xl bg-[#0A0B0E] text-white border border-black/15 shadow-xl hover:scale-105 transition-transform cursor-pointer radial-wheel-counter-orbit ${
+                      className={`w-full text-left p-3.5 rounded-2xl bg-white text-[#0A0B0E] border border-slate-300 hover:border-[#0A0B0E] shadow-lg hover:scale-105 transition-all cursor-pointer radial-wheel-counter-orbit ${
                         wheelPaused ? 'editorial-marquee-paused' : ''
                       }`}
                     >
-                      <div className="flex items-center justify-between font-mono text-[10px] text-neutral-400 mb-1">
+                      <div className="flex items-center justify-between font-mono text-[10px] text-slate-500 font-bold mb-1">
                         <span>#{mod.code}</span>
-                        <ArrowUpRight className="w-3 h-3 text-white" />
+                        <ArrowUpRight className="w-3 h-3 text-[#0A0B0E]" />
                       </div>
-                      <div className="font-display font-bold text-xs text-white leading-snug">
+                      <div className="font-display font-bold text-xs text-[#0A0B0E] leading-snug">
                         {mod.title}
                       </div>
-                      <div className="font-mono text-[10px] text-neutral-400 mt-0.5">
+                      <div className="font-mono text-[10px] text-slate-600 mt-0.5">
                         {mod.sub}
                       </div>
                     </button>
@@ -759,14 +748,13 @@ export function ProjectsShowcase() {
             </div>
           </div>
 
-          {/* Mobile/Tablet Responsive Grid fallback for the Radial Wheel */}
           <div className="w-full md:hidden">
             <div className="text-center mb-6">
               <div className="font-display font-black text-3xl uppercase tracking-tight text-[#0A0B0E]">
                 ЛУЧШИЕ МОДУЛИ
               </div>
-              <div className="font-mono text-xs uppercase tracking-widest text-[#0A0B0E]/70">
-                ИНТЕГРАЦИИ И АРХИТЕКТУРА
+              <div className="font-mono text-xs uppercase tracking-widest text-slate-700">
+                ВИТРИНЫ И АРХИТЕКТУРА
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">
@@ -775,11 +763,11 @@ export function ProjectsShowcase() {
                   key={mod.code}
                   type="button"
                   onClick={() => setActiveModalProject(projects[mod.projectIndex])}
-                  className="p-4 rounded-2xl bg-[#0A0B0E] text-white text-left flex flex-col justify-between"
+                  className="p-4 rounded-2xl bg-white border border-slate-300 text-[#0A0B0E] text-left flex flex-col justify-between shadow-sm"
                 >
-                  <div className="font-mono text-[10px] text-neutral-400">#{mod.code}</div>
+                  <div className="font-mono text-[10px] text-slate-500 font-bold">#{mod.code}</div>
                   <div className="font-display font-bold text-sm mt-1">{mod.title}</div>
-                  <div className="font-mono text-[10px] text-neutral-400 mt-1">{mod.sub}</div>
+                  <div className="font-mono text-[10px] text-slate-600 mt-1">{mod.sub}</div>
                 </button>
               ))}
             </div>
@@ -788,15 +776,14 @@ export function ProjectsShowcase() {
       </section>
 
       {/* =====================================================================
-          PART 4: "ВСЕ РАБОТЫ" — Sticky Full-Bleed Stack & Filterable Catalog (00:25-00:34 & 00:45-00:49)
+          PART 4: "ВСЕ РАБОТЫ" — Light Sticky Stack & Filterable Catalog
          ===================================================================== */}
-      <section className="bg-[#07080B] text-white py-24 sm:py-32 px-4 sm:px-8 border-b border-white/10">
+      <section className="bg-[#F5F5F0] text-[#0A0B0E] py-24 sm:py-32 px-4 sm:px-8 border-b border-black/15">
         <div className="max-w-[1380px] mx-auto">
-          {/* Header + Filter Pills matching 00:25 & 00:46 */}
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-14">
             <div>
               <h2
-                className="font-display font-black uppercase tracking-[-0.035em] leading-[0.92] text-white"
+                className="font-display font-black uppercase tracking-[-0.035em] leading-[0.92] text-[#0A0B0E]"
                 style={{ fontSize: 'clamp(2.8rem, 7.5vw, 6.2rem)' }}
               >
                 ВСЕ
@@ -805,7 +792,6 @@ export function ProjectsShowcase() {
               </h2>
             </div>
 
-            {/* Category Filter Tabs (00:46-00:49 reference: Fashion | Horeca | Travel | Экспертные рилсы) */}
             <div
               role="tablist"
               aria-label="Фильтровать все работы по направлению"
@@ -819,10 +805,10 @@ export function ProjectsShowcase() {
                     role="tab"
                     aria-selected={isActive}
                     onClick={() => setSelectedFilter(cat.id as any)}
-                    className={`shrink-0 px-4 sm:px-5 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-400 ${
+                    className={`shrink-0 px-4 sm:px-5 py-2.5 rounded-full text-xs font-mono font-bold uppercase tracking-wider border transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-900 ${
                       isActive
-                        ? 'bg-white text-[#07080B] border-white shadow-lg'
-                        : 'bg-transparent text-neutral-300 border-white/20 hover:border-white/50 hover:text-white'
+                        ? 'bg-[#0A0B0E] text-[#F5F5F0] border-[#0A0B0E] shadow-md'
+                        : 'bg-white text-slate-700 border-slate-300 hover:border-[#0A0B0E] hover:text-[#0A0B0E]'
                     }`}
                   >
                     {cat.label}
@@ -832,7 +818,6 @@ export function ProjectsShowcase() {
             </div>
           </div>
 
-          {/* Sticky Stacking Cards (00:25-00:34 reference) */}
           <div className="space-y-8">
             <AnimatePresence mode="popLayout">
               {filteredProjects.map((project, index) => (
@@ -846,45 +831,44 @@ export function ProjectsShowcase() {
                   style={{
                     top: `${76 + index * 14}px`,
                   }}
-                  className="md:sticky scroll-entry-card rounded-3xl bg-[#0E1016] border border-white/15 hover:border-white/35 transition-colors p-6 sm:p-10 shadow-2xl overflow-hidden"
+                  className="md:sticky scroll-entry-card rounded-3xl bg-white border border-slate-300 hover:border-slate-500 transition-colors p-6 sm:p-10 shadow-xl overflow-hidden"
                 >
                   <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    {/* Left 7 Cols: Editorial Details */}
                     <div className="lg:col-span-7 flex flex-col justify-between">
                       <div>
                         <div className="flex flex-wrap items-center gap-3 mb-4">
-                          <span className="font-mono text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-white/10 text-white">
+                          <span className="font-mono text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-slate-100 border border-slate-300 text-[#0A0B0E]">
                             0{index + 1} • {project.shortCode}
                           </span>
-                          <span className="font-mono text-xs text-neutral-400">
+                          <span className="font-mono text-xs text-slate-600 font-semibold">
                             {project.categoryLabel}
                           </span>
                         </div>
 
-                        <h3 className="font-display font-black text-2xl sm:text-4xl text-white tracking-tight mb-3">
+                        <h3 className="font-display font-black text-2xl sm:text-4xl text-[#0A0B0E] tracking-tight mb-3">
                           {project.title}
                         </h3>
 
-                        <p className="text-sm sm:text-base text-neutral-300 leading-relaxed mb-6">
+                        <p className="text-sm sm:text-base text-slate-700 leading-relaxed mb-6">
                           {project.tagline}
                         </p>
 
-                        <ul className="space-y-2.5 text-xs sm:text-sm text-neutral-300 mb-6">
+                        <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700 mb-6">
                           {project.points.map((point, pIdx) => (
                             <li key={pIdx} className="flex items-start gap-2.5">
-                              <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
+                              <Check className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
                               <span>{point}</span>
                             </li>
                           ))}
                         </ul>
                       </div>
 
-                      <div className="pt-5 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                      <div className="pt-5 border-t border-slate-200 flex flex-wrap items-center justify-between gap-4">
                         <div className="flex flex-wrap gap-1.5">
                           {project.badges.map((badge) => (
                             <span
                               key={badge}
-                              className="px-2.5 py-1 rounded-lg bg-white/5 border border-white/10 text-[11px] font-mono text-neutral-300"
+                              className="px-2.5 py-1 rounded-lg bg-[#FAF9F5] border border-slate-300 text-[11px] font-mono text-slate-800 font-semibold"
                             >
                               #{badge}
                             </span>
@@ -896,7 +880,7 @@ export function ProjectsShowcase() {
                             href={project.githubUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-4 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-mono text-xs flex items-center gap-1.5 transition-colors"
+                            className="px-4 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-300 text-[#0A0B0E] font-mono font-bold text-xs flex items-center gap-1.5 transition-colors"
                           >
                             <Github className="w-3.5 h-3.5" />
                             <span>GitHub</span>
@@ -907,16 +891,16 @@ export function ProjectsShowcase() {
                               href={project.liveUrl}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-4 py-2.5 rounded-full bg-emerald-500 hover:bg-emerald-400 text-[#07080B] font-mono font-bold text-xs flex items-center gap-1.5 transition-colors"
+                              className="px-4 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-mono font-bold text-xs flex items-center gap-1.5 transition-colors shadow-sm"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
-                              <span>Live Demo</span>
+                              <span>Открыть Дашборд</span>
                             </a>
                           )}
 
                           <button
                             onClick={() => setActiveModalProject(project)}
-                            className="px-5 py-2.5 rounded-full bg-white hover:bg-neutral-200 text-[#07080B] font-mono font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
+                            className="px-5 py-2.5 rounded-full bg-[#0A0B0E] hover:bg-neutral-800 text-[#F5F5F0] font-mono font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
                           >
                             <Layers className="w-3.5 h-3.5" />
                             <span>Архитектура и код</span>
@@ -926,24 +910,24 @@ export function ProjectsShowcase() {
                       </div>
                     </div>
 
-                    {/* Right 5 Cols: Live Code & Architecture Preview Card */}
+                    {/* Right 5 Cols: Live Code & Architecture Preview Card (Light) */}
                     <div className="lg:col-span-5">
-                      <div className="rounded-2xl bg-[#07080B] border border-white/10 p-5 font-mono text-xs text-neutral-300 shadow-inner">
-                        <div className="flex items-center justify-between pb-3 mb-3 border-b border-white/10 text-[11px] text-neutral-400">
+                      <div className="rounded-2xl bg-[#FAF9F5] border border-slate-300 p-5 font-mono text-xs text-slate-800 shadow-inner">
+                        <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-300 text-[11px] text-slate-600 font-bold">
                           <span>{project.codeSnippet.title}</span>
-                          <span className="uppercase text-emerald-400">{project.techSpec.runtime}</span>
+                          <span className="uppercase text-emerald-800">{project.techSpec.runtime}</span>
                         </div>
-                        <pre className="overflow-x-auto text-[11px] leading-relaxed text-neutral-200 no-scrollbar">
+                        <pre className="overflow-x-auto text-[11px] leading-relaxed text-slate-900 no-scrollbar">
                           <code>{project.codeSnippet.code}</code>
                         </pre>
-                        <div className="mt-4 pt-3 border-t border-white/10 grid grid-cols-2 gap-2 text-[10px] text-neutral-400">
+                        <div className="mt-4 pt-3 border-t border-slate-300 grid grid-cols-2 gap-2 text-[10px] text-slate-600">
                           <div>
-                            <span className="block text-neutral-500">ПРОТОКОЛ</span>
-                            <span className="text-white">{project.techSpec.protocol}</span>
+                            <span className="block text-slate-500 font-bold">ПРОТОКОЛ</span>
+                            <span className="text-[#0A0B0E] font-bold">{project.techSpec.protocol}</span>
                           </div>
                           <div>
-                            <span className="block text-neutral-500">ХРАНИЛИЩЕ</span>
-                            <span className="text-white">{project.techSpec.storage}</span>
+                            <span className="block text-slate-500 font-bold">ХРАНИЛИЩЕ</span>
+                            <span className="text-[#0A0B0E] font-bold">{project.techSpec.storage}</span>
                           </div>
                         </div>
                       </div>
@@ -956,7 +940,6 @@ export function ProjectsShowcase() {
         </div>
       </section>
 
-      {/* Project Architecture & Details Modal */}
       <ProjectDetailModal
         project={activeModalProject}
         onClose={() => setActiveModalProject(null)}
