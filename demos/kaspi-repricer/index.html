@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaspi Repricer Enterprise — Кабинет селлера и аналитика цен</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        kaspi: {
+                            red: '#F14635',
+                            darkred: '#D9251D',
+                            lightred: '#FF5C4C',
+                            bg: '#F3F4F8',
+                            surface: '#FFFFFF',
+                            gold: '#F59E0B'
+                        }
+                    },
+                    boxShadow: {
+                        'kaspi-glow': '0 4px 20px -2px rgba(241, 70, 53, 0.35)',
+                        'glass-light': '0 8px 30px rgba(0, 0, 0, 0.04)',
+                        'glass-elevated': '0 14px 40px rgba(0, 0, 0, 0.07)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #F3F4F8;
+            color: #0F172A;
+        }
+        .glass-panel-light {
+            background: rgba(255, 255, 255, 0.86);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+        }
+        .glass-card-light {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 20px rgba(15, 23, 42, 0.03);
+        }
+        .glass-modal-light {
+            background: rgba(255, 255, 255, 0.97);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.16);
+        }
+        .kaspi-btn-red {
+            background: linear-gradient(135deg, #F14635 0%, #D9251D 100%);
+            box-shadow: 0 4px 14px rgba(241, 70, 53, 0.35);
+        }
+        .kaspi-btn-red:hover {
+            background: linear-gradient(135deg, #FF5C4C 0%, #E1251B 100%);
+            box-shadow: 0 6px 20px rgba(241, 70, 53, 0.45);
+        }
+    </style>
+</head>
+<body class="min-h-screen relative overflow-x-hidden text-slate-800">
+    <div class="fixed top-0 left-1/4 w-[32rem] h-[32rem] bg-red-400/[0.07] rounded-full blur-[140px] pointer-events-none"></div>
+    <div class="fixed bottom-10 right-1/4 w-[32rem] h-[32rem] bg-rose-400/[0.06] rounded-full blur-[160px] pointer-events-none"></div>
+
+    <!-- Основной рабочий экран селлера -->
+    <div id="appContainer" class="relative z-10">
+        <nav class="glass-panel-light sticky top-0 z-40 border-b border-slate-200/70">
+            <div class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 py-2.5 flex items-center justify-between">
+                <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-10 h-10 rounded-2xl kaspi-btn-red flex items-center justify-center font-black text-white text-xl shadow-kaspi-glow shrink-0">
+                        K
+                    </div>
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="font-black text-base sm:text-lg text-slate-900 tracking-tight">Kaspi <span class="text-kaspi-red">Repricer</span></span>
+                            <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] font-bold uppercase bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full">Static Live Demo</span>
+                        </div>
+                        <div class="text-[11px] text-slate-500 font-medium truncate" id="headerStoreInfo">TechLeader.kz (Merchant ID: 30248769)</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button onclick="openGuideModal()" class="px-3.5 py-2 text-xs font-semibold glass-card-light hover:bg-white text-slate-700 rounded-xl border border-slate-200/70 shadow-sm cursor-pointer">
+                        📖 Инструкция
+                    </button>
+                    <button onclick="openSettingsModal()" class="hidden sm:flex px-3.5 py-2 text-xs font-semibold glass-card-light hover:bg-white text-slate-700 rounded-xl border border-slate-200/70 shadow-sm cursor-pointer">
+                        ⚙️ Настройки
+                    </button>
+                    <button onclick="openAddModal()" class="px-4 py-2 text-xs font-bold kaspi-btn-red text-white rounded-xl shadow-kaspi-glow flex items-center gap-1 cursor-pointer">
+                        <span>+</span> Добавить SKU
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <main class="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 space-y-6 pb-20">
+            <!-- Hero Banner -->
+            <div class="glass-panel-light rounded-3xl p-6 sm:p-8 relative overflow-hidden border border-white/90 shadow-glass-light">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+                    <div class="max-w-2xl">
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-50 border border-red-200/80 text-kaspi-red text-xs font-bold uppercase tracking-wider mb-3">
+                            ⚡ Автозахват кнопки «Купить» • Мониторинг витрины и SLA
+                        </div>
+                        <h1 class="text-xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                            Динамическое ценообразование (-1 ₸) с защитой стоп-маржи
+                        </h1>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">
+                            Алгоритм парсит витрину Kaspi.kz, удерживает Топ-1 позицию, блокирует слив ниже себестоимости (Min Margin Floor) и автоматически поднимает цену вверх, когда конкурент выходит из стока.
+                        </p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-emerald-50 to-white border border-emerald-200 rounded-2xl p-5 min-w-[240px] shadow-sm">
+                        <div class="text-xs font-bold uppercase tracking-wider text-emerald-700 flex items-center gap-1.5">
+                            <span>💰</span> Сэкономлено маржи (30 дн)
+                        </div>
+                        <div class="text-3xl font-black text-slate-900 mt-2 font-mono" id="savedMarginDisplay">485 200 ₸</div>
+                        <p class="text-[11px] text-slate-500 mt-1">за счет авто-повышения цен и защиты стоп-порога</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- XML Feed Link -->
+            <div class="glass-card-light rounded-2xl p-5 border border-slate-200/80 shadow-glass-light">
+                <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Kaspi XML Прайс-Фид активен (SLA: обновление каждые 3 мин)</span>
+                        </div>
+                        <p class="text-xs text-slate-500 mt-1">Прямая ссылка для кабинета <b>merchant.kaspi.kz</b> → <i>Загрузка прайс-листа по расписанию</i></p>
+                    </div>
+                    <div class="flex items-center gap-2 w-full lg:w-auto">
+                        <input type="text" readonly id="publicFeedInput" value="https://kaspi-repricer.kz/api/feed/30248769_techleader.xml"
+                               class="bg-white border border-slate-300 text-xs font-mono text-slate-800 rounded-xl px-3.5 py-2.5 w-full lg:w-96 focus:outline-none select-all">
+                        <button onclick="copyFeed()" class="px-4 py-2.5 kaspi-btn-red font-bold text-xs text-white rounded-xl shadow-kaspi-glow whitespace-nowrap cursor-pointer">
+                            📋 Скопировать
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card-light rounded-2xl p-5 border border-slate-200/80">
+                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Товаров в каталоге</div>
+                    <div class="text-3xl font-black text-slate-900 mt-2 font-mono" id="metricTotal">5</div>
+                    <div class="text-xs text-slate-400 mt-1">активный мониторинг SKU</div>
+                </div>
+                <div class="glass-card-light rounded-2xl p-5 border border-emerald-200 bg-emerald-50/50">
+                    <div class="text-xs font-semibold text-emerald-700 uppercase tracking-wider flex justify-between">
+                        <span>Лидеры (Топ-1)</span><span>🏆</span>
+                    </div>
+                    <div class="text-3xl font-black text-emerald-700 mt-2 font-mono" id="metricTop1">4</div>
+                    <div class="text-xs text-emerald-600 mt-1">забирают кнопку «Купить»</div>
+                </div>
+                <div class="glass-card-light rounded-2xl p-5 border border-amber-200 bg-amber-50/50">
+                    <div class="text-xs font-semibold text-amber-700 uppercase tracking-wider flex justify-between">
+                        <span>Защита маржи</span><span>🛡️</span>
+                    </div>
+                    <div class="text-3xl font-black text-amber-700 mt-2 font-mono" id="metricFloor">1</div>
+                    <div class="text-xs text-amber-600 mt-1">удержали стоп-цену</div>
+                </div>
+                <div class="glass-card-light rounded-2xl p-5 border border-slate-200/80">
+                    <div class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Цикл сканирования</div>
+                    <div class="text-3xl font-black text-slate-900 mt-2 font-mono" id="metricInterval">3 мин</div>
+                    <div class="text-xs text-slate-400 mt-1">SLA 99.9% аптайм</div>
+                </div>
+            </div>
+
+            <!-- Products Table -->
+            <div class="glass-panel-light rounded-3xl border border-slate-200/80 shadow-glass-light overflow-hidden">
+                <div class="p-5 border-b border-slate-200/80 flex items-center justify-between gap-3 bg-white/40">
+                    <div>
+                        <h2 class="text-base font-bold text-slate-900">Витрина товаров на автодемпинге (г. Алматы)</h2>
+                        <p class="text-xs text-slate-500 mt-0.5">Нажмите 📊 для просмотра лога решений алгоритма и истории цен конкурентов</p>
+                    </div>
+                    <button onclick="runNow()" class="px-4 py-2 text-xs font-semibold glass-card-light hover:bg-white text-slate-700 rounded-xl border border-slate-200/80 flex items-center gap-1.5 transition-all shadow-sm cursor-pointer">
+                        <span id="syncIcon">🔄</span> <span>Пересчитать цены сейчас</span>
+                    </button>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-slate-700">
+                        <thead class="text-[11px] uppercase bg-slate-100/70 text-slate-500 border-b border-slate-200/70 font-bold tracking-wider">
+                            <tr>
+                                <th class="py-3.5 px-4">Товар / Master SKU</th>
+                                <th class="py-3.5 px-4">Стратегия</th>
+                                <th class="py-3.5 px-4">Коридор (Стоп / Макс)</th>
+                                <th class="py-3.5 px-4">Конкурент №1</th>
+                                <th class="py-3.5 px-4">Ваша цена</th>
+                                <th class="py-3.5 px-4">Статус</th>
+                                <th class="py-3.5 px-4 text-right">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTableBody" class="divide-y divide-slate-200/70 text-xs sm:text-sm bg-white/30"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- History Modal -->
+    <div id="historyModal" class="fixed inset-0 bg-slate-900/30 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-modal-light rounded-3xl w-full max-w-2xl p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-5 pb-3 border-b border-slate-200">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900" id="histTitle">История изменения цены</h3>
+                    <p class="text-xs text-slate-500">Лог решений алгоритма репрайсинга (Data Lineage)</p>
+                </div>
+                <button onclick="document.getElementById('historyModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-2xl cursor-pointer">&times;</button>
+            </div>
+            <div class="space-y-3 max-h-96 overflow-y-auto" id="historyTimeline"></div>
+        </div>
+    </div>
+
+    <!-- Add Product Modal -->
+    <div id="addModal" class="fixed inset-0 bg-slate-900/30 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-modal-light rounded-3xl w-full max-w-lg p-6 sm:p-8">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-lg font-bold text-slate-900">Добавить SKU на мониторинг</h3>
+                <button onclick="document.getElementById('addModal').classList.add('hidden')" class="text-slate-400 hover:text-slate-700 text-xl cursor-pointer">&times;</button>
+            </div>
+            <form id="newProductForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Название товара</label>
+                    <input type="text" id="m_title" required placeholder="Apple iPhone 16 Pro 256GB Natural Titanium" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Ваш SKU</label>
+                        <input type="text" id="m_sku" required placeholder="IPH16-PRO-256" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Стратегия</label>
+                        <select id="m_strategy" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm">
+                            <option value="undercut">🚀 Лидер (-1 ₸)</option>
+                            <option value="match">⚖️ Паритет (=)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Стоп-цена (Мин) ₸</label>
+                        <input type="number" id="m_min" required placeholder="640000" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1 uppercase">Базовая цена (Макс) ₸</label>
+                        <input type="number" id="m_max" required placeholder="710000" class="w-full bg-white border border-slate-300 rounded-xl px-3.5 py-2.5 text-sm font-mono">
+                    </div>
+                </div>
+                <div class="pt-3 flex gap-3">
+                    <button type="button" onclick="document.getElementById('addModal').classList.add('hidden')" class="w-1/2 py-2.5 glass-card-light text-slate-700 font-semibold rounded-xl text-xs border border-slate-200">Отмена</button>
+                    <button type="submit" class="w-1/2 py-2.5 kaspi-btn-red text-white font-bold rounded-xl text-xs">Добавить в каталог</button>
+                </div>
+              <p class="text-[11px] text-slate-400 text-center pt-1">Согласие на обработку персональных данных и коммерческой тайны (Политика конфиденциальности РК)</p>
+      </form>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 bg-slate-900/30 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-modal-light rounded-3xl w-full max-w-md p-6">
+            <h3 class="text-lg font-bold text-slate-900 mb-4">Настройки селлера Kaspi</h3>
+            <div class="space-y-3 text-xs">
+                <div><label class="font-bold text-slate-600">Merchant ID:</label><input id="set_mid" value="30248769" class="w-full border rounded-xl px-3 py-2 mt-1 font-mono"></div>
+                <div><label class="font-bold text-slate-600">Магазин:</label><input id="set_store" value="TechLeader.kz" class="w-full border rounded-xl px-3 py-2 mt-1"></div>
+                <button onclick="saveSettings()" class="w-full py-2.5 kaspi-btn-red text-white font-bold rounded-xl mt-2">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Guide Modal -->
+    <div id="guideModal" class="fixed inset-0 bg-slate-900/30 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
+        <div class="glass-modal-light rounded-3xl w-full max-w-lg p-6 space-y-4">
+            <h3 class="text-lg font-bold text-slate-900">Архитектура и алгоритм Kaspi Repricer</h3>
+            <p class="text-xs text-slate-600 leading-relaxed">1. <b>Парсинг офферов:</b> Каждые 3 минуты воркер опрашивает карточку товара на Kaspi.kz и фильтрует собственный магазин по Merchant ID.<br>2. <b>Защита себестоимости:</b> Если минимальная цена конкурента ниже вашей <code>Стоп-цены</code>, алгоритм встает на стоп-порог и отправляет алерт в Telegram.<br>3. <b>Генерация XML:</b> Обновленные цены моментально публикуются в защищенном XML-фиде по стандарту Kaspi.</p>
+            <button onclick="document.getElementById('guideModal').classList.add('hidden')" class="w-full py-2.5 kaspi-btn-red text-white font-bold rounded-xl text-xs">Закрыть</button>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'kaspi_repricer_static_v1';
+        const defaultProducts = [
+            { id: 1, title: "Apple AirPods Pro 2 with MagSafe Case (USB-C)", sku: "APP2-USBC-KZ", product_id: "113482910", strategy: "undercut", min_price: 108000, max_price: 129990, top_competitor_name: "iSpace Almaty", top_competitor_price: 114890, target_price: 114889, status: "top1", is_active: true },
+            { id: 2, title: "Смартфон Apple iPhone 16 Pro 128GB Black Titanium", sku: "IPH16P-128-BLK", product_id: "123981044", strategy: "undercut", min_price: 615000, max_price: 689990, top_competitor_name: "Sulpak.kz", top_competitor_price: 632900, target_price: 632899, status: "top1", is_active: true },
+            { id: 3, title: "Стайлер Dyson Airwrap Multi-Styler Complete Long", sku: "DYS-AW-LONG", product_id: "105992381", strategy: "undercut", min_price: 245000, max_price: 289000, top_competitor_name: "Dyson-Discount", top_competitor_price: 239000, target_price: 245000, status: "floor_limit", is_active: true },
+            { id: 4, title: "Игровая приставка Sony PlayStation 5 Slim 1TB", sku: "PS5-SLIM-1TB", product_id: "114889201", strategy: "match", min_price: 235000, max_price: 269990, top_competitor_name: "GameStore KZ", top_competitor_price: 248500, target_price: 248500, status: "top1", is_active: true },
+            { id: 5, title: "Кофемашина DeLonghi Magnifica Evo ECAM290.81.TB", sku: "DEL-ECAM-290", product_id: "102938475", strategy: "undercut", min_price: 268000, max_price: 315000, top_competitor_name: "TechnoDom", top_competitor_price: 279990, target_price: 279989, status: "top1", is_active: true }
+        ];
+
+        function getProducts() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) { localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultProducts)); return [...defaultProducts]; }
+                return JSON.parse(raw);
+            } catch (e) { return [...defaultProducts]; }
+        }
+        function saveProducts(list) {
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); } catch (e) {}
+        }
+
+        function renderProducts() {
+            const products = getProducts();
+            document.getElementById('metricTotal').innerText = products.length;
+            document.getElementById('metricTop1').innerText = products.filter(p => p.status === 'top1' && p.is_active).length;
+            document.getElementById('metricFloor').innerText = products.filter(p => p.status === 'floor_limit' && p.is_active).length;
+
+            const tbody = document.getElementById('productsTableBody');
+            tbody.innerHTML = products.map(p => {
+                const statusBadge = !p.is_active
+                    ? '<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 text-slate-500 border border-slate-200">Пауза</span>'
+                    : (p.status === 'top1'
+                        ? '<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200">🏆 Топ-1</span>'
+                        : '<span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200">🛡️ Стоп-порог</span>');
+                const strategyBadge = p.strategy === 'match'
+                    ? '<span class="text-[11px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">⚖️ Паритет (=)</span>'
+                    : '<span class="text-[11px] text-kaspi-red font-bold bg-red-50 px-2 py-0.5 rounded-md border border-red-200">🚀 Лидер (-1 ₸)</span>';
+                return `
+                    <tr class="hover:bg-slate-50/80 transition-colors">
+                        <td class="py-4 px-4">
+                            <div class="font-bold text-slate-900">${p.title}</div>
+                            <div class="text-[11px] text-slate-500 font-mono mt-0.5">SKU: ${p.sku} • Kaspi ID: ${p.product_id}</div>
+                        </td>
+                        <td class="py-4 px-4">${strategyBadge}</td>
+                        <td class="py-4 px-4 font-mono text-xs text-slate-600">
+                            <div>Стоп: <b class="text-slate-800">${Number(p.min_price).toLocaleString()} ₸</b></div>
+                            <div class="text-slate-400">Макс: ${Number(p.max_price).toLocaleString()} ₸</div>
+                        </td>
+                        <td class="py-4 px-4 text-xs">
+                            <div class="font-bold text-slate-900">${p.top_competitor_name}</div>
+                            <div class="text-[11px] text-slate-500 font-mono">${Number(p.top_competitor_price).toLocaleString()} ₸</div>
+                        </td>
+                        <td class="py-4 px-4"><span class="text-emerald-700 font-black font-mono text-base">${Number(p.target_price).toLocaleString()} ₸</span></td>
+                        <td class="py-4 px-4">${statusBadge}</td>
+                        <td class="py-4 px-4 text-right space-x-1">
+                            <button onclick="viewHistory(${p.id})" class="p-2 glass-card-light hover:bg-amber-50 text-amber-700 rounded-xl text-xs border border-amber-200 cursor-pointer" title="История">📊</button>
+                            <button onclick="toggleActive(${p.id})" class="p-2 glass-card-light hover:bg-slate-100 text-slate-600 rounded-xl text-xs border border-slate-200 cursor-pointer">${p.is_active ? '⏸️' : '▶️'}</button>
+                            <button onclick="deleteProd(${p.id})" class="p-2 glass-card-light hover:bg-red-50 text-red-500 rounded-xl text-xs border border-red-200 cursor-pointer">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function viewHistory(id) {
+            const p = getProducts().find(x => x.id === id);
+            if (!p) return;
+            document.getElementById('histTitle').innerText = p.title;
+            document.getElementById('historyTimeline').innerHTML = `
+                <div class="glass-card-light rounded-xl p-3.5 border border-slate-200 text-xs">
+                    <div class="flex justify-between text-slate-500 mb-1"><span class="font-mono">Сегодня, 14:20:05</span><span class="text-emerald-700 font-black font-mono">${Number(p.target_price).toLocaleString()} ₸</span></div>
+                    <div class="font-bold text-slate-900">Конкурент №1: ${p.top_competitor_name} (${Number(p.top_competitor_price).toLocaleString()} ₸)</div>
+                    <div class="text-slate-600 mt-1">${p.status === 'floor_limit' ? 'Сработала защита маржи: цена конкурента ниже вашего стоп-порога. Удержана минимально допустимая цена.' : 'Алгоритм выставил цену на 1 ₸ ниже конкурента и забрал кнопку «Купить».'}</div>
+                </div>
+                <div class="glass-card-light rounded-xl p-3.5 border border-slate-200 text-xs">
+                    <div class="flex justify-between text-slate-500 mb-1"><span class="font-mono">Сегодня, 11:05:12</span><span class="text-emerald-700 font-black font-mono">${Number(p.target_price + 1500).toLocaleString()} ₸</span></div>
+                    <div class="font-bold text-slate-900">Авто-повышение маржи (Smart Margin Recovery)</div>
+                    <div class="text-slate-600 mt-1">Демпингующий продавец вышел из стока. Цена автоматически поднята до следующего конкурента (+1 500 ₸ чистой прибыли).</div>
+                </div>
+            `;
+            document.getElementById('historyModal').classList.remove('hidden');
+        }
+
+        function toggleActive(id) {
+            const list = getProducts().map(p => p.id === id ? { ...p, is_active: !p.is_active } : p);
+            saveProducts(list);
+            renderProducts();
+        }
+        function deleteProd(id) {
+            if (!confirm('Удалить SKU из мониторинга?')) return;
+            saveProducts(getProducts().filter(p => p.id !== id));
+            renderProducts();
+        }
+        function runNow() {
+            const icon = document.getElementById('syncIcon');
+            icon.classList.add('animate-spin');
+            setTimeout(() => {
+                const list = getProducts().map(p => {
+                    if (!p.is_active) return p;
+                    const delta = Math.floor(Math.random() * 400) - 200;
+                    const comp = Math.max(p.min_price - 2000, p.top_competitor_price + delta);
+                    const target = comp - 1 < p.min_price ? p.min_price : comp - 1;
+                    return { ...p, top_competitor_price: comp, target_price: target, status: comp - 1 < p.min_price ? 'floor_limit' : 'top1' };
+                });
+                saveProducts(list);
+                icon.classList.remove('animate-spin');
+                renderProducts();
+            }, 600);
+        }
+        function copyFeed() {
+            navigator.clipboard.writeText(document.getElementById('publicFeedInput').value);
+            alert('Ссылка на Kaspi XML прайс-лист скопирована!');
+        }
+        function openAddModal() { document.getElementById('addModal').classList.remove('hidden'); }
+        function openSettingsModal() { document.getElementById('settingsModal').classList.remove('hidden'); }
+        function openGuideModal() { document.getElementById('guideModal').classList.remove('hidden'); }
+        function saveSettings() {
+            const store = document.getElementById('set_store').value;
+            const mid = document.getElementById('set_mid').value;
+            document.getElementById('headerStoreInfo').innerText = `${store} (Merchant ID: ${mid})`;
+            document.getElementById('settingsModal').classList.add('hidden');
+        }
+
+        document.getElementById('newProductForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const list = getProducts();
+            const minP = parseFloat(document.getElementById('m_min').value) || 50000;
+            const maxP = parseFloat(document.getElementById('m_max').value) || 70000;
+            const compP = Math.round((minP + maxP) / 2);
+            list.unshift({
+                id: Date.now(),
+                title: document.getElementById('m_title').value,
+                sku: document.getElementById('m_sku').value,
+                product_id: String(Math.floor(100000000 + Math.random() * 90000000)),
+                strategy: document.getElementById('m_strategy').value,
+                min_price: minP,
+                max_price: maxP,
+                top_competitor_name: "Kaspi Store Almaty",
+                top_competitor_price: compP,
+                target_price: compP - 1,
+                status: "top1",
+                is_active: true
+            });
+            saveProducts(list);
+            document.getElementById('addModal').classList.add('hidden');
+            e.target.reset();
+            renderProducts();
+        });
+
+        renderProducts();
+    </script>
+</body>
+</html>
