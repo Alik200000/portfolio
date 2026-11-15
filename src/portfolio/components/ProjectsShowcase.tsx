@@ -54,7 +54,7 @@ const projects: ShowcaseProject[] = [
   .digest('hex').slice(0, 16);
 if (Number(modifyByUserId) === 999) return { status: 'SKIPPED_LOOP_GUARD', stateHash };`,
     },
-    githubUrl: 'https://github.com/Alik200000/almawine-ai-hub',
+    githubUrl: 'https://github.com/Alik200000/portfolio/tree/main/demos/almawine-hub',
     liveUrl: '/demos/almawine-hub/index.html',
   },
   {

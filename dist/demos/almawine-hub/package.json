@@ -1,0 +1,13 @@
+{
+  "name": "almawine-omnichannel-ai-hub",
+  "version": "1.0.0",
+  "description": "Демо-система автоматизации дистрибуции, интеграции 1С:Предприятие 8.3 ↔ Битрикс24, SQL/Excel-аналитики 24 филиалов и Telegram-бота для Холдинга Almawine (ТОО Almatytrade, винотеки Almawine, сеть Наурыз, E-Commerce)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test tests/hub.test.js",
+    "pdf": "node generate_pdf.js"
+  },
+  "author": "Алимжан Аптай <aptayalimzhan07@gmail.com>",
+  "license": "MIT"
+}
