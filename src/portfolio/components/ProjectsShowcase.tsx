@@ -241,17 +241,60 @@ const projects: ShowcaseProject[] = [
     },
     githubUrl: 'https://github.com/Alik200000/bybit-trading-bot',
   },
+  {
+    id: 'onpremise-enterprise-ai',
+    title: 'On-Premise Enterprise AI (ТОО «ПромКонструкция»)',
+    shortCode: 'ZERO-CLOUD AIR-GAPPED AI',
+    year: '2026',
+    category: 'ai',
+    categoryLabel: 'On-Premise LLM & RAG • CAD 2D Core',
+    accentGradient: 'from-white via-sky-50 to-indigo-50',
+    tagline:
+      'Изолированный корпоративный ИИ-контур с локальным RAG по ГОСТ/СП РК, 2D CAD-движком КМД, защитой от утечек DLP/RBAC и телеметрией GPU.',
+    points: [
+      'Мультиагентный RAG по ГОСТам: специализированные агенты (Страж DLP/RBAC, Расчетчик, Нормоконтролер СП РК 5.04-23-2022) для верификации узлов металлоконструкций опор ОМ-1.',
+      'Инженерный CAD-интерфейс: интерактивный 2D Canvas вьювер чертежей КМД с зумом и паспортом анкеров М24 + формирование официального заключения ПТО с синей круглой печатью.',
+      'Безопасность предприятия: ролевой доступ RBAC (Инженер, Монтажник, Стажер, Админ ИБ), реестр сотрудников с временными паролями, аудит запрещенных запросов и Telegram-алерты.',
+    ],
+    badges: ['On-Premise LLM', 'Air-Gapped / Zero-Cloud', 'Multi-Agent DLP', 'Python / FastAPI', 'Vector RAG', 'HTML5 Canvas CAD', 'СП РК / ГОСТ'],
+    architectureNodes: ['Browser Client UI', 'Sentinel Agent (DLP/RBAC)', 'Vector Knowledge Base (RAG)', '2D CAD & PDF Stamp', 'vLLM NVIDIA Core'],
+    techSpec: {
+      runtime: 'Python 3.11 + FastAPI + vLLM CUDA 12',
+      protocol: 'REST API + Local RAG Zero-Cloud',
+      storage: 'ChromaDB / SQLite (Air-Gapped)',
+      security: 'DLP Guardrail + RBAC Level 4 + Telegram Alerts',
+    },
+    codeSnippet: {
+      language: 'python',
+      title: 'Мультиагентный Агент-Страж: DLP и ролевой контроль доступа (RBAC)',
+      code: `def sentinel_dlp_guardrail(query: str, user_role: str) -> GuardResult:
+    # 1. Проверка на несанкционированный дамп БД или раскрытие паролей
+    if any(k in query.lower() for k in ['дамп', 'dump', 'парол', 'api_key', 'слив базы']):
+        log_security_incident(query, user_role, category="DLP Угроза")
+        telegram_alert_officer(f"🚨 Попытка дампа от роли {user_role}")
+        return GuardResult(allowed=False, reason="Заблокировано политикой DLP предприятия")
+    
+    # 2. Ролевое ограничение доступа к чертежам КМД для уровня Гость/Стажер
+    if user_role == "guest" and re.search(r'(чертеж|опор|расчет|нагрузк|анкер)', query, re.I):
+        log_security_incident(query, user_role, category="RBAC Нарушение")
+        return GuardResult(allowed=False, reason="Доступ к чертежам КМД закрыт для Гостя")
+        
+    return GuardResult(allowed=True)`,
+    },
+    githubUrl: 'https://github.com/Alik200000/onpremise-enterprise-ai',
+    liveUrl: 'https://onpremise-enterprise-ai.onrender.com',
+  },
 ];
 
 const RADIAL_MODULES = [
   { code: '01', title: '1С OData & CommerceML', sub: 'Витрины УТ/БП РК', projectIndex: 1 },
   { code: '02', title: 'Битрикс24 Batch Sync', sub: 'Дедупликация БИН/ИИН', projectIndex: 0 },
   { code: '03', title: 'Kaspi Top-1 Repricer', sub: 'Защита стоп-цены 24/7', projectIndex: 2 },
-  { code: '04', title: 'Gemini Vision OCR', sub: 'Накладные и схемы', projectIndex: 4 },
-  { code: '05', title: 'WB Burn-Rate Аналитика', sub: 'Контроль Out-of-Stock', projectIndex: 3 },
-  { code: '06', title: 'Bybit / Binance АБК', sub: 'Спреды и Funding APR', projectIndex: 5 },
-  { code: '07', title: 'Smart Digital BI P&L', sub: 'Маржинальность сделок', projectIndex: 0 },
-  { code: '08', title: 'Data Lineage & Audit', sub: 'Закон РК & Качество', projectIndex: 1 },
+  { code: '04', title: 'On-Premise AI Core', sub: 'Zero-Cloud RAG & CAD', projectIndex: 6 },
+  { code: '05', title: 'Gemini Vision OCR', sub: 'Накладные и схемы', projectIndex: 4 },
+  { code: '06', title: 'WB Burn-Rate Аналитика', sub: 'Контроль Out-of-Stock', projectIndex: 3 },
+  { code: '07', title: 'Bybit / Binance АБК', sub: 'Спреды и Funding APR', projectIndex: 5 },
+  { code: '08', title: 'Smart Digital BI P&L', sub: 'Маржинальность сделок', projectIndex: 0 },
 ];
 
 export function ProjectsShowcase() {
@@ -282,9 +325,9 @@ export function ProjectsShowcase() {
   });
 
   const categories = [
-    { id: 'all', label: 'Все проекты (6)' },
+    { id: 'all', label: 'Все проекты (7)' },
     { id: 'b2b', label: 'Kaspi & 1С (2)' },
-    { id: 'ai', label: 'AI & Аналитика (2)' },
+    { id: 'ai', label: 'AI & Enterprise (3)' },
     { id: 'fullstack', label: 'BI Дашборды & FinTech (2)' },
   ];
 

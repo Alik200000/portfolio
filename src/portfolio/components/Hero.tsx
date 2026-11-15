@@ -207,7 +207,7 @@ export function Hero() {
                 aria-label="Смотреть все проекты"
                 className="px-4 sm:px-6 py-3 rounded-full bg-white/90 hover:bg-white text-[#0A0B0E] border border-[#0A0B0E]/20 font-bold text-xs sm:text-sm tracking-wide uppercase flex items-center justify-center gap-1.5 transition-colors shadow-sm cursor-pointer"
               >
-                <span>Проекты (6)</span>
+                <span>Проекты (7)</span>
                 <ArrowDownRight className="w-4 h-4 shrink-0" />
               </motion.button>
 

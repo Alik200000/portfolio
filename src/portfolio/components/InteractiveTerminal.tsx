@@ -73,7 +73,13 @@ export function InteractiveTerminal() {
           {
             id: String(Date.now() + 1),
             type: 'output',
-            text: '1. Smart Digital Ops & Profit Intelligence (BI / P&L Live Dashboard)',
+            text: '1. On-Premise Enterprise AI (Zero-Cloud Air-Gapped RAG, CAD 2D & DLP)',
+            link: { url: 'https://onpremise-enterprise-ai.onrender.com', label: 'Открыть Live On-Premise ИИ' },
+          },
+          {
+            id: String(Date.now() + 2),
+            type: 'output',
+            text: '2. Smart Digital Ops & Profit Intelligence (BI / P&L Live Dashboard)',
             link: { url: '/demos/smart-digital-ops/index.html', label: 'Открыть Live BI-дашборд P&L' },
           },
           {
