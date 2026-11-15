@@ -24,6 +24,40 @@ interface ShowcaseProject extends DetailedProject {
 
 const projects: ShowcaseProject[] = [
   {
+    id: 'almawine-ai-hub',
+    title: 'Almawine Omnichannel AI & Data Hub (ТОО «Almatytrade»)',
+    shortCode: '1С 8.3 ↔ БИТРИКС24',
+    year: '2026',
+    category: 'b2b',
+    categoryLabel: 'Live BI-Стенд • 24 Филиала РК • 1С & Битрикс24',
+    accentGradient: 'from-white via-[#FAF9F5] to-[#EFEFEA]',
+    tagline:
+      'Единый контур дистрибуции алкогольной и безалкогольной продукции: синхронизация 1С:Предприятие 8.3 и Битрикс24, SQL/CSV-аналитика 24 филиалов РК, винотек Almawine, сети «Наурыз» и Telegram-бот.',
+    points: [
+      'Контроль 24 филиалов и брендов (Brown-Forman, William Grant & Sons, Jägermeister, Finlandia, Paulaner, Asahi, Undurraga, Serena): расчёт суточного Burn Rate и дозаказ в 1С при запасе < 5 дней.',
+      'Двусторонний шлюз Битрикс24 ↔ 1С 8.3 (УТ/БП РК): валидация 12-значного БИН по алгоритму МФ РК (КБе 17/19), защита от петель (sync_state SHA-256) и печать Счёта РК (КНП 710) + З-2 + СНТ.',
+      'AI → SQL Конструктор отчётов, выгрузка витрины в Excel CSV (UTF-8-BOM с защитой ведущих нулей в штрихкодах EAN-13) и симулятор Telegram-бота @AlmawineOpsBot.',
+    ],
+    badges: ['1С:Предприятие 8.3', 'Битрикс24 API', 'SQL & Excel CSV', 'Claude Code AI', 'Telegram Bot', '24 Филиала РК'],
+    architectureNodes: ['Битрикс24 Webhook', 'Шлюз БИН & Loop Guard', '1С 8.3 OData + СНТ', 'BI 24 Филиала & Бот'],
+    techSpec: {
+      runtime: 'Node.js REST + Static BI',
+      protocol: '1C OData / CSV UTF-8-BOM',
+      storage: 'DWH SQL / LocalStore',
+      security: 'Loop Guard & BIN Check',
+    },
+    codeSnippet: {
+      language: 'javascript',
+      title: 'Шлюз Битрикс24 → 1С 8.3 OData: проверка БИН РК и защита от бесконечного цикла',
+      code: `const stateHash = crypto.createHash('sha256')
+  .update(\`\${dealId}|\${binCheck.clean}|\${skuCode}|\${quantity}|\${totalAmount}\`)
+  .digest('hex').slice(0, 16);
+if (Number(modifyByUserId) === 999) return { status: 'SKIPPED_LOOP_GUARD', stateHash };`,
+    },
+    githubUrl: 'https://github.com/Alik200000/almawine-ai-hub',
+    liveUrl: '/demos/almawine-hub/index.html',
+  },
+  {
     id: 'smart-digital-ops',
     title: 'Smart Digital Ops & Profit Intelligence (BI / P&L)',
     shortCode: 'BI / ERP P&L CORE',

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Резюме — Алимжан Аптай | AI-разработчик бизнес-решений (Almawine / ТОО «Almatytrade»)</title>
+  <style>
+    @page {
+      size: A4;
+      margin: 9mm 11mm 9mm 11mm;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1c1917;
+      background: #ffffff;
+      line-height: 1.38;
+      font-size: 12px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      max-width: 210mm;
+      margin: 0 auto;
+      padding: 12px;
+    }
+    a {
+      color: #7f1d1d;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .header {
+      border-bottom: 2px solid #7f1d1d;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .header-left h1 {
+      font-size: 23px;
+      font-weight: 800;
+      color: #0f172a;
+      letter-spacing: -0.4px;
+      margin-bottom: 2px;
+    }
+    .header-left .target-role {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #7f1d1d;
+      margin-bottom: 3px;
+    }
+    .header-left .location {
+      font-size: 11px;
+      color: #57534e;
+      font-weight: 500;
+    }
+    .header-right {
+      text-align: right;
+      font-size: 11px;
+      color: #292524;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5px;
+    }
+    .badge {
+      display: inline-block;
+      background: #fef2f2;
+      color: #7f1d1d;
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid #fecaca;
+    }
+    .section {
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: 11.5px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: #1c1917;
+      border-bottom: 1.5px solid #d6d3cd;
+      padding-bottom: 3px;
+      margin-bottom: 7px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      background: #7f1d1d;
+      border-radius: 2px;
+    }
+    .summary-text {
+      font-size: 11.2px;
+      color: #292524;
+      line-height: 1.4;
+      text-align: justify;
+    }
+    .project-card {
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
+      border-left: 3.5px solid #7f1d1d;
+      border-radius: 6px;
+      padding: 7px 10px;
+      margin-bottom: 6px;
+    }
+    .project-card-title {
+      font-size: 12.2px;
+      font-weight: 700;
+      color: #0f172a;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .project-links {
+      font-size: 10.5px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .project-stack {
+      font-size: 10.5px;
+      color: #57534e;
+      margin-bottom: 3px;
+    }
+    ul.bullet-list {
+      list-style-type: disc;
+      padding-left: 15px;
+      font-size: 11px;
+      color: #292524;
+    }
+    ul.bullet-list li {
+      margin-bottom: 2px;
+      line-height: 1.33;
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .skill-category {
+      background: #fafaf9;
+      border: 1px solid #e7e5e4;
+      border-radius: 6px;
+      padding: 6px 9px;
+    }
+    .skill-cat-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #7f1d1d;
+      margin-bottom: 2px;
+    }
+    .skill-cat-desc {
+      font-size: 10.6px;
+      color: #44403c;
+      line-height: 1.32;
+    }
+    .footer-note {
+      margin-top: 8px;
+      padding-top: 5px;
+      border-top: 1px dashed #d6d3cd;
+      display: flex;
+      justify-content: space-between;
+      font-size: 9.8px;
+      color: #78716c;
+    }
+    @media print {
+      .no-print {
+        display: none !important;
+      }
+      body {
+        padding: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print" style="margin-bottom: 12px; padding: 8px 12px; background: #1c1917; color: #fff; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+    <span>🍷 Резюме адаптировано под вакансию <strong>Almawine (ТОО «Almatytrade»)</strong></span>
+    <div style="display: flex; gap: 8px;">
+      <a href="./index.html" style="color: #fca5a5; font-weight: 700;">← Назад к Демо-хабу Almawine</a>
+      <button onclick="window.print()" style="padding: 4px 10px; border-radius: 6px; border: none; background: #7f1d1d; color: #fff; cursor: pointer; font-weight: 700;">Печать / Сохранить PDF</button>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <h1>Алимжан Аптай</h1>
+      <div class="target-role">AI-разработчик бизнес-решений (Claude Code • SQL/Excel • 1С • Битрикс24 • Боты)</div>
+      <div class="location">г. Алматы • Готов к работе в офисе / гибридном формате</div>
+    </div>
+    <div class="header-right">
+      <div>Тел. / WhatsApp: <a href="tel:+77786078732"><strong>+7 778 607-87-32</strong></a></div>
+      <div>Email: <a href="mailto:aptayalimzhan07@gmail.com"><strong>aptayalimzhan07@gmail.com</strong></a></div>
+      <div>GitHub: <a href="https://github.com/Alik200000" target="_blank" rel="noopener noreferrer"><strong>github.com/Alik200000</strong></a></div>
+      <div>Портфолио: <a href="https://portfolio-9os8.onrender.com" target="_blank" rel="noopener noreferrer"><strong>portfolio-9os8.onrender.com</strong></a></div>
+      <div style="margin-top: 2px;"><span class="badge">Целевой отклик: Холдинг Almawine / ТОО «Almatytrade»</span></div>
+    </div>
+  </header>
+
+  <!-- SUMMARY -->
+  <section class="section">
+    <div class="section-title">Профиль и подход к работе</div>
+    <div class="summary-text">
+      Разработчик прикладных бизнес-решений и автоматизации полного цикла: самостоятельно разбираюсь в задаче вместе с внутренним заказчиком, моделирую структуру данных и быстро довожу решение до работающего продукта с помощью <strong>Claude Code / Cursor</strong>. Специализируюсь на учётных функциях, аналитических витринах (<strong>SQL и продвинутый Excel/CSV</strong>), двусторонних интеграциях <strong>1С:Предприятие 8.3 ↔ Битрикс24</strong>, Telegram-ботах для операционных команд и веб-интерфейсах для B2B-дистрибуции и розницы.
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section class="section">
+    <div class="section-title">Ключевые компетенции под задачи Almawine</div>
+    <div class="skills-grid">
+      <div class="skill-category">
+        <div class="skill-cat-title">AI-инструменты и быстрая разработка</div>
+        <div class="skill-cat-desc">
+          Claude Code, Cursor, Anthropic Claude API, Gemini / OpenAI API, быстрое прототипирование и доведение сервисов до продакшена (Python, FastAPI, Node.js, TypeScript, React).
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">Данные, SQL, отчёты и продвинутый Excel</div>
+        <div class="skill-cat-desc">
+          Сложные SQL-запросы (PostgreSQL, SQLite, оконные функции, агрегации план/факт, ABC/XYZ), автоматизация Excel (.xlsx / openpyxl, CSV UTF-8-BOM с сохранением ведущих нулей в БИН и штрихкодах EAN-13).
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">Интеграции: 1С:Предприятие 8.3 и Битрикс24</div>
+        <div class="skill-cat-desc">
+          1С 8.3 (УТ / Бухгалтерия для Казахстана, Standard OData REST, HTTP-сервисы, CommerceML 3.1, ЭСФ/СНТ, Виртуальный склад), Битрикс24 (Webhooks, Batch API, синхронизация по БИН/ИИН с защитой от циклов).
+        </div>
+      </div>
+      <div class="skill-category">
+        <div class="skill-cat-title">Дистрибуция, Ритейл, E-Com и Боты</div>
+        <div class="skill-cat-desc">
+          Telegram-боты на aiogram 3 (остатки, стоп-листы, утренние сводки, OCR накладных), контроль скорости продаж (Burn Rate) и Out-of-Stock, дебиторская задолженность, печатные формы РК (Счёт, З-2, Р-1).
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REAL WORKING PROJECTS -->
+  <section class="section">
+    <div class="section-title">Работающие проекты, созданные с помощью AI-инструментов</div>
+
+    <div class="project-card">
+      <div class="project-card-title">
+        <span>1. Almawine Omnichannel AI &amp; Data Hub (Специальный демо-стенд к отклику)</span>
+        <span class="project-links">
+          <a href="https://portfolio-9os8.onrender.com/demos/almawine-hub/index.html" target="_blank" rel="noopener noreferrer">Live Demo</a> •
+          <a href="https://github.com/Alik200000/almawine-ai-hub" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </span>
+      </div>
+      <div class="project-stack"><strong>Стек:</strong> Node.js REST API, SQL/CSV Витрина, Шлюз 1С 8.3 OData ↔ Битрикс24, Валидатор БИН РК, Симулятор Telegram-бота.</div>
+      <ul class="bullet-list">
+        <li><strong>Аналитика 24 филиалов и брендов Almawine:</strong> мониторинг выручки план/факт и просроченной ДЗ по ТОО «Almatytrade», винотекам Almawine, сети «Наурыз» и E-Commerce; расчёт суточного Burn Rate и авто-заказа при запасе &lt; 5 дней.</li>
+        <li><strong>Шлюз Битрикс24 ↔ 1С:Предприятие 8.3:</strong> проверка контрольного разряда 12-значного БИН контрагента HoReCa, защита от кольцевых триггеров (SHA-256 <code>sync_state</code>) и формирование документа <code>Document_ЗаказКлиента</code> с НДС 12% и признаком СНТ.</li>
+      </ul>
+    </div>
+
+    <div class="project-card">
+      <div class="project-card-title">
+        <span>2. Alatau Food Trade — B2B HoReCa E-Commerce &amp; Шлюз 1С:Предприятие 8.3</span>
+        <span class="project-links"><a href="https://github.com/Alik200000/alatau-food-trade" target="_blank" rel="noopener noreferrer">github.com/Alik200000/alatau-food-trade</a></span>
+      </div>
+      <div class="project-stack"><strong>Стек:</strong> Next.js, React 19, TypeScript, 1С:Предприятие 8.3 (УТ для Казахстана), CommerceML 3.1, PostgreSQL.</div>
+      <ul class="bullet-list">
+        <li>Оптово-розничная B2B-платформа поставок для сегмента HoReCa г. Алматы с двусторонним обменом 1С по протоколу CommerceML 3.1 (синхронизация каталога, цен, остатков и заказов).</li>
+        <li>Кабинет контрагента: контроль лимитов дебиторской задолженности, динамические оптовые скидки от объёма, выгрузка ЭСФ и актов сверки.</li>
+      </ul>
+    </div>
+
+    <div class="project-card">
+      <div class="project-card-title">
+        <span>3. Smart Digital Ops &amp; Profit Intelligence — BI-дашборд и ERP-система учёта</span>
+        <span class="project-links">
+          <a href="https://portfolio-9os8.onrender.com/demos/smart-digital-ops/index.html" target="_blank" rel="noopener noreferrer">Live BI Demo</a> •
+          <a href="https://github.com/Alik200000/smart-digital-ops-core" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </span>
+      </div>
+      <div class="project-stack"><strong>Стек:</strong> TypeScript / JavaScript, Express REST API, SQL / P&amp;L-метрики, CSV-экспорт, генератор закрывающих документов РК.</div>
+      <ul class="bullet-list">
+        <li>Сквозной учётный контур: воронка сделок → автоматический расчёт себестоимости → контроль маржинальности в реальном времени → выгрузка витрины P&amp;L в CSV/Excel и печать актов выполненных работ РК.</li>
+      </ul>
+    </div>
+
+    <div class="project-card">
+      <div class="project-card-title">
+        <span>4. Wildberries Manager AI Bot &amp; Kaspi Repricer Enterprise (Ритейл &amp; E-Commerce)</span>
+        <span class="project-links">
+          <a href="https://github.com/Alik200000/wb-manager-ai-bot" target="_blank" rel="noopener noreferrer">WB Bot GitHub</a> •
+          <a href="https://github.com/Alik200000/kaspi-repricer" target="_blank" rel="noopener noreferrer">Kaspi Repricer GitHub</a>
+        </span>
+      </div>
+      <div class="project-stack"><strong>Стек:</strong> Python 3.11, FastAPI, aiogram 3, SQLite WAL, XML-фиды, Gemini Vision OCR.</div>
+      <ul class="bullet-list">
+        <li><strong>WB Manager AI Bot:</strong> расчёт скорости продаж (Burn Rate) по складам, предупреждение Out-of-Stock за 5 дней до обнуления остатков, утренний управленческий брифинг в Telegram и распознавание первичных накладных по фото.</li>
+        <li><strong>Kaspi Repricer:</strong> автоматическая генерация XML-прайсов, контроль минимальной стоп-цены (защита маржи) и аналитический веб-дашборд.</li>
+      </ul>
+    </div>
+
+    <div class="project-card">
+      <div class="project-card-title">
+        <span>5. On-Premise Enterprise AI (Корпоративный AI-контур с RBAC и Telegram-алертами)</span>
+        <span class="project-links">
+          <a href="https://onpremise-enterprise-ai.onrender.com" target="_blank" rel="noopener noreferrer">Live Demo</a> •
+          <a href="https://github.com/Alik200000/onpremise-enterprise-ai" target="_blank" rel="noopener noreferrer">GitHub</a>
+        </span>
+      </div>
+      <div class="project-stack"><strong>Стек:</strong> Python, FastAPI, локальный RAG (ChromaDB / SQLite), ролевой доступ RBAC, DLP-фильтр безопасности.</div>
+      <ul class="bullet-list">
+        <li>Внутренняя система работы с нормативной базой и документацией предприятия с разграничением прав доступа по ролям сотрудников и журналом аудита.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- HOW I WORK -->
+  <section class="section">
+    <div class="section-title">Как я выстраиваю путь от задачи бизнеса до внедрения в Almawine</div>
+    <div class="summary-text" style="background: #fafaf9; padding: 7px 10px; border-radius: 6px; border: 1px solid #e7e5e4;">
+      <strong>1. Сбор задачи у заказчика (РОП, логистика, бухгалтерия, ритейл):</strong> фиксирую бизнес-цель, источники данных (регистры 1С, поля Битрикс24, таблицы Excel) и критерии приёмки.<br/>
+      <strong>2. Прототип за 1–3 дня через Claude Code:</strong> поднимаю рабочую витрину данных, скрипт сверки, Telegram-бота или веб-интерфейс на реальной выборке.<br/>
+      <strong>3. Внедрение и поддержка:</strong> покрываю критическую логику автотестами (валидация БИН, НДС 12%, идемпотентность обмена), настраиваю очередь повторов (Outbox) и дорабатываю по обратной связи пользователей.
+    </div>
+  </section>
+
+  <footer class="footer-note">
+    <span>Кандидат: Алимжан Аптай • г. Алматы • +7 778 607-87-32</span>
+    <span>Полное интерактивное портфолио: https://portfolio-9os8.onrender.com</span>
+  </footer>
+
+</body>
+</html>

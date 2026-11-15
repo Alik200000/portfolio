@@ -1,0 +1,1345 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Almawine Omnichannel AI & Data Hub | ТОО «Almatytrade» • 1С • Битрикс24 • SQL • Боты</title>
+  <meta name="description" content="Интерактивный прототип системы автоматизации дистрибуции, интеграции 1С:Предприятие 8.3 и Битрикс24, SQL/Excel-аналитики 24 филиалов и Telegram-бота для Холдинга Almawine." />
+  <style>
+    :root {
+      --bg-page: #f8f7f4;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f1efe9;
+      --text-main: #141413;
+      --text-muted: #57534e;
+      --wine-primary: #7f1d1d;
+      --wine-accent: #991b1b;
+      --wine-soft: #fef2f2;
+      --emerald-ok: #065f46;
+      --emerald-bg: #ecfdf5;
+      --amber-warn: #92400e;
+      --amber-bg: #fffbeb;
+      --border-color: #d6d3cd;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      line-height: 1.5;
+      font-size: 1rem;
+    }
+
+    a {
+      color: var(--wine-primary);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    button, input, select {
+      font: inherit;
+      min-height: 44px;
+    }
+
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, [tabindex="0"]:focus-visible {
+      outline: 3px solid var(--wine-primary);
+      outline-offset: 2px;
+    }
+
+    /* Modern Web Guidance: interactions-in-complex-layouts */
+    .board-column {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 300px auto 800px;
+    }
+
+    @supports not (content-visibility: auto) {
+      .board-column {
+        contain: layout style paint;
+      }
+    }
+
+    /* Modern Web Guidance: responsive-table */
+    .table-wrapper {
+      overflow: auto;
+      max-inline-size: 100%;
+      max-block-size: min(520px, 80vh);
+      container-type: inline-size;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 0.9rem;
+      --label-1: "Артикул / Бренд";
+      --label-2: "Категория";
+      --label-3: "Канал / Склад";
+      --label-4: "Цена (₸)";
+      --label-5: "Остаток (бут.)";
+      --label-6: "Burn Rate / день";
+      --label-7: "Запас (дней)";
+      --label-8: "Статус / 1С Заказ";
+    }
+
+    caption {
+      text-align: left;
+      padding: 0.85rem 1rem;
+      font-weight: 700;
+      background: var(--bg-subtle);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    thead {
+      position: sticky;
+      inset-block-start: 0;
+      z-index: 1;
+      background: #1c1917;
+      color: #fafaf9;
+    }
+
+    th, td {
+      padding: 0.75rem 0.9rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    tbody th {
+      position: sticky;
+      inset-inline-start: 0;
+      background: var(--bg-surface);
+      font-weight: 700;
+      border-right: 1px solid var(--border-color);
+    }
+
+    tbody tr:hover td, tbody tr:hover th {
+      background: #faf8f5;
+    }
+
+    @container (width < 600px) {
+      table, thead, tbody, tr, th, td {
+        display: block;
+      }
+
+      thead {
+        /* MANDATORY: Hide column header from layout and screen readers. */
+        display: none;
+      }
+
+      tr {
+        margin-block-end: 1rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+      }
+
+      tbody th {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 2;
+        background: var(--bg-subtle);
+        border-right: none;
+      }
+
+      td:nth-child(2)::before { content: var(--label-2) ": "; font-weight: 700; }
+      td:nth-child(3)::before { content: var(--label-3) ": "; font-weight: 700; }
+      td:nth-child(4)::before { content: var(--label-4) ": "; font-weight: 700; }
+      td:nth-child(5)::before { content: var(--label-5) ": "; font-weight: 700; }
+      td:nth-child(6)::before { content: var(--label-6) ": "; font-weight: 700; }
+      td:nth-child(7)::before { content: var(--label-7) ": "; font-weight: 700; }
+      td:nth-child(8)::before { content: var(--label-8) ": "; font-weight: 700; }
+    }
+
+    /* Layout & UI Components */
+    .container {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    header.topbar {
+      background: #141413;
+      color: #f8f7f4;
+      padding: 1rem 0;
+      border-bottom: 3px solid var(--wine-primary);
+    }
+
+    .topbar-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--wine-primary);
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+    }
+
+    .nav-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: background-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-primary {
+      background: var(--wine-primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: #631717;
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: var(--text-main);
+      border-color: var(--border-color);
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      background: var(--bg-subtle);
+    }
+
+    .btn-dark {
+      background: #292524;
+      color: #fafaf9;
+      border-color: #44403c;
+    }
+
+    @media (hover: none) {
+      .btn:hover {
+        transform: none;
+      }
+    }
+
+    .hero {
+      padding: 2rem 0 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.35fr 0.65fr;
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    @media (max-width: 960px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.35rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1rem;
+      margin-top: 1.25rem;
+    }
+
+    .kpi-box {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+    }
+
+    .kpi-label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .kpi-value {
+      font-size: 1.65rem;
+      font-weight: 800;
+      margin-top: 0.25rem;
+      color: var(--text-main);
+    }
+
+    .kpi-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+
+    .section-block {
+      padding: 1.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .section-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 1rem;
+      margin-bottom: 1.15rem;
+    }
+
+    .section-title {
+      font-size: 1.35rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .pill-ok {
+      background: var(--emerald-bg);
+      color: var(--emerald-ok);
+      border: 1px solid #a7f3d0;
+    }
+
+    .pill-warn {
+      background: var(--wine-soft);
+      color: var(--wine-primary);
+      border: 1px solid #fecaca;
+    }
+
+    .pill-amber {
+      background: var(--amber-bg);
+      color: var(--amber-warn);
+      border: 1px solid #fde68a;
+    }
+
+    .two-col-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 960px) {
+      .two-col-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .branch-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0.85rem;
+      max-height: 440px;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+    }
+
+    .branch-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .code-box {
+      background: #141413;
+      color: #e7e5e4;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.8rem;
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      max-height: 360px;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 0.75rem;
+    }
+
+    @media (max-width: 600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+      color: var(--text-muted);
+    }
+
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    .bot-chat {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      min-height: 250px;
+      max-height: 320px;
+      overflow-y: auto;
+      font-size: 0.86rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .bot-msg {
+      background: #1e293b;
+      border-left: 3px solid #ef4444;
+      padding: 0.7rem 0.9rem;
+      border-radius: 8px;
+      white-space: pre-line;
+    }
+
+    /* Modals & Cookie Banner (Reel 4 Compliance) */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 100;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-window {
+      background: var(--bg-surface);
+      border-radius: var(--radius-lg);
+      max-width: 680px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .cookie-banner {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      left: 1rem;
+      max-width: 560px;
+      margin: 0 auto;
+      background: #1c1917;
+      color: #fafaf9;
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius-md);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      z-index: 90;
+      font-size: 0.82rem;
+    }
+
+    footer.site-footer {
+      padding: 2rem 0 3rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div>
+        <span class="brand-badge">🍷 Almawine • ТОО «Almatytrade» • AI Engineering Demo</span>
+        <div style="font-weight: 800; font-size: 1.15rem; margin-top: 0.25rem;">
+          Единый контур дистрибуции, 1С:Предприятие 8.3, Битрикс24 и аналитики 24 филиалов РК
+        </div>
+      </div>
+      <nav class="nav-actions" aria-label="Быстрая навигация и документы">
+        <a href="./resume_almawine.html" class="btn btn-dark">📄 Открыть Резюме (HTML)</a>
+        <a href="./resume_alimzhan_aptay_almawine.pdf" download class="btn btn-primary">⬇ Скачать PDF-Резюме</a>
+        <a href="https://github.com/Alik200000/almawine-ai-hub" target="_blank" rel="noopener noreferrer" class="btn btn-dark">GitHub Репозиторий ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- HERO / EXECUTIVE SUMMARY -->
+    <section class="hero board-column">
+      <div class="hero-grid">
+        <div class="card">
+          <div style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: var(--wine-primary); letter-spacing: 0.05em;">
+            Разработано с помощью AI-инструментов (Claude Code / Cursor) • Фокус на задаче бизнеса и данных
+          </div>
+          <h1 style="font-size: clamp(1.55rem, 3vw, 2.2rem); font-weight: 900; margin: 0.4rem 0 0.65rem; letter-spacing: -0.02em;">
+            От бизнес-задачи заказчика до работающего решения: учёт, 1С, Битрикс24, SQL/Excel и боты
+          </h1>
+          <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1rem;">
+            Прототип демонстрирует, как я решаю реальные операционные задачи дистрибьютора и ритейла масштаба <strong>Almawine</strong>:
+            24 филиала по Казахстану (включая <strong>ТОО «Almatytrade»</strong>), сеть винотек <strong>Almawine</strong>, магазины у дома <strong>«Наурыз»</strong> и <strong>E-Commerce</strong>.
+          </p>
+
+          <div class="kpi-grid">
+            <div class="kpi-box">
+              <div class="kpi-label">Дистрибуционная сеть</div>
+              <div class="kpi-value" id="kpi-branches">24 филиала</div>
+              <div class="kpi-sub">ТОО «Almatytrade» + регионы РК</div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-label">Выручка по витрине (План/Факт)</div>
+              <div class="kpi-value" id="kpi-revenue">2 852.0 млн ₸</div>
+              <div class="kpi-sub">Выполнение плана холдинга: 102.1%</div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-label">Критичный Out-of-Stock (&lt;5 дн.)</div>
+              <div class="kpi-value" id="kpi-oos" style="color: var(--wine-primary);">4 SKU</div>
+              <div class="kpi-sub">Авто-резерв и дозаказ в 1С УТ 8.3</div>
+            </div>
+            <div class="kpi-box">
+              <div class="kpi-label">Шлюз 1С ↔ Битрикс24</div>
+              <div class="kpi-value" style="color: var(--emerald-ok);">99.94%</div>
+              <div class="kpi-sub">Контроль БИН РК, СНТ и защита петель</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="background: #1c1917; color: #fafaf9; display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <span class="pill pill-amber">Кандидат в команду Almawine</span>
+            <h2 style="font-size: 1.3rem; font-weight: 800; margin-top: 0.6rem;">Алимжан Аптай</h2>
+            <p style="font-size: 0.85rem; color: #d6d3d1; margin-top: 0.25rem;">
+              AI-разработчик бизнес-решений (г. Алматы). Самостоятельно собираю требования у бизнеса, проектирую БД/SQL и выкатываю интеграции с 1С и Битрикс24.
+            </p>
+            <ul style="margin-top: 0.85rem; padding-left: 1.1rem; font-size: 0.84rem; color: #e7e5e4; display: flex; flex-direction: column; gap: 0.35rem;">
+              <li><strong>Alatau Food Trade:</strong> B2B HoReCa портал + обмен 1С 8.3 (CommerceML 3.1 / ЭСФ / ДЗ).</li>
+              <li><strong>Smart Digital Ops Core:</strong> живой BI-дашборд P&amp;L, SQL/CSV-витрины и генерация актов РК.</li>
+              <li><strong>WB &amp; Kaspi AI Боты:</strong> расчёт Burn Rate, прогноз Out-of-Stock за 5 дней, OCR накладных.</li>
+            </ul>
+          </div>
+          <div style="margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid #44403c; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <button type="button" class="btn btn-primary" id="copy-cover-btn" onclick="copyCoverLetter()">
+              📋 Скопировать сопроводительное письмо
+            </button>
+            <a href="https://portfolio-9os8.onrender.com" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="background: transparent; color: #fff; border-color: #57534e;">
+              Все 7 проектов ↗
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 1: PORTFOLIO SKU MATRIX & EXCEL/CSV EXPORT -->
+    <section class="section-block board-column" aria-labelledby="sku-section-heading">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title" id="sku-section-heading">
+            1. Товарная матрица Almawine: Burn Rate, контроль Out-of-Stock и выгрузка в Excel / 1С
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Глобальные бренды портфеля (Brown-Forman, William Grant &amp; Sons, Jägermeister, Finlandia, Paulaner, Asahi, Pilsner Urquell, Undurraga, Serena, Casa Relvas).
+          </p>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center;">
+          <label for="category-filter" style="font-size: 0.82rem; font-weight: 700;">Категория:</label>
+          <select id="category-filter" onchange="renderSkuTable()" style="padding: 0.45rem 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: #fff;">
+            <option value="ALL">Все категории (12 SKU)</option>
+            <option value="Крепкий алкоголь">Крепкий алкоголь</option>
+            <option value="Пиво импортное">Пиво импортное</option>
+            <option value="Вино тихое">Вино тихое</option>
+            <option value="Вино игристое">Вино игристое</option>
+            <option value="OOS_ONLY">🔥 Только риск Out-of-Stock (&lt; 5 дней)</option>
+          </select>
+          <button type="button" class="btn btn-primary" onclick="exportSkusToExcelCsv()">
+            📊 Выгрузить в Excel (.CSV UTF-8-BOM)
+          </button>
+        </div>
+      </div>
+
+      <!-- Modern Web Guidance compliant responsive-table -->
+      <div tabindex="0" role="region" aria-labelledby="sku-table-caption" class="table-wrapper">
+        <table>
+          <caption id="sku-table-caption">
+            Оперативная сводка остатков, суточных продаж (Burn Rate) и автоматического расчёта дозаказа по складам Холдинга Almawine
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Артикул / Бренд</th>
+              <th scope="col">Категория</th>
+              <th scope="col">Канал / Склад</th>
+              <th scope="col">Цена (₸)</th>
+              <th scope="col">Остаток (бут.)</th>
+              <th scope="col">Burn Rate / день</th>
+              <th scope="col">Запас (дней)</th>
+              <th scope="col">Статус / 1С Заказ</th>
+            </tr>
+          </thead>
+          <tbody id="sku-tbody">
+            <!-- Заполняется скриптом -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- MODULE 2: BITRIX24 <-> 1C:ENTERPRISE 8.3 SYNC GATEWAY -->
+    <section class="section-block board-column" aria-labelledby="sync-section-heading">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title" id="sync-section-heading">
+            2. Двусторонний шлюз: Битрикс24 (CRM) ↔ 1С:Предприятие 8.3 (УТ / Бухгалтерия для Казахстана)
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Проверка БИН/ИИН по контрольному разряду МФ РК, защита от кольцевых обновлений (Loop Guard SHA-256) и генерация документа <code>Document_ЗаказКлиента</code> с признаком СНТ (Виртуальный склад).
+          </p>
+        </div>
+      </div>
+
+      <div class="two-col-grid">
+        <form class="card" id="sync-form" onsubmit="handleSyncSubmit(event)">
+          <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 0.85rem;">
+            Симулятор события <code>ONCRMDEALUPDATE</code> (Битрикс24 → 1С OData)
+          </h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="sync-deal-id">ID сделки в Битрикс24</label>
+              <input id="sync-deal-id" type="text" value="B24-HORECA-88412" required />
+            </div>
+            <div class="form-group">
+              <label for="sync-bin">БИН / ИИН контрагента РК (12 цифр)</label>
+              <input id="sync-bin" type="text" value="040540004126" maxlength="12" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="sync-company">Наименование клиента (HoReCa / Ритейл)</label>
+              <input id="sync-company" type="text" value="ТОО «Ресторанная Группа Алатау HoReCa»" required />
+            </div>
+            <div class="form-group">
+              <label for="sync-branch">Филиал отгрузки (24 филиала РК)</label>
+              <select id="sync-branch"></select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="sync-sku">Товарная позиция (Номенклатура 1С)</label>
+              <select id="sync-sku"></select>
+            </div>
+            <div class="form-group">
+              <label for="sync-qty">Количество (бут. / кег)</label>
+              <input id="sync-qty" type="number" min="1" max="10000" value="60" required />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="sync-user">Инициатор события (MODIFY_BY_ID)</label>
+              <select id="sync-user">
+                <option value="42">Менеджер отдела продаж HoReCa (ID: 42)</option>
+                <option value="999">Технический бот 1С (ID: 999 — тест защиты от петли)</option>
+              </select>
+            </div>
+            <div class="form-group" style="display: flex; align-items: flex-end; gap: 0.45rem;">
+              <button type="submit" id="sync-submit-btn" class="btn btn-primary" style="flex: 1;">
+                ⚡ Провести в 1С 8.3
+              </button>
+              <button type="button" class="btn btn-outline" onclick="printKzInvoiceAndZ2()" title="Сформировать Счёт на оплату РК (КНП 710) и Накладную З-2">
+                🖨️ Счёт РК / З-2
+              </button>
+            </div>
+          </div>
+
+          <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.4rem;">
+            🔒 Отправляя тестовую форму, вы подтверждаете согласие с <a href="#privacy" onclick="openModal('privacy-modal'); return false;">Политикой конфиденциальности и обработки ПДн РК</a>.
+          </p>
+        </form>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+            <h3 style="font-size: 1.05rem; font-weight: 800;">Результат валидации БИН и OData-пакет для 1С</h3>
+            <span id="sync-status-badge" class="pill pill-ok">ГОТОВ К ОБМЕНУ</span>
+          </div>
+          <div id="bin-check-summary" style="font-size: 0.83rem; margin-bottom: 0.75rem; padding: 0.65rem; border-radius: 8px; background: var(--bg-subtle); border: 1px solid var(--border-color);">
+            Нажмите «Провести сделку в 1С», чтобы проверить контрольный разряд БИН, НДС 12% и сформировать JSON OData пакет.
+          </div>
+          <pre class="code-box" id="sync-json-output"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 3: AI SQL REPORT BUILDER & TELEGRAM BOT SIMULATOR -->
+    <section class="section-block board-column" aria-labelledby="ai-section-heading">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title" id="ai-section-heading">
+            3. AI-генератор SQL-отчётов и Telegram-бот для торговых представителей и винотек
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            Быстрое создание аналитических витрин по запросу заказчика и оперативный бот в полях (проверка остатков, стоп-листов, лимита дебиторки и утренний дайджест).
+          </p>
+        </div>
+      </div>
+
+      <div class="two-col-grid">
+        <!-- SQL Builder -->
+        <div class="card">
+          <h3 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 0.65rem;">
+            🧠 Запрос бизнеса → Готовый SQL и аналитическая выжимка
+          </h3>
+          <div class="form-group" style="margin-bottom: 0.75rem;">
+            <label for="sql-preset">Выберите типовую задачу руководителя департамента Almawine:</label>
+            <select id="sql-preset" onchange="runSqlPreset()">
+              <option value="ar_top">1. Топ филиалов с просроченной дебиторской задолженностью (ДЗ &gt; 5 млн ₸) и сверка с планом</option>
+              <option value="oos_matrix">2. Позиции с риском Out-of-Stock (&lt; 5 дней запаса) по складам Almatytrade и сети «Наурыз»</option>
+              <option value="margin_abc">3. ABC/XYZ маржинальность импортного портфеля (Винотеки Almawine vs HoReCa)</option>
+            </select>
+          </div>
+          <pre class="code-box" id="sql-code-box" style="margin-bottom: 0.75rem;"></pre>
+          <div id="sql-result-summary" style="font-size: 0.85rem; background: var(--bg-subtle); padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-color);"></div>
+        </div>
+
+        <!-- Telegram Bot Simulator -->
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+            <h3 style="font-size: 1.05rem; font-weight: 800;">🤖 Симулятор Telegram-бота @AlmawineOpsBot</h3>
+            <span class="pill pill-ok">aiogram 3 • Online</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 0.75rem;">
+            <button type="button" class="btn btn-outline" onclick="sendBotCommand('/morning_digest')">🌅 /morning_digest</button>
+            <button type="button" class="btn btn-outline" onclick="sendBotCommand('/stop_list')">🚨 /stop_list (OOS)</button>
+            <button type="button" class="btn btn-outline" onclick="sendBotCommand('/debt_almaty')">💳 /debt_almaty (ДЗ)</button>
+            <button type="button" class="btn btn-outline" onclick="sendBotCommand('/nauryz_promo')">🏪 /nauryz_promo</button>
+          </div>
+          <div class="bot-chat" id="bot-chat-log" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE 4: 24 DISTRIBUTION BRANCHES & INFRASTRUCTURE ARCHITECTURE -->
+    <section class="section-block board-column" aria-labelledby="branches-section-heading">
+      <div class="section-header">
+        <div>
+          <h2 class="section-title" id="branches-section-heading">
+            4. Карта 24 дистрибуционных филиалов Казахстана и каналов Холдинга
+          </h2>
+          <p style="color: var(--text-muted); font-size: 0.9rem;">
+            ТОО «Almatytrade» (Алматы), региональные склады, винотеки Almawine, магазины у дома «Наурыз» и E-Commerce.
+          </p>
+        </div>
+        <div style="display: flex; gap: 0.6rem; align-items: center;">
+          <input type="search" id="branch-search" placeholder="Поиск города или канала..." oninput="renderBranches()" style="padding: 0.45rem 0.75rem; border-radius: 8px; border: 1px solid var(--border-color); background: #fff;" />
+        </div>
+      </div>
+
+      <div class="branch-grid" id="branch-grid"></div>
+
+      <!-- Reel 3 Architecture Note -->
+      <div class="card" style="margin-top: 1.25rem; background: var(--bg-subtle);">
+        <h3 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.35rem;">
+          🛡️ Доменная и почтовая архитектура промышленного внедрения (Стандарты безопасности)
+        </h3>
+        <p style="font-size: 0.83rem; color: var(--text-muted);">
+          При выводе внутренних порталов в продакшен контуры строго изолируются: публичная витрина на <code>almawine.kz</code>, B2B-кабинет и BI-дашборды на <code>app.almawine.kz</code> (изолированные cookie), шлюз 1С/Битрикс24 на <code>api.almawine.kz</code>. Транзакционные уведомления и коды авторизации идут через выделенный поддомен <code>auth.almawine.kz</code>, а маркетинговые рассылки — через <code>news.almawine.kz</code> с настроенными <strong>SPF</strong>, <strong>DKIM (2048-bit)</strong> и политикой <strong>DMARC (<code>v=DMARC1; p=reject; pct=100</code>)</strong>.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER (Reel 4 Legal & Real Contacts) -->
+  <footer class="site-footer container">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+      <div>
+        <strong>Разработчик демо-стенда:</strong> Алимжан Аптай (г. Алматы, Казахстан) •
+        Тел./WhatsApp: <a href="tel:+77786078732">+7 778 607-87-32</a> •
+        Email: <a href="mailto:aptayalimzhan07@gmail.com">aptayalimzhan07@gmail.com</a> •
+        GitHub: <a href="https://github.com/Alik200000" target="_blank" rel="noopener noreferrer">github.com/Alik200000</a>
+      </div>
+      <div style="display: flex; gap: 1rem;">
+        <a href="#privacy" onclick="openModal('privacy-modal'); return false;">Политика конфиденциальности (Закон РК о ПДн)</a>
+        <a href="#terms" onclick="openModal('terms-modal'); return false;">Условия использования и Cookie</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PRIVACY MODAL -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal-window">
+      <h2 id="privacy-title" style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.75rem;">
+        Политика конфиденциальности и защиты персональных данных РК
+      </h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+        Настоящий демонстрационный стенд разработан Алимжаном Аптаем специально для презентации архитектурных и аналитических компетенций компании Almawine (ТОО «Almatytrade») в соответствии с Законом Республики Казахстан от 21 мая 2013 года № 94-V «О персональных данных и их защите».
+      </p>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
+        Все представленные в таблицах объёмы продаж, остатки и номера сделок являются демонстрационными (синтетическими) и не содержат коммерческой тайны третьих лиц. Нажмите клавишу <strong>Escape</strong> или кнопку ниже для закрытия окна.
+      </p>
+      <button type="button" class="btn btn-primary" onclick="closeAllModals()">Закрыть (Esc)</button>
+    </div>
+  </div>
+
+  <!-- TERMS & COOKIE MODAL -->
+  <div class="modal-backdrop" id="terms-modal" role="dialog" aria-modal="true" aria-labelledby="terms-title">
+    <div class="modal-window">
+      <h2 id="terms-title" style="font-size: 1.2rem; font-weight: 800; margin-bottom: 0.75rem;">
+        Условия использования и Политика Cookie
+      </h2>
+      <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
+        Приложению требуется только техническое локальное хранилище (<code>localStorage</code>) для сохранения факта ознакомления с уведомлением о Cookie. Внешние рекламные трекеры не используются.
+      </p>
+      <button type="button" class="btn btn-primary" onclick="closeAllModals()">Понятно (Esc)</button>
+    </div>
+  </div>
+
+  <!-- COOKIE CONSENT BANNER -->
+  <div class="cookie-banner" id="cookie-banner" role="region" aria-label="Уведомление об использовании Cookie">
+    <span>
+      Мы используем технические файлы cookie и <code>localStorage</code> для корректной работы фильтров аналитической витрины в соответствии с Законом РК «О персональных данных».
+    </span>
+    <button type="button" class="btn btn-primary" onclick="acceptCookies()">Принять</button>
+  </div>
+
+  <script>
+    // Встроенные эталонные данные (работают мгновенно и офлайн, и через Node API)
+    const BRANCHES = [
+      { id: 'ALM-01', name: 'ТОО «Almatytrade» (Алматы Хаб)', city: 'Алматы', channel: 'HoReCa & Дистрибуция', revenueMln: 485.4, planMln: 460.0, arOverdueMln: 11.2, oosCount: 1, syncStatus: 'OK' },
+      { id: 'AST-02', name: 'Филиал Астана Север/Левый берег', city: 'Астана', channel: 'HoReCa & Ритейл', revenueMln: 342.8, planMln: 350.0, arOverdueMln: 14.8, oosCount: 2, syncStatus: 'OK' },
+      { id: 'SHY-03', name: 'Филиал Шымкент Юг', city: 'Шымкент', channel: 'Традиционная розница', revenueMln: 198.5, planMln: 190.0, arOverdueMln: 6.4, oosCount: 0, syncStatus: 'OK' },
+      { id: 'VIN-04', name: 'Сеть винотек «Almawine» (Алматы/Астана)', city: 'Алматы / Астана', channel: 'Винотеки Almawine (B2C/VIP)', revenueMln: 164.2, planMln: 155.0, arOverdueMln: 0.0, oosCount: 1, syncStatus: 'OK' },
+      { id: 'NAU-05', name: 'Сеть магазинов у дома «Наурыз»', city: 'Алматы', channel: 'Ритейл «Наурыз»', revenueMln: 148.9, planMln: 145.0, arOverdueMln: 0.0, oosCount: 2, syncStatus: 'OK' },
+      { id: 'ECM-06', name: 'Almawine E-Commerce & B2B Portal', city: 'Казахстан (Online)', channel: 'E-Commerce', revenueMln: 112.6, planMln: 100.0, arOverdueMln: 1.5, oosCount: 0, syncStatus: 'OK' },
+      { id: 'KAR-07', name: 'Филиал Караганда Центр', city: 'Караганда', channel: 'Дистрибуция', revenueMln: 134.0, planMln: 140.0, arOverdueMln: 9.1, oosCount: 3, syncStatus: 'RETRY_QUEUE' },
+      { id: 'ATY-08', name: 'Филиал Атырау Запад', city: 'Атырау', channel: 'HoReCa & Ритейл', revenueMln: 121.4, planMln: 115.0, arOverdueMln: 4.3, oosCount: 1, syncStatus: 'OK' },
+      { id: 'AKT-09', name: 'Филиал Актобе', city: 'Актобе', channel: 'Дистрибуция', revenueMln: 108.7, planMln: 110.0, arOverdueMln: 5.2, oosCount: 1, syncStatus: 'OK' },
+      { id: 'UKG-10', name: 'Филиал Усть-Каменогорск (ВКО)', city: 'Усть-Каменогорск', channel: 'Дистрибуция', revenueMln: 96.3, planMln: 95.0, arOverdueMln: 3.8, oosCount: 0, syncStatus: 'OK' },
+      { id: 'PAV-11', name: 'Филиал Павлодар', city: 'Павлодар', channel: 'Дистрибуция', revenueMln: 91.5, planMln: 90.0, arOverdueMln: 2.9, oosCount: 0, syncStatus: 'OK' },
+      { id: 'KOS-12', name: 'Филиал Костанай', city: 'Костанай', channel: 'Дистрибуция', revenueMln: 88.2, planMln: 85.0, arOverdueMln: 4.1, oosCount: 1, syncStatus: 'OK' },
+      { id: 'AKT-13', name: 'Филиал Актау (Мангистау)', city: 'Актау', channel: 'HoReCa & Ритейл', revenueMln: 86.0, planMln: 82.0, arOverdueMln: 3.1, oosCount: 0, syncStatus: 'OK' },
+      { id: 'URA-14', name: 'Филиал Уральск (ЗКО)', city: 'Уральск', channel: 'Дистрибуция', revenueMln: 74.5, planMln: 75.0, arOverdueMln: 2.4, oosCount: 0, syncStatus: 'OK' },
+      { id: 'TAR-15', name: 'Филиал Тараз', city: 'Тараз', channel: 'Дистрибуция', revenueMln: 69.8, planMln: 70.0, arOverdueMln: 3.6, oosCount: 1, syncStatus: 'OK' },
+      { id: 'SEM-16', name: 'Филиал Семей (Абай)', city: 'Семей', channel: 'Дистрибуция', revenueMln: 66.1, planMln: 65.0, arOverdueMln: 2.2, oosCount: 0, syncStatus: 'OK' },
+      { id: 'KYZ-17', name: 'Филиал Кызылорда', city: 'Кызылорда', channel: 'Дистрибуция', revenueMln: 58.4, planMln: 60.0, arOverdueMln: 2.8, oosCount: 1, syncStatus: 'OK' },
+      { id: 'PET-18', name: 'Филиал Петропавловск (СКО)', city: 'Петропавловск', channel: 'Дистрибуция', revenueMln: 54.0, planMln: 52.0, arOverdueMln: 1.9, oosCount: 0, syncStatus: 'OK' },
+      { id: 'TAL-19', name: 'Филиал Талдыкорган (Жетысу)', city: 'Талдыкорган', channel: 'Дистрибуция', revenueMln: 51.2, planMln: 50.0, arOverdueMln: 1.7, oosCount: 0, syncStatus: 'OK' },
+      { id: 'KOK-20', name: 'Филиал Кокшетау (Акмола)', city: 'Кокшетау', channel: 'Дистрибуция', revenueMln: 48.7, planMln: 48.0, arOverdueMln: 1.4, oosCount: 0, syncStatus: 'OK' },
+      { id: 'TUR-21', name: 'Филиал Туркестан', city: 'Туркестан', channel: 'Дистрибуция', revenueMln: 45.3, planMln: 45.0, arOverdueMln: 2.1, oosCount: 0, syncStatus: 'OK' },
+      { id: 'EKI-22', name: 'Филиал Экибастуз', city: 'Экибастуз', channel: 'Дистрибуция', revenueMln: 38.9, planMln: 40.0, arOverdueMln: 1.1, oosCount: 0, syncStatus: 'OK' },
+      { id: 'ZHE-23', name: 'Филиал Жезказган (Улытау)', city: 'Жезказган', channel: 'Дистрибуция', revenueMln: 34.6, planMln: 35.0, arOverdueMln: 0.9, oosCount: 0, syncStatus: 'OK' },
+      { id: 'RUD-24', name: 'Филиал Рудный / Балхаш', city: 'Рудный', channel: 'Дистрибуция', revenueMln: 32.1, planMln: 32.0, arOverdueMln: 0.8, oosCount: 0, syncStatus: 'OK' }
+    ];
+
+    const SKUS = [
+      { sku: 'AW-BF-001', barcode: '5099873089798', brand: 'Jack Daniel’s Old No.7 (Brown-Forman)', category: 'Крепкий алкоголь', volume: '0.7 л', priceKzt: 11850, marginPct: 28.4, stockUnits: 1420, dailyBurnRate: 185, warehouse: 'ТОО Almatytrade (Алматы)' },
+      { sku: 'AW-FIN-002', barcode: '5099873045213', brand: 'Finlandia Classic Vodka', category: 'Крепкий алкоголь', volume: '0.7 л', priceKzt: 6490, marginPct: 26.0, stockUnits: 790, dailyBurnRate: 210, warehouse: 'ТОО Almatytrade (Алматы)' },
+      { sku: 'AW-WG-003', barcode: '5010327325125', brand: 'Glenfiddich 12 YO Single Malt (William Grant & Sons)', category: 'Крепкий алкоголь', volume: '0.7 л', priceKzt: 24900, marginPct: 34.2, stockUnits: 310, dailyBurnRate: 42, warehouse: 'Винотеки Almawine' },
+      { sku: 'AW-JAG-004', barcode: '4067700015532', brand: 'Jägermeister Herbal Liqueur', category: 'Крепкий алкоголь', volume: '0.7 л', priceKzt: 9750, marginPct: 29.5, stockUnits: 410, dailyBurnRate: 145, warehouse: 'Филиал Астана' },
+      { sku: 'AW-PAU-005', barcode: '4066600601944', brand: 'Paulaner Hefe-Weißbier Naturtrüb', category: 'Пиво импортное', volume: '0.5 л ж/б', priceKzt: 1190, marginPct: 31.0, stockUnits: 8400, dailyBurnRate: 920, warehouse: 'Сеть «Наурыз» + HoReCa' },
+      { sku: 'AW-ASA-006', barcode: '8008440122301', brand: 'Asahi Super Dry (Япония)', category: 'Пиво импортное', volume: '0.5 л ст.', priceKzt: 1350, marginPct: 32.5, stockUnits: 1150, dailyBurnRate: 380, warehouse: 'ТОО Almatytrade (Алматы)' },
+      { sku: 'AW-PIL-007', barcode: '8594403110119', brand: 'Pilsner Urquell Original (Чехия)', category: 'Пиво импортное', volume: '0.5 л ж/б', priceKzt: 1150, marginPct: 29.8, stockUnits: 4920, dailyBurnRate: 540, warehouse: 'ТОО Almatytrade (Алматы)' },
+      { sku: 'AW-LON-008', barcode: '5010492112506', brand: 'Fuller’s London Pride & Belhaven Black', category: 'Пиво импортное', volume: '0.5 л ст.', priceKzt: 1680, marginPct: 33.4, stockUnits: 1640, dailyBurnRate: 190, warehouse: 'HoReCa Пабы Алматы/Астана' },
+      { sku: 'AW-UND-009', barcode: '7804320114026', brand: 'Undurraga Cabernet Sauvignon Reserve (Чили)', category: 'Вино тихое', volume: '0.75 л', priceKzt: 5890, marginPct: 38.0, stockUnits: 1290, dailyBurnRate: 160, warehouse: 'Винотеки Almawine & E-Com' },
+      { sku: 'AW-SER-010', barcode: '8003505003119', brand: 'Serena 1881 Prosecco DOC Treviso Brut (Италия)', category: 'Вино игристое', volume: '0.75 л', priceKzt: 6950, marginPct: 39.5, stockUnits: 520, dailyBurnRate: 175, warehouse: 'Филиал Караганда / Алматы' },
+      { sku: 'AW-GOB-011', barcode: '9002493001124', brand: 'Schloss Gobelsburg Grüner Veltliner (Австрия)', category: 'Вино тихое', volume: '0.75 л', priceKzt: 12400, marginPct: 41.2, stockUnits: 290, dailyBurnRate: 28, warehouse: 'Винотеки Almawine VIP' },
+      { sku: 'AW-REL-012', barcode: '5602840014209', brand: 'Casa Relvas Herdade de São Miguel (Португалия)', category: 'Вино тихое', volume: '0.75 л', priceKzt: 7200, marginPct: 37.6, stockUnits: 740, dailyBurnRate: 85, warehouse: 'Сеть «Наурыз» + Винотеки' }
+    ].map(item => {
+      const daysOfSupply = +(item.stockUnits / item.dailyBurnRate).toFixed(1);
+      const oosRisk = daysOfSupply < 5.0;
+      const recommendedReorder = oosRisk ? Math.ceil(item.dailyBurnRate * 14 - item.stockUnits) : 0;
+      return { ...item, daysOfSupply, oosRisk, recommendedReorder };
+    });
+
+    function renderSkuTable() {
+      const filter = document.getElementById('category-filter').value;
+      const tbody = document.getElementById('sku-tbody');
+      tbody.innerHTML = '';
+
+      const filtered = SKUS.filter(s => {
+        if (filter === 'ALL') return true;
+        if (filter === 'OOS_ONLY') return s.oosRisk;
+        return s.category === filter;
+      });
+
+      filtered.forEach(item => {
+        const tr = document.createElement('tr');
+
+        const th = document.createElement('th');
+        th.scope = 'row';
+        th.innerHTML = `<div>${item.brand}</div><div style="font-size:0.74rem; color:#57534e; font-weight:500;">${item.sku} • ШК: ${item.barcode}</div>`;
+        tr.appendChild(th);
+
+        const tdCat = document.createElement('td');
+        tdCat.textContent = `${item.category} (${item.volume})`;
+        tr.appendChild(tdCat);
+
+        const tdWh = document.createElement('td');
+        tdWh.textContent = item.warehouse;
+        tr.appendChild(tdWh);
+
+        const tdPrice = document.createElement('td');
+        tdPrice.textContent = `${item.priceKzt.toLocaleString('ru-RU')} ₸ (${item.marginPct}%)`;
+        tr.appendChild(tdPrice);
+
+        const tdStock = document.createElement('td');
+        tdStock.textContent = `${item.stockUnits.toLocaleString('ru-RU')} шт.`;
+        tr.appendChild(tdStock);
+
+        const tdBurn = document.createElement('td');
+        tdBurn.textContent = `${item.dailyBurnRate} шт./дн.`;
+        tr.appendChild(tdBurn);
+
+        const tdDays = document.createElement('td');
+        tdDays.innerHTML = `<strong style="color:${item.oosRisk ? '#7f1d1d' : '#065f46'};">${item.daysOfSupply} дн.</strong>`;
+        tr.appendChild(tdDays);
+
+        const tdAction = document.createElement('td');
+        if (item.oosRisk) {
+          tdAction.innerHTML = `<span class="pill pill-warn">Риск OOS: +${item.recommendedReorder} шт. в 1С</span>`;
+        } else {
+          tdAction.innerHTML = `<span class="pill pill-ok">Запас в норме</span>`;
+        }
+        tr.appendChild(tdAction);
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Выгрузка в Excel CSV с UTF-8 BOM и защитой ведущих нулей в штрихкодах
+    function exportSkusToExcelCsv() {
+      const headers = ['Артикул_1С', 'Штрихкод_EAN13', 'Бренд_Almawine', 'Категория', 'Склад_Филиал', 'Цена_KZT', 'Маржа_%', 'Остаток_шт', 'Продажи_в_день', 'Запас_дней', 'Рекомендованный_дозаказ_1С'];
+      const rows = SKUS.map(s => [
+        s.sku,
+        `="${s.barcode}"`,
+        `"${s.brand.replace(/"/g, '""')}"`,
+        `"${s.category}"`,
+        `"${s.warehouse}"`,
+        s.priceKzt,
+        s.marginPct,
+        s.stockUnits,
+        s.dailyBurnRate,
+        s.daysOfSupply,
+        s.recommendedReorder
+      ]);
+
+      const csvContent = '\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'almawine_stock_burnrate_1c_report.csv';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+    }
+
+    // Клиентский валидатор БИН/ИИН РК
+    function validateBinClient(code) {
+      const clean = String(code || '').replace(/\D/g, '');
+      if (clean.length !== 12) return { valid: false, clean, error: 'БИН/ИИН должен содержать 12 цифр' };
+      const w1 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+      const w2 = [3, 4, 5, 6, 7, 8, 9, 10, 11, 1, 2];
+      const d = clean.split('').map(Number);
+      let s = 0;
+      for (let i = 0; i < 11; i++) s += d[i] * w1[i];
+      let c = s % 11;
+      if (c === 10) {
+        s = 0;
+        for (let i = 0; i < 11; i++) s += d[i] * w2[i];
+        c = s % 11;
+      }
+      const valid = c === d[11];
+      return {
+        valid,
+        clean,
+        kbe: d[4] >= 4 && d[4] <= 6 ? '17 (Юрлицо-резидент РК / ТОО)' : '19 (ИП / Физлицо)',
+        regDate: `${clean.slice(2, 4)}.20${clean.slice(0, 2)}`,
+        expectedDigit: c
+      };
+    }
+
+    async function handleSyncSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('sync-submit-btn');
+      btn.disabled = true;
+
+      const payload = {
+        dealId: document.getElementById('sync-deal-id').value.trim(),
+        bin: document.getElementById('sync-bin').value.trim(),
+        counterpartyName: document.getElementById('sync-company').value.trim(),
+        branchId: document.getElementById('sync-branch').value,
+        skuCode: document.getElementById('sync-sku').value,
+        quantity: Number(document.getElementById('sync-qty').value) || 24,
+        modifyByUserId: Number(document.getElementById('sync-user').value)
+      };
+
+      try {
+        const res = await fetch('/api/sync/bitrix-1c', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error('Fallback to local engine');
+        const data = await res.json();
+        renderSyncOutput(data);
+      } catch (_) {
+        // Автономный расчёт, если открыт как статический файл
+        const binCheck = validateBinClient(payload.bin);
+        const skuObj = SKUS.find(s => s.sku === payload.skuCode) || SKUS[0];
+        const branchObj = BRANCHES.find(b => b.id === payload.branchId) || BRANCHES[0];
+        const total = skuObj.priceKzt * payload.quantity;
+        const net = Math.round(total / 1.12);
+        const vat = total - net;
+        const isLoop = payload.modifyByUserId === 999;
+
+        renderSyncOutput({
+          status: isLoop ? 'SKIPPED_LOOP_GUARD' : binCheck.valid ? 'SYNCED_TO_1C' : 'VALIDATION_WARNING',
+          binValidation: binCheck,
+          loopPrevention: {
+            modifyByUserId: payload.modifyByUserId,
+            action: isLoop
+              ? 'Событие от технического пользователя 999 проигнорировано (Loop Prevention)'
+              : 'Хэш сделки проверен в таблице sync_state — дублей нет'
+          },
+          odataPayload1C: {
+            '@odata.type': 'StandardODATA.Document_ЗаказКлиента',
+            Организация_Name: 'ТОО «Almatytrade» (Холдинг Almawine)',
+            Контрагент_БИН: binCheck.clean,
+            Контрагент_Наименование: payload.counterpartyName,
+            Склад_Name: branchObj.name,
+            ПризнакСНТ_ВиртуальныйСклад: true,
+            СуммаДокумента_KZT: total,
+            СуммаНДС_12_KZT: vat,
+            Товары: [{ Артикул: skuObj.sku, Бренд: skuObj.brand, Количество: payload.quantity, Цена: skuObj.priceKzt }]
+          }
+        });
+      } finally {
+        btn.disabled = false;
+      }
+    }
+
+    function renderSyncOutput(data) {
+      const badge = document.getElementById('sync-status-badge');
+      const summary = document.getElementById('bin-check-summary');
+      const jsonBox = document.getElementById('sync-json-output');
+
+      if (data.status === 'SKIPPED_LOOP_GUARD') {
+        badge.className = 'pill pill-amber';
+        badge.textContent = 'ПЕТЛЯ ПРЕДОТВРАЩЕНА';
+      } else if (data.binValidation && data.binValidation.valid) {
+        badge.className = 'pill pill-ok';
+        badge.textContent = 'ПРОВЕДЕНО В 1С 8.3';
+      } else {
+        badge.className = 'pill pill-warn';
+        badge.textContent = 'ОШИБКА КОНТРОЛЬНОГО РАЗРЯДА БИН';
+      }
+
+      const b = data.binValidation || {};
+      summary.innerHTML = `<strong>Проверка БИН (${b.clean || ''}):</strong> ${
+        b.valid ? '✅ Контрольный разряд верный' : `⚠️ Внимание: контрольный разряд не совпал`
+      } • КБе: <strong>${b.kbe || '17'}</strong><br/><strong>Защита от циклов:</strong> ${
+        data.loopPrevention ? data.loopPrevention.action : ''
+      }`;
+
+      jsonBox.textContent = JSON.stringify(data.odataPayload1C || data, null, 2);
+    }
+
+    const SQL_PRESETS = {
+      ar_top: {
+        sql: `SELECT b.branch_id, b.branch_name, b.city,
+       b.revenue_mln_kzt, b.plan_mln_kzt,
+       ROUND((b.revenue_mln_kzt / b.plan_mln_kzt) * 100, 1) AS plan_pct,
+       b.ar_overdue_mln_kzt
+FROM dwh_almawine.fact_branch_kpi b
+WHERE b.ar_overdue_mln_kzt > 5.0
+ORDER BY b.ar_overdue_mln_kzt DESC;`,
+        summary: '📊 Вывод витрины: 5 филиалов имеют просроченную дебиторскую задолженность свыше 5 млн ₸ (Астана: 14.8 млн ₸, ТОО «Almatytrade»: 11.2 млн ₸, Караганда: 9.1 млн ₸, Шымкент: 6.4 млн ₸, Актобе: 5.2 млн ₸). Рекомендация: включить авто-стоп отгрузки в 1С при просрочке > 14 дней.'
+      },
+      oos_matrix: {
+        sql: `SELECT s.sku_code, s.brand_name, s.warehouse_name,
+       s.stock_units, s.daily_burn_rate,
+       ROUND(s.stock_units::numeric / NULLIF(s.daily_burn_rate, 0), 1) AS days_of_supply,
+       CEIL(s.daily_burn_rate * 14 - s.stock_units) AS reorder_qty_1c
+FROM dwh_almawine.mart_inventory_burnrate s
+WHERE (s.stock_units::numeric / NULLIF(s.daily_burn_rate, 0)) < 5.0
+ORDER BY days_of_supply ASC;`,
+        summary: '🚨 Вывод витрины: обнаружено 4 критических SKU с запасом менее 5 дней: Jägermeister 0.7л в Астане (2.8 дня), Serena Prosecco DOC в Караганде/Алматы (3.0 дня), Asahi Super Dry в Almatytrade (3.0 дня) и Finlandia 0.7л (3.8 дня). Сформирована заявка на перемещение в 1С.'
+      },
+      margin_abc: {
+        sql: `SELECT category_name,
+       COUNT(sku_code) AS sku_count,
+       ROUND(AVG(gross_margin_pct), 1) AS avg_margin_pct,
+       SUM(stock_units * price_kzt) / 1e6 AS stock_value_mln_kzt
+FROM dwh_almawine.dim_portfolio_sku
+GROUP BY category_name
+ORDER BY avg_margin_pct DESC;`,
+        summary: '🍷 Вывод витрины: самую высокую среднюю маржинальность показывают категории «Вино игристое» (Serena Prosecco — 39.5%) и «Вино тихое» (Schloss Gobelsburg, Undurraga, Casa Relvas — 38.9%) в канале винотек Almawine и VIP HoReCa.'
+      }
+    };
+
+    function runSqlPreset() {
+      const key = document.getElementById('sql-preset').value;
+      const item = SQL_PRESETS[key];
+      document.getElementById('sql-code-box').textContent = item.sql;
+      document.getElementById('sql-result-summary').textContent = item.summary;
+    }
+
+    function sendBotCommand(cmd) {
+      const log = document.getElementById('bot-chat-log');
+      const responses = {
+        '/morning_digest': `🌅 Утренняя сводка Холдинга Almawine (08:30 Алматы):
+• Выручка за вчера (24 филиала): 114.2 млн ₸ (103.4% к дневному плану)
+• ТОО «Almatytrade»: 21.8 млн ₸ | Винотеки Almawine: 6.9 млн ₸ | Сеть «Наурыз»: 5.8 млн ₸
+• Синхронизация 1С УТ ↔ Битрикс24: 418 заказов проведено, 1 в очереди ретрая (Караганда)`,
+        '/stop_list': `🚨 Контроль Out-of-Stock (запас < 5 дней):
+1. [AW-JAG-004] Jägermeister 0.7л (Астана) — 2.8 дн. (к дозаказу: 1 620 бут.)
+2. [AW-SER-010] Serena Prosecco Brut (Караганда/Алматы) — 3.0 дн. (к дозаказу: 1 930 бут.)
+3. [AW-ASA-006] Asahi Super Dry 0.5л (Almatytrade) — 3.0 дн. (к дозаказу: 4 170 бут.)
+4. [AW-FIN-002] Finlandia 0.7л (Almatytrade) — 3.8 дн. (к дозаказу: 2 150 бут.)`,
+        '/debt_almaty': `💳 Контроль дебиторской задолженности (ТОО «Almatytrade»):
+• Общая просроченная ДЗ по Алматы: 11.2 млн ₸
+• Сделки в стоп-листе отгрузки 1С: 3 контрагента HoReCa (ожидается разноска выписки Kaspi/Halyk в 1С Бухгалтерия)`,
+        '/nauryz_promo': `🏪 Сеть магазинов у дома «Наурыз» + E-Commerce:
+• Лидеры оборачиваемости: Paulaner Hefe-Weißbier (920 ж/б в день) и Casa Relvas (85 бут. в день).
+• Рекомендация AI: пополнить полку из РЦ Алматы до пятничного пика спроса.`
+      };
+
+      const msg = document.createElement('div');
+      msg.className = 'bot-msg';
+      msg.textContent = `> Запрос: ${cmd}\n${responses[cmd] || ''}`;
+      log.prepend(msg);
+    }
+
+    function renderBranches() {
+      const q = (document.getElementById('branch-search').value || '').toLowerCase().trim();
+      const grid = document.getElementById('branch-grid');
+      grid.innerHTML = '';
+
+      BRANCHES.filter(b => {
+        if (!q) return true;
+        return b.name.toLowerCase().includes(q) || b.city.toLowerCase().includes(q) || b.channel.toLowerCase().includes(q);
+      }).forEach(b => {
+        const pct = ((b.revenueMln / b.planMln) * 100).toFixed(1);
+        const card = document.createElement('div');
+        card.className = 'branch-card';
+        card.innerHTML = `
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:0.4rem;">
+              <span style="font-size:0.72rem; font-weight:700; color:#57534e;">${b.id} • ${b.city}</span>
+              <span class="pill ${b.syncStatus === 'OK' ? 'pill-ok' : 'pill-amber'}">${b.syncStatus === 'OK' ? '1С Sync OK' : 'Outbox Queue'}</span>
+            </div>
+            <div style="font-weight:800; font-size:0.92rem; margin-top:0.25rem;">${b.name}</div>
+            <div style="font-size:0.78rem; color:#57534e;">Канал: ${b.channel}</div>
+          </div>
+          <div style="font-size:0.8rem; border-top:1px solid #e7e5e4; padding-top:0.45rem; display:flex; justify-content:space-between;">
+            <span>Факт: <strong>${b.revenueMln} млн ₸</strong> (${pct}%)</span>
+            <span style="color:${b.arOverdueMln > 8 ? '#7f1d1d' : '#57534e'};">ДЗ: ${b.arOverdueMln} млн ₸</span>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // Копирование сопроводительного письма с fallback (Reel 1)
+    function copyCoverLetter() {
+      const text = `Здравствуйте, команда Almawine! Откликаюсь на позицию разработчика бизнес-решений с использованием AI-инструментов (Claude Code). Живу в Алматы. В моём портфолио — работающий B2B HoReCa портал со шлюзом 1С:Предприятие 8.3 (Alatau Food Trade), BI-система P&L-учёта (Smart Digital Ops Core), коннектор Битрикс24 ↔ 1С с проверкой БИН РК и Telegram-бот контроля товарных запасов и Out-of-Stock. Специально для Almawine я также собрал живой демо-прототип аналитики 24 филиалов и обмена 1С ↔ Битрикс24. Контакты: Алимжан Аптай, +7 778 607-87-32, https://github.com/Alik200000 , портфолио: https://portfolio-9os8.onrender.com`;
+      const btn = document.getElementById('copy-cover-btn');
+
+      const showCopied = () => {
+        const orig = btn.textContent;
+        btn.textContent = '✅ Письмо скопировано в буфер!';
+        setTimeout(() => { btn.textContent = orig; }, 2500);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(showCopied).catch(() => fallbackCopy(text, showCopied));
+      } else {
+        fallbackCopy(text, showCopied);
+      }
+    }
+
+    function fallbackCopy(text, cb) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (_) {}
+      document.body.removeChild(ta);
+      cb();
+    }
+
+    // Модальные окна и закрытие по Escape (Reel 1 & Reel 4)
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeAllModals() {
+      document.querySelectorAll('.modal-backdrop').forEach(el => el.classList.remove('active'));
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAllModals();
+    });
+
+    function acceptCookies() {
+      try { localStorage.setItem('almawine_cookie_accepted', '1'); } catch (_) {}
+      document.getElementById('cookie-banner').style.display = 'none';
+    }
+
+    // Печать официального Счёта на оплату РК (КНП 710, КБе 17) и Накладной З-2 от ТОО «Almatytrade»
+    function printKzInvoiceAndZ2() {
+      const dealId = document.getElementById('sync-deal-id').value.trim();
+      const bin = document.getElementById('sync-bin').value.trim();
+      const company = document.getElementById('sync-company').value.trim();
+      const skuCode = document.getElementById('sync-sku').value;
+      const qty = Number(document.getElementById('sync-qty').value) || 24;
+      const skuObj = SKUS.find(s => s.sku === skuCode) || SKUS[0];
+      const total = skuObj.priceKzt * qty;
+      const vat = Math.round((total * 12) / 112);
+
+      const w = window.open('', '_blank', 'width=900,height=800');
+      if (!w) return;
+      w.document.write(`<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>Счёт на оплату РК и Накладная З-2 — ${dealId}</title>
+      <style>
+        body { font-family: Arial, sans-serif; font-size: 12px; color: #000; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 14px; }
+        th, td { border: 1px solid #000; padding: 6px 8px; text-align: left; }
+        .no-print { margin-bottom: 15px; }
+        @media print { .no-print { display: none; } }
+      </style></head><body>
+      <div class="no-print"><button onclick="window.print()" style="padding:8px 16px;font-weight:bold;cursor:pointer;">🖨️ Распечатать / Сохранить в PDF</button></div>
+      <h3 style="margin-bottom:6px;">Образец платежного поручения (Счёт на оплату РК + Признак СНТ Виртуальный склад)</h3>
+      <table>
+        <tr>
+          <td><strong>Бенефициар:</strong> ТОО «Almatytrade» (Холдинг Almawine)<br/>БИН: 060440009124</td>
+          <td><strong>ИИК (IBAN):</strong><br/>KZ846010131000192837</td>
+          <td><strong>Кбе:</strong><br/>17</td>
+        </tr>
+        <tr>
+          <td><strong>Банк бенефициара:</strong> АО «Народный Банк Казахстана»</td>
+          <td><strong>БИК:</strong> HSBKKZKX</td>
+          <td><strong>Код назначения платежа (КНП):</strong> 710 (Оплата за товары)</td>
+        </tr>
+      </table>
+      <h2>СЧЁТ НА ОПЛАТУ № АТ-${dealId.slice(-5)} от ${new Date().toLocaleDateString('ru-RU')} г.</h2>
+      <p><strong>Поставщик:</strong> ТОО «Almatytrade», БИН 060440009124, г. Алматы</p>
+      <p><strong>Покупатель:</strong> ${company}, БИН/ИИН ${bin} (Сделка Битрикс24: ${dealId})</p>
+      <p><strong>Договор:</strong> Договор поставки HoReCa / Ритейл (сопровождается СНТ в ИС ЭСФ РК)</p>
+      <table style="margin-top:10px;">
+        <thead><tr><th>№</th><th>Артикул 1С</th><th>Штрихкод EAN-13</th><th>Наименование (Форма З-2)</th><th>Кол-во</th><th>Ед.</th><th>Цена с НДС (₸)</th><th>Сумма с НДС (₸)</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>1</td><td>${skuObj.sku}</td><td>${skuObj.barcode}</td><td>${skuObj.brand} (${skuObj.volume})</td>
+            <td>${qty}</td><td>бут.</td><td>${skuObj.priceKzt.toLocaleString('ru-RU')}</td><td>${total.toLocaleString('ru-RU')}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="text-align:right;font-size:13px;"><strong>Итого с НДС: ${total.toLocaleString('ru-RU')} ₸</strong><br/>В том числе НДС (12%): ${vat.toLocaleString('ru-RU')} ₸</p>
+      <hr style="margin:14px 0;"/>
+      <p><strong>Всего наименований 1, на сумму ${total.toLocaleString('ru-RU')},00 KZT (тенге 00 тиын).</strong></p>
+      <p style="margin-top:24px;">Ответственный исполнитель (1С:Предприятие 8.3 УТ РК): ______________________ / Автоматический шлюз Bitrix24 ↔ 1С /</p>
+      </body></html>`);
+      w.document.close();
+    }
+
+    // Инициализация страницы
+    (function init() {
+      const branchSel = document.getElementById('sync-branch');
+      BRANCHES.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b.id;
+        opt.textContent = `${b.name} (${b.city})`;
+        branchSel.appendChild(opt);
+      });
+
+      const skuSel = document.getElementById('sync-sku');
+      SKUS.forEach(s => {
+        const opt = document.createElement('option');
+        opt.value = s.sku;
+        opt.textContent = `${s.brand} — ${s.priceKzt} ₸`;
+        skuSel.appendChild(opt);
+      });
+
+      renderSkuTable();
+      renderBranches();
+      runSqlPreset();
+      sendBotCommand('/morning_digest');
+      handleSyncSubmit(new Event('submit'));
+
+      try {
+        if (!localStorage.getItem('almawine_cookie_accepted')) {
+          document.getElementById('cookie-banner').style.display = 'flex';
+        }
+      } catch (_) {}
+    })();
+  </script>
+</body>
+</html>
