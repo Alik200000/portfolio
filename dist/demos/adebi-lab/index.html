@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Әдеби LAB — 5-сынып «Қазақ әдебиеті» ЖИ-ассистенті (Оқушылар мен Мұғалімдерге арналған)</title>
+  <meta name="description" content="Әдеби LAB — 5-сынып оқушылары мен қазақ әдебиеті пәні мұғалімдеріне арналған интеллектуалды ЖИ-ассистент: шығармалар талдауы, авторлар, мазмұны, тесттер, ҚМЖ және AI чат." />
+  <style>
+    :root {
+      --bg-main: #f7f6f2;
+      --bg-card: #ffffff;
+      --bg-soft: #eef2f6;
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --primary-light: #ccfbf1;
+      --accent-gold: #b45309;
+      --accent-gold-bg: #fef3c7;
+      --text-dark: #0f172a;
+      --text-muted: #475569;
+      --border: #cbd5e1;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      overflow-x: hidden;
+      background: var(--bg-main);
+      color: var(--text-dark);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      line-height: 1.55;
+      font-size: 16px;
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+      min-height: 44px;
+    }
+
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid var(--primary);
+      outline-offset: 2px;
+    }
+
+    /* Modern Web Guidance: interactions-in-complex-layouts */
+    .isolated-panel {
+      content-visibility: auto;
+      contain-intrinsic-size: auto 320px auto 720px;
+    }
+    @supports not (content-visibility: auto) {
+      .isolated-panel {
+        contain: layout style paint;
+      }
+    }
+
+    /* Header */
+    header.site-header {
+      background: linear-gradient(135deg, #0f172a 0%, #134e4a 100%);
+      color: #ffffff;
+      padding: 1.25rem 0;
+      border-bottom: 4px solid #14b8a6;
+    }
+
+    .container {
+      max-width: 1340px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    .header-flex {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .logo-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      background: #14b8a6;
+      color: #042f2e;
+      font-weight: 900;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(20, 184, 166, 0.35);
+    }
+
+    .badge-pill {
+      display: inline-block;
+      background: rgba(20, 184, 166, 0.2);
+      border: 1px solid #2dd4bf;
+      color: #99f6e4;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .role-switcher {
+      display: inline-flex;
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.25rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      gap: 0.25rem;
+    }
+
+    .role-btn {
+      background: transparent;
+      color: #e2e8f0;
+      border: none;
+      padding: 0.45rem 0.9rem;
+      border-radius: 9px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .role-btn.active {
+      background: #14b8a6;
+      color: #042f2e;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.55rem 1rem;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: background-color 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+    .btn-primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn-gold {
+      background: #f59e0b;
+      color: #0f172a;
+    }
+    .btn-gold:hover {
+      background: #d97706;
+    }
+
+    .btn-outline {
+      background: #ffffff;
+      color: var(--text-dark);
+      border-color: var(--border);
+    }
+    .btn-outline:hover {
+      background: var(--bg-soft);
+    }
+
+    /* Main Layout: Sidebar (Works list) + Detail Workspace */
+    .workspace-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 1.5rem;
+      margin: 1.5rem 0 2.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 980px) {
+      .workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    /* Left Sidebar: Works Catalog */
+    .search-box {
+      width: 100%;
+      padding: 0.6rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 0.65rem;
+      background: #f8fafc;
+    }
+
+    .chapter-select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 0.9rem;
+      background: #f8fafc;
+      font-weight: 600;
+      font-size: 0.86rem;
+    }
+
+    .works-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      max-height: 620px;
+      overflow-y: auto;
+      padding-right: 0.2rem;
+    }
+
+    .work-item {
+      text-align: left;
+      width: 100%;
+      padding: 0.8rem 0.95rem;
+      border-radius: 12px;
+      border: 1.5px solid var(--border);
+      background: #ffffff;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .work-item:hover {
+      border-color: var(--primary);
+      background: #f0fdfa;
+    }
+
+    .work-item.active {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      box-shadow: 0 2px 6px rgba(15, 118, 110, 0.12);
+    }
+
+    .work-chapter-tag {
+      font-size: 0.7rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .work-title {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .work-author {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Right Panel: Work Header + Choice Tabs */
+    .work-banner {
+      background: linear-gradient(135deg, #f0fdfa 0%, #fef3c7 100%);
+      border: 1px solid #99f6e4;
+      border-radius: var(--radius-md);
+      padding: 1.2rem;
+      margin-bottom: 1.15rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .tabs-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 0.75rem;
+    }
+
+    .tab-btn {
+      padding: 0.55rem 0.95rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: var(--text-dark);
+      font-weight: 700;
+      font-size: 0.86rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .info-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+
+    .info-box h4 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      color: var(--primary-dark);
+      margin-bottom: 0.35rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* AI Assistant Chat Box */
+    .ai-box {
+      background: #0f172a;
+      color: #f8fafc;
+      border-radius: var(--radius-md);
+      padding: 1.15rem;
+      margin-top: 1.25rem;
+    }
+
+    .ai-quick-prompts {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin: 0.75rem 0;
+    }
+
+    .prompt-chip {
+      background: #1e293b;
+      color: #99f6e4;
+      border: 1px solid #334155;
+      padding: 0.4rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .prompt-chip:hover {
+      background: #0f766e;
+      color: #ffffff;
+    }
+
+    .ai-messages {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 1rem;
+      min-height: 190px;
+      max-height: 320px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .ai-msg-bot {
+      background: #0f172a;
+      border-left: 3px solid #14b8a6;
+      padding: 0.75rem 0.95rem;
+      border-radius: 8px;
+      white-space: pre-line;
+    }
+
+    .ai-msg-user {
+      background: #115e59;
+      align-self: flex-end;
+      padding: 0.55rem 0.9rem;
+      border-radius: 8px;
+      font-weight: 600;
+    }
+
+    /* Quiz Styling */
+    .quiz-card {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .quiz-opt {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.55rem 0.85rem;
+      margin-top: 0.45rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #ffffff;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .quiz-opt.correct {
+      background: #dcfce7;
+      border-color: #16a34a;
+      color: #14532d;
+      font-weight: 700;
+    }
+
+    .quiz-opt.wrong {
+      background: #fee2e2;
+      border-color: #dc2626;
+      color: #7f1d1d;
+    }
+
+    /* Native Dialog Modal (Modern Web Guidance) */
+    dialog.modern-dialog {
+      margin: auto;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      max-width: 640px;
+      width: calc(100% - 2rem);
+      background: #ffffff;
+      color: var(--text-dark);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+    }
+
+    dialog.modern-dialog::backdrop {
+      background: rgba(15, 23, 42, 0.65);
+    }
+
+    .form-field {
+      margin-bottom: 0.8rem;
+    }
+    .form-field label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      color: var(--text-muted);
+    }
+    .form-field input, .form-field textarea, .form-field select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    footer.site-footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 0 2.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-flex">
+      <div class="logo-wrap">
+        <div class="logo-icon" aria-hidden="true">ӘL</div>
+        <div>
+          <span class="badge-pill">Ғылыми жоба • 5-сынып «Қазақ әдебиеті»</span>
+          <h1 style="font-size: clamp(1.35rem, 2.5vw, 1.85rem); font-weight: 900; margin-top: 0.15rem;">
+            Әдеби LAB — Оқушы мен Мұғалімге арналған ЖИ-Ассистент
+          </h1>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;">
+        <div class="role-switcher" role="group" aria-label="Пайдаланушы режимін таңдау">
+          <button type="button" class="role-btn active" id="mode-student" onclick="setMode('student')">🎒 Оқушы режимі</button>
+          <button type="button" class="role-btn" id="mode-teacher" onclick="setMode('teacher')">👩‍🏫 Мұғалім режимі (ҚМЖ/БЖБ)</button>
+        </div>
+        <button type="button" class="btn btn-gold" onclick="openAddWorkDialog()">
+          ➕ Өз материалыңды қосу
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WORKSPACE -->
+  <main class="container workspace-grid">
+    <!-- LEFT SIDEBAR: LIST OF WORKS -->
+    <aside class="card isolated-panel" aria-label="5-сынып шығармалар тізімі">
+      <h2 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.65rem;">
+        📚 5-сынып шығармалар тізімі
+      </h2>
+      <input
+        type="search"
+        id="work-search"
+        class="search-box"
+        placeholder="Шығарма немесе авторды іздеу..."
+        oninput="renderWorksList()"
+      />
+      <select id="chapter-filter" class="chapter-select" onchange="renderWorksList()" aria-label="Тоқсан және бөлім бойынша сүзгі">
+        <option value="ALL">Барлық бөлімдер (І – ІV тоқсан)</option>
+        <option value="І бөлім. Таза, мінсіз сұлулық">І бөлім. Таза, мінсіз сұлулық</option>
+        <option value="ІІ бөлім. Тәрбиенің қайнар бұлағы">ІІ бөлім. Тәрбиенің қайнар бұлағы</option>
+        <option value="ІІІ бөлім. Адамгершілік — асыл қасиет">ІІІ бөлім. Адамгершілік — асыл қасиет</option>
+        <option value="ІV бөлім. Отбасы құндылықтары">ІV бөлім. Отбасы құндылықтары</option>
+      </select>
+
+      <div class="works-list" id="works-list-container"></div>
+    </aside>
+
+    <!-- RIGHT PANEL: SELECTED WORK & AI LAB -->
+    <section class="card isolated-panel" aria-live="polite">
+      <!-- Work Title Banner -->
+      <div class="work-banner">
+        <div>
+          <span class="work-chapter-tag" id="detail-chapter"></span>
+          <h2 style="font-size: clamp(1.3rem, 2.2vw, 1.75rem); font-weight: 900; margin-top: 0.2rem;" id="detail-title"></h2>
+          <p style="font-size: 0.92rem; color: var(--text-muted); font-weight: 600;" id="detail-author-genre"></p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button type="button" class="btn btn-outline" onclick="window.print()">🖨️ Басып шығару / PDF</button>
+        </div>
+      </div>
+
+      <!-- Interactive Selection Tabs (Таңдаулар) -->
+      <div style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem;">
+        Таңдаулар (керекті бөлімді басыңыз):
+      </div>
+      <div class="tabs-nav" role="tablist">
+        <button type="button" class="tab-btn active" id="tab-author" onclick="selectTab('author')">👤 Автор туралы мәлімет</button>
+        <button type="button" class="tab-btn" id="tab-summary" onclick="selectTab('summary')">📖 Қысқаша мазмұны</button>
+        <button type="button" class="tab-btn" id="tab-analysis" onclick="selectTab('analysis')">🎯 Идеясы мен Кейіпкерлер</button>
+        <button type="button" class="tab-btn" id="tab-quiz" onclick="selectTab('quiz')">🧩 Интерактивті Тест (5 сұрақ)</button>
+        <button type="button" class="tab-btn" id="tab-teacher" onclick="selectTab('teacher')">👩‍🏫 Мұғалімге (ҚМЖ / Дескриптор)</button>
+      </div>
+
+      <!-- Dynamic Tab Content -->
+      <div id="tab-content-area" style="min-height: 210px;"></div>
+
+      <!-- AI ASSISTANT MODULE -->
+      <div class="ai-box">
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem;">
+          <div>
+            <span class="badge-pill">🤖 Әдеби LAB — ЖИ Ассистенті</span>
+            <h3 style="font-size: 1.05rem; font-weight: 800; margin-top: 0.25rem;">
+              Осы шығарма бойынша ЖИ-ден көмек сұраңыз (Оқушы мен Мұғалімге)
+            </h3>
+          </div>
+        </div>
+
+        <div class="ai-quick-prompts">
+          <button type="button" class="prompt-chip" onclick="runAiAction('essay')">✍️ Эссе жоспарын құру</button>
+          <button type="button" class="prompt-chip" onclick="runAiAction('character_map')">🦸 Кейіпкерлерге мінездеме</button>
+          <button type="button" class="prompt-chip" onclick="runAiAction('bloom_questions')">🎓 Блум таксономиясы (5 сұрақ)</button>
+          <button type="button" class="prompt-chip" onclick="runAiAction('kmzh_goal')">📋 Мұғалімге: Сабақ мақсаты мен дескриптор</button>
+          <button type="button" class="prompt-chip" onclick="runAiAction('moral')">💡 Негізгі тәрбиелік мәні</button>
+        </div>
+
+        <div class="ai-messages" id="ai-chat-history"></div>
+
+        <form onsubmit="handleCustomAiQuestion(event)" style="display: flex; gap: 0.55rem;">
+          <input
+            type="text"
+            id="ai-user-input"
+            placeholder="Мысалы: Осы шығарманың басты идеясы қандай? Немесе сабаққа тапсырма құрастыр..."
+            style="flex: 1; padding: 0.6rem 0.9rem; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: #fff;"
+            required
+          />
+          <button type="submit" class="btn btn-primary">Жіберу ➤</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <!-- ADD CUSTOM MATERIAL DIALOG (Light Dismiss Native <dialog>) -->
+  <dialog class="modern-dialog" id="add-work-dialog" closedby="any" aria-labelledby="dialog-title">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
+      <h2 id="dialog-title" style="font-size: 1.2rem; font-weight: 800;">➕ Жаңа шығарма / Өз материалыңызды қосу</h2>
+      <button type="button" class="btn btn-outline" onclick="closeAddWorkDialog()" style="min-height: 36px; padding: 0.25rem 0.65rem;">✕</button>
+    </div>
+    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.9rem;">
+      Сессияға дайындаған өз материалыңызды осы жерге енгізсеңіз, ол бірден шығармалар тізіміне және ЖИ-ассистент базасына қосылады:
+    </p>
+    <form id="add-work-form" onsubmit="saveCustomWork(event)">
+      <div class="form-field">
+        <label for="new-chapter">Бөлім (Тоқсан):</label>
+        <select id="new-chapter">
+          <option value="І бөлім. Таза, мінсіз сұлулық">І бөлім. Таза, мінсіз сұлулық</option>
+          <option value="ІІ бөлім. Тәрбиенің қайнар бұлағы">ІІ бөлім. Тәрбиенің қайнар бұлағы</option>
+          <option value="ІІІ бөлім. Адамгершілік — асыл қасиет">ІІІ бөлім. Адамгершілік — асыл қасиет</option>
+          <option value="ІV бөлім. Отбасы құндылықтары">ІV бөлім. Отбасы құндылықтары</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label for="new-title">Шығарманың атауы:</label>
+        <input type="text" id="new-title" placeholder="Мысалы: Атымтай Жомарт" required />
+      </div>
+      <div class="form-field">
+        <label for="new-author">Авторы және жанры:</label>
+        <input type="text" id="new-author" placeholder="Мысалы: Ыбырай Алтынсарин • Әңгіме" required />
+      </div>
+      <div class="form-field">
+        <label for="new-author-bio">Автор туралы мәлімет:</label>
+        <textarea id="new-author-bio" rows="2" placeholder="Автордың өмірбаяны мен еңбектері..." required></textarea>
+      </div>
+      <div class="form-field">
+        <label for="new-summary">Қысқаша мазмұны:</label>
+        <textarea id="new-summary" rows="3" placeholder="Шығарманың қысқаша мазмұны..." required></textarea>
+      </div>
+      <div class="form-field">
+        <label for="new-idea">Тақырыбы, идеясы және кейіпкерлері:</label>
+        <textarea id="new-idea" rows="2" placeholder="Негізгі ойы мен басты кейіпкерлер..." required></textarea>
+      </div>
+      <div style="display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 1rem;">
+        <button type="button" class="btn btn-outline" onclick="closeAddWorkDialog()">Болдырмау</button>
+        <button type="submit" class="btn btn-primary">💾 Сақтау және тізімге қосу</button>
+      </div>
+    </form>
+  </dialog>
+
+  <footer class="site-footer container">
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;">
+      <div>
+        <strong>«Әдеби LAB» ғылыми жобасы</strong> — 5-сынып «Қазақ әдебиеті» пәні бойынша оқушылар мен мұғалімдерге арналған цифрлық ЖИ-платформа.
+      </div>
+      <div>
+        Әзірлеуші: <a href="https://portfolio-9os8.onrender.com" target="_blank" rel="noopener noreferrer">Алимжан Аптай</a> • WhatsApp: <a href="tel:+77786078732">+7 778 607-87-32</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // 5-сынып «Қазақ әдебиеті» оқу бағдарламасының толық базасы
+    const DEFAULT_WORKS = [
+      {
+        id: 'kendebay',
+        chapter: 'І бөлім. Таза, мінсіз сұлулық',
+        title: '«Керқұла атты Кендебай» ертегісі',
+        author: 'Халық ауыз әдебиеті • Қиял-ғажайып ертегі',
+        readingGoal: '5.1.1.1 — әдеби шығарманың жанрына қарай фабуласы мен сюжеттік дамуын сипаттау',
+        authorBio: '«Керқұла атты Кендебай» — қазақ халқының ежелгі қиял-ғажайып және батырлық ертегілерінің озық үлгісі. Авторы — халық. Ертегіде халықтың арман-тілегі, батырлық пен адалдық, жетім балаға қамқорлық жасау идеясы көрініс тапқан.',
+        summary: 'Қарасудың бойында Қазанғап деген кедей аңшы өмір сүреді. Оның ұлы Кендебай сағат сайын емес, күн сайын өсетін алып батыр болып ержетеді. Ол Мергенбай батырдың баласы — панасыз қалған жетім балаға көмектесу үшін ханның жоғалған биесінің құлынын (Керқұланы) өсіріп, алты кез алмас қылыш пен сауыт киіп, баланың ата-анасын зынданнан құтқарып, елін мұратқа жеткізеді.',
+        plotStages: [
+          'Басталуы: Қарасу бойындағы Қазанғап кедейдің отбасында Кендебайдың дүниеге келуі.',
+          'Байланысуы: Кендебайдың көкжал қасқырдан буаз биені құтқарып, Керқұла құлынды аمان алып қалуы.',
+          'Дамуы: Жетім баламен кездесуі және Керқұла атқа мініп, алыс сапарға аттануы.',
+          'Шарықтау шегі: Дәу мен арыстанды жеңіп, ханның шартын орындап, баланың ата-анасын босатуы.',
+          'Шешімі: Кендебайдың еліне оралып, әділдік орнатуы.'
+        ],
+        idea: 'Тақырыбы — қарапайым халық өкілі Кендебайдың батырлығы мен мейірімділігі. Идеясы — жетімге қорған болу, уәдеге беріктік, еңбекқорлық пен ерлікті дәріптеу.',
+        characters: [
+          'Кендебай — мейірімді, батыр, қайырымды, сөзінде тұратын нағыз ел қорғаны.',
+          'Керқұла ат — Кендебайдың сенімді серігі, адамша сөйлейтін, алдын болжайтын қасиетті тұлпар.',
+          'Мергенбайдың баласы — ата-анасын іздеген қайсар жетім бала.',
+          'Қазанғап — адал еңбегімен күн көрген қарапайым аңшы.'
+        ],
+        teacherNotes: {
+          lessonObjective: 'Оқушылар ертегінің сюжеттік композициялық құрылымын талдайды және Кендебай бейнесін бүгінгі заман батырларымен салыстырады.',
+          descriptors: [
+            '1. Ертегінің 5 сюжеттік бөлігін (басталуы, дамуы, шешімі) дұрыс анықтайды (2 балл);',
+            '2. Кендебай мен Керқұла атқа 3 дәлелмен мінездеме береді (3 балл);',
+            '3. Ертегідегі қиял-ғажайып элементтерді шынайы өмірмен салыстырады (3 балл).'
+          ]
+        },
+        quiz: [
+          { q: '1. Кендебайдың әкесінің есімі кім?', opts: ['Қазанғап', 'Мергенбай', 'Қарахан'], a: 0 },
+          { q: '2. Керқұла ат қандай жануардан туған құлын еді?', opts: ['Ханның жоғалған көк биесінен', 'Жылқышының торы биесінен', 'Даланың тағы құланынан'], a: 0 },
+          { q: '3. Кендебай кімнің ата-анасын құтқару үшін сапарға шықты?', opts: ['Ханның баласының', 'Мергенбай батырдың жетім қалған баласының', 'Көрші ауыл байының'], a: 1 }
+        ]
+      },
+      {
+        id: 'qobylandy',
+        chapter: 'І бөлім. Таза, мінсіз сұлулық',
+        title: '«Қобыланды батыр» жыры',
+        author: 'Халық ауыз әдебиеті • Батырлар жыры',
+        readingGoal: '5.1.2.1 — әдеби шығарманың тақырыбы мен идеясын анықтау',
+        authorBio: '«Қобыланды батыр» — қазақ халқының ең көне әрі көркем батырлық эпостарының бірі. Жырдың 29 нұсқасы бар (Марабай, Мергенбай, Нұрпейіс Байғанин жырлаған нұсқалар кең тараған).',
+        summary: 'Жырда Тоқтарбай мен Аналықтың сексен жасқа келгенде көрген жалғыз ұлы Қобыландының ерлік жолы, сүйген жары Құртқаның даналығы, Тайбурыл тұлпарының шабысы және Қызылбас елінің ханы Қазан мен Көбіктіні жеңіп, туған жерін жаудан қорғауы баяндалады.',
+        plotStages: [
+          'Басталуы: Қарақыпшақ Қобыландының дүниеге келуі және ержетуі.',
+          'Байланысуы: Көктім Аймақтың қызы Құртқа сұлуды теңге атып жеңіп алуы.',
+          'Дамуы: Құртқаның Тайбурыл тұлпарды 40 күн баптап өсіруі.',
+          'Шарықтау шегі: Қазан ханмен және Көбіктімен шайқас, Қарлыға қыздың көмегі.',
+          'Шешімі: Қобыландының елін жаудан азат етіп, мұратына жетуі.'
+        ],
+        idea: 'Тақырыбы — туған жерді сыртқы жаудан қорғау. Идеясы — ел бірлігі, отансүйгіштік пен батырлықты ұлықтау.',
+        characters: [
+          'Қобыланды — қарақыпшақ елінің батыры, жаужүрек қолбасшы.',
+          'Құртқа — ақылды, көреген, Тайбурылдың сыншысы әрі адал жар.',
+          'Тайбурыл — батырдың қанатты тұлпары.',
+          'Қарлыға — ержүрек, Қобыландыға көмектескен батыр қыз.'
+        ],
+        teacherNotes: {
+          lessonObjective: 'Батырлар жырындағы гипербола (әсірелеу) мен эпитеттерді табу, Тайбурылдың шабысын мәнерлеп талдау.',
+          descriptors: [
+            '1. Жырдағы әсірелеу (гипербола) мысалдарын мәтіннен табады (3 балл);',
+            '2. Құртқа бейнесінің даналығын 2 дәлелмен сипаттайды (3 балл);',
+            '3. Батырдың Отан алдындағы парызы туралы ой қорытады (2 балл).'
+          ]
+        },
+        quiz: [
+          { q: '1. Қобыланды батырдың тұлпарының аты қалай?', opts: ['Байшұбар', 'Тайбурыл', 'Тарлан'], a: 1 },
+          { q: '2. Тайбурылды баптап өсірген Қобыландының ақылды жары кім?', opts: ['Құртқа', 'Гүлбаршын', 'Ақжүніс'], a: 0 },
+          { q: '3. Қобыланды қай рудан шыққан батыр?', opts: ['Қарақыпшақ', 'Қоңырат', 'Арғын'], a: 0 }
+        ]
+      },
+      {
+        id: 'atymtay',
+        chapter: 'ІІ бөлім. Тәрбиенің қайнар бұлағы',
+        title: '«Атымтай Жомарт» әңгімесі',
+        author: 'Ыбырай Алтынсарин • Әңгіме',
+        readingGoal: '5.2.1.1 — әдеби шығармадағы кейіпкерді портреті мен іс-әрекеті арқылы талдау',
+        authorBio: 'Ыбырай Алтынсарин (1841–1889) — қазақтың ұлы ағартушы-педагогы, жазушы, этнограф, балалар әдебиетінің атасы, қазақ даласында алғаш мектеп ашып, «Қазақ хрестоматиясын» (1879) жазған тұлға.',
+        summary: 'Атымтай Жомарт өзі асқан бай бола тұра, күн сайын бір мезгіл үстіне ескі киім киіп, отын шауып, шөп тасып еңбек етеді. Жарлы-жақыбайларға үнемі көмектеседі. Достары «Неге өзіңді қинайсың?» деп сұрағанда, ол дәулетке мастанып кетпеу үшін және еңбекпен табылған нанның қадірін ұмытпау үшін солай істейтінін4 себеппен түсіндіреді.',
+        plotStages: [
+          'Басталуы: Атымтай Жомарттың бай бола тұра күнде еңбек етуі.',
+          'Дамуы: Таныстарының оған таңғалып сұрақ қоюы.',
+          'Шешімі: Атымтайдың 4 түрлі ғибратты жауабы.'
+        ],
+        idea: 'Тақырыбы — жомарттық пен адал еңбек. Идеясы — байлыққа масаттанбау, кішіпейіл болу және мұқтаж жандарға қол ұшын беру.',
+        characters: [
+          'Атымтай Жомарт — қайырымды, еңбекқор, кішіпейіл, дана адам.'
+        ],
+        teacherNotes: {
+          lessonObjective: 'Атымтай Жомарттың 4 жауабын талдау арқылы оқушыларды еңбекқорлық пен қайырымдылыққа баулу.',
+          descriptors: [
+            '1. Атымтай Жомарттың еңбек етуінің 4 себебін толық атайды (4 балл);',
+            '2. «Жомарттық» ұғымына өз сөзімен анықтама береді (3 балл).'
+          ]
+        },
+        quiz: [
+          { q: '1. «Атымтай Жомарт» әңгімесінің авторы кім?', opts: ['Абай Құнанбайұлы', 'Ыбырай Алтынсарин', 'Ахмет Байтұрсынұлы'], a: 1 },
+          { q: '2. Атымтай Жомарт достарына еңбек етуінің неше себебін айтты?', opts: ['2 себебін', '4 себебін', '7 себебін'], a: 1 },
+          { q: '3. Атымтай Жомарттың басты қасиеті қандай?', opts: ['Жомарттық пен еңбекқорлық', 'Аңшылық', 'Әскери қолбасшылық'], a: 0 }
+        ]
+      },
+      {
+        id: 'qypshaq-seyitqul',
+        chapter: 'ІІ бөлім. Тәрбиенің қайнар бұлағы',
+        title: '«Қыпшақ Сейітқұл» әңгімесі',
+        author: 'Ыбырай Алтынсарин • Әңгіме',
+        readingGoal: '5.1.3.1 — көркем шығармадағы кейіпкерлердің типтерін жасалу тәсілдері тұрғысынан анықтау',
+        authorBio: 'Ыбырай Алтынсарин өз шығармаларында («Қыпшақ Сейітқұл», «Бай баласы мен жарлы баласы») қазақ халқын отырықшылыққа, егіншілікке, кәсіп пен білімге шақырды.',
+        summary: 'Сейітқұл отыз үйлі кедей туыстарын ертіп, Қабырға өзенінің бойына қоныстанады. Ағасы барымтамен мал жинамақ болып қаза табады, ал Сейітқұл жер жыртып, арық қазып, егін егіп, артық астығын малға айырбастап, бүкіл елін байлық пен берекеге жеткізеді.',
+        plotStages: [
+          'Басталуы: Сейітқұлдың кедей елін бастап Қабырға өзеніне көшуі.',
+          'Дамуы: Егін егіп, су тартып, диқаншылықты дамытуы.',
+          'Шарықтау шегі: Ұрлық-барымта қуған ағасының мерт болуы және Сейітқұл қауымының өркендеуі.',
+          'Шешімі: Төрт жүз үйге жеткен берекелі ел болуы.'
+        ],
+        idea: 'Тақырыбы — адал кәсіп пен егіншілік. Идеясы — ұрлық пен барымта емес, маңдай термен жасалған еңбек қана елді байытады.',
+        characters: [
+          'Сейітқұл — ақылды, еңбексүйгіш, ұйымдастырушы басшы.',
+          'Сейітқұлдың ағасы — жеңіл жолмен мал таппақ болған теріс жолдағы кейіпкер.'
+        ],
+        teacherNotes: {
+          lessonObjective: 'Сейітқұл мен оның ағасының іс-әрекетін «Венн диаграммасы» арқылы салыстыру.',
+          descriptors: [
+            '1. Сейітқұл мен ағасының өмірлік ұстанымын салыстырады (4 балл);',
+            '2. Еңбектің қоғамдағы рөлі туралы қорытынды шығарады (3 балл).'
+          ]
+        },
+        quiz: [
+          { q: '1. Сейітқұл елін қай өзеннің бойына қоныстандырды?', opts: ['Қабырға өзені', 'Сырдария өзені', 'Ертіс өзені'], a: 0 },
+          { q: '2. Сейітқұл халқын қандай кәсіппен байытты?', opts: ['Егіншілік (диқаншылық)', 'Барымта', 'Зергерлік'], a: 0 },
+          { q: '3. Сейітқұлдың қарамағындағы отыз үй неше үйге дейін өсті?', opts: ['Жүз үйге', 'Төрт жүз үйге', 'Мың үйге'], a: 1 }
+        ]
+      },
+      {
+        id: 'menin-atym-qozha',
+        chapter: 'ІІІ бөлім. Адамгершілік — асыл қасиет',
+        title: '«Менің атым Қожа» повесі',
+        author: 'Бердібек Соқпақбаев • Хикаят (Повесть)',
+        readingGoal: '5.2.2.1 — автор бейнесі мен кейіпкерлер қарым-қатынасын талдау',
+        authorBio: 'Бердібек Соқпақбаев (1924–1992) — қазақ балалар әдебиетінің классигі. Алматы облысы Нарынқол өңірінде туған. «Менің атым Қожа» повесі бойынша 1963 жылы режиссер Абдолла Қарсақбаев түсірген фильм Канн кинофестивалінде арнайы жүлдеге ие болды.',
+        summary: 'Шығармада әкесі майданда қаза тапқан, ақкөңіл, бірақ тентектеу 5-сынып оқушысы Қожабергеннің (Қожаның) мектептегі және ауылдағы қызықты бастан кешкен оқиғалары, мұғалімі Майқановамен, сыныптастары Жантас, Жанар, Сұлтанмен қарым-қатынасы және өз қателігін түсініп, тәртіпті азамат болуға серт беруі суреттеледі.',
+        plotStages: [
+          'Басталуы: Қожаның айна алдында өз есімі мен мінезі туралы ойлануы.',
+          'Байланысуы: Лагерьге жолдама алу жолындағы оқиғалар және Майқанованың сөмкесіне бақа салуы.',
+          'Дамуы: Сұлтанмен бірге жайлауға қашуы, педкеңесте талқылануы.',
+          'Шарықтау шегі: Қожаның өзіне-өзі «құпия кеңес» ашып, түзелуге уәде беруі.',
+          'Шешімі: Қожаның болашаққа сеніммен қарап, жазушы болуды армандауы.'
+        ],
+        idea: 'Тақырыбы — балалық шақ пен мінез тәрбиесі. Идеясы — қателеспейтін адам болмайды, ең бастысы — өз мінін мойындап, адал да мейірімді азамат болып өсу.',
+        characters: [
+          'Қожа (Қожаберген Қадыров) — ақкөңіл, шыншыл, арманшыл, бірақ сотқарлау бала.',
+          'Жантас — қу, біреуді сыртынан сөз ететін жағымсыз кейіпкер.',
+          'Жанар — озат, әділ, мейірімді қыз.',
+          'Миллат — Қожаның анасы, еңбекқор әрі сабырлы жан.',
+          'Майқанова — қатал да болса шәкіртіне жаны ашитын сынып жетекшісі.'
+        ],
+        teacherNotes: {
+          lessonObjective: 'Қожа мен Жантас бейнелерін салыстыра отырып, шынайы достық пен адалдық құндылықтарын ашу.',
+          descriptors: [
+            '1. Қожаның жағымды және тентек қылықтарына мәтіннен 2 мысал келтіреді (3 балл);',
+            '2. Педкеңес сахнасындағы кейіпкерлердің эмоциясын талдайды (3 балл);',
+            '3. «Мен Қожаның орнында болсам...» тақырыбында шағын ой-толғау жазады (4 балл).'
+          ]
+        },
+        quiz: [
+          { q: '1. Қожаның шын аты кім?', opts: ['Қожаберген', 'Қожахмет', 'Қожанасыр'], a: 0 },
+          { q: '2. Қожа мұғалім Майқанованың сөмкесіне не салып жіберді?', opts: ['Кітап', 'Бақа', 'Алма'], a: 1 },
+          { q: '3. «Менің атым Қожа» повесінің авторы кім?', opts: ['Бердібек Соқпақбаев', 'Сайын Мұратбеков', 'Мұхтар Әуезов'], a: 0 }
+        ]
+      },
+      {
+        id: 'eginnin-bastary',
+        chapter: 'ІІІ бөлім. Адамгершілік — асыл қасиет',
+        title: '«Егіннің бастары» мысал өлеңі',
+        author: 'Ахмет Байтұрсынұлы • Мысал өлең',
+        readingGoal: '5.1.4.1 — мысал жанрындағы алегория мен моральды анықтау',
+        authorBio: 'Ахмет Байтұрсынұлы (1872–1937) — ұлт ұстазы, ақын, әдебиет зерттеуші ғалым, қазақ тіл білімінің негізін қалаушы, «Қырық мысал» және «Маса» жинақтарының авторы.',
+        summary: 'Бір адам жас баласын ертіп егін алқабына барады. Баласы басы көкке қарап тікірейіп тұрған масаққа қызығады. Сонда әкесі оған іші дәнге толы масақтың басы төмен иіліп тұратынын, ал іші бос, дәні жоқ масақтың ғана кеудесін керіп тік тұратынын айтып, тәкаппарлықтан аулақ болуға үйретеді.',
+        plotStages: [
+          'Басталуы: Әкесі мен баласының егін басына баруы.',
+          'Дамуы: Баланың тікірейген бидайға таңырқауы.',
+          'Шешімі: Әкенің даналық өсиеті (мораль): «Тәкаппар — о കനсіз бос масақ тәрізді».'
+        ],
+        idea: 'Тақырыбы — кішіпейілділік пен тәкаппарлық. Идеясы — білімді, парасатты адам дәнге толы бидай секілді кішіпейіл болады.',
+        characters: [
+          'Әке — өмірден түйгені мол дана ұстаз.',
+          'Бала — білуге құмар жас ұрпақ.',
+          'Бидай масақтары — адам мінездерінің аллегориялық бейнесі.'
+        ],
+        teacherNotes: {
+          lessonObjective: 'Мысалдағы астарлы ойды (аллегорияны) ашу және түйінді шумақты жатқа талдау.',
+          descriptors: [
+            '1. Дәнге толы масақ пен бос масақтың бейнесін адам мінезімен сәйкестендіреді (3 балл);',
+            '2. Мысалдың түйінді моралін өз сөзімен түсіндіреді (3 балл).'
+          ]
+        },
+        quiz: [
+          { q: '1. Неліктен кейбір бидайдың басы төмен иіліп тұрды?', opts: ['Іші дәнге толы, ауыр болғандықтан', 'Жел соққандықтан', 'Су жетпегендіктен'], a: 0 },
+          { q: '2. Басы көкке қарап тікірейіп тұрған масақ қандай адамды бейнелейді?', opts: ['Кішіпейіл ғалымды', 'Іші бос, мақтаншақ, тәкаппар адамды', 'Еңбекқор диқанды'], a: 1 },
+          { q: '3. «Егіннің бастары» Ахмет Байтұрсынұлының қай жинағына енген?', opts: ['«Қырық мысал»', '«Маса»', '«Әдебиет танытқыш»'], a: 0 }
+        ]
+      },
+      {
+        id: 'nagyz-azhe',
+        chapter: 'ІV бөлім. Отбасы құндылықтары',
+        title: '«Нағыз әже қайда?» әңгімесі',
+        author: 'Нұрдәулет Ақыш • Әңгіме',
+        readingGoal: '5.3.1.1 — шығармадағы ұлттық құндылықтардың заманауи көрінісін бағалау',
+        authorBio: 'Нұрдәулет Ақыш (1950 ж. туған) — белгілі қазақ жазушысы, балалар мен жасөспірімдерге арналған көптеген тағылымды шығармалардың авторы.',
+        summary: 'Қалада өскен екі кішкентай қыз — Ая мен Райханға әкесі Азамат нағыз қазақы, ертегі айтатын, кимешек киген, мейірімді әжені көрсеткісі келіп қонаққа барады. Алайда қаладағы әже заманауи киінген, ертегі білмейтін болып шығады да, қыздар нағыз әжені аңсап қайтады.',
+        plotStages: [
+          'Басталуы: Ая мен Райханның ертегі айтатын нағыз әжені көргісі келуі.',
+          'Дамуы: Әкесімен бірге қонаққа барып, қалалық әжемен кездесуі.',
+          'Шешімі: Балалардың «Бұл нағыз әже емес екен» деп, ұлттық болмысты іздеуі.'
+        ],
+        idea: 'Тақырыбы — ұлттық тәрбие мен әже институты. Идеясы — қазақ отбасындағы әженің мейірімі, ана тілі мен салт-дәстүр сабақтастығын сақтау.',
+        characters: [
+          'Азамат — балаларына ұлттық тәрбие бергісі келетін әке.',
+          'Ая мен Райхан — ертегі мен әже мейірімін аңсаған бүлдіршіндер.'
+        ],
+        teacherNotes: {
+          lessonObjective: 'Отбасылық құндылықтар мен қазақ қоғамындағы әже рөлін талқылау.',
+          descriptors: [
+            '1. Балалар елестеткен «нағыз әже» мен қонақтағы әженің айырмашылығын сипаттайды (3 балл);',
+            '2. Отбасындағы үлкендер тәрбиесі туралы эссе/пікір айтады (3 балл).'
+          ]
+        },
+        quiz: [
+          { q: '1. «Нағыз әже қайда?» әңгімесіндегі әкенің есімі кім?', opts: ['Азамат', 'Ерлан', 'Сәбит'], a: 0 },
+          { q: '2. Кішкентай қыздардың есімдері қалай?', opts: ['Ая мен Райхан', 'Айгүл мен Маржан', 'Жанар мен Сәуле'], a: 0 },
+          { q: '3. Шығармада қандай басты құндылық көтерілген?', opts: ['Отбасылық және ұлттық тәрбие (әже мейірімі)', 'Табиғатты қорғау', 'Спортпен шұғылдану'], a: 0 }
+        ]
+      }
+    ];
+
+    let worksData = [...DEFAULT_WORKS];
+    try {
+      const saved = localStorage.getItem('adebi_lab_custom_works');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) worksData = [...parsed, ...DEFAULT_WORKS];
+      }
+    } catch (_) {}
+
+    let selectedWorkId = worksData[0].id;
+    let activeTab = 'author';
+    let userMode = 'student';
+
+    function getSelectedWork() {
+      return worksData.find(w => w.id === selectedWorkId) || worksData[0];
+    }
+
+    function setMode(mode) {
+      userMode = mode;
+      document.getElementById('mode-student').classList.toggle('active', mode === 'student');
+      document.getElementById('mode-teacher').classList.toggle('active', mode === 'teacher');
+      if (mode === 'teacher') {
+        selectTab('teacher');
+      } else {
+        selectTab('author');
+      }
+    }
+
+    function renderWorksList() {
+      const q = (document.getElementById('work-search').value || '').toLowerCase().trim();
+      const ch = document.getElementById('chapter-filter').value;
+      const container = document.getElementById('works-list-container');
+      container.innerHTML = '';
+
+      const filtered = worksData.filter(w => {
+        const matchChapter = ch === 'ALL' || w.chapter === ch;
+        const matchQuery = !q || w.title.toLowerCase().includes(q) || w.author.toLowerCase().includes(q);
+        return matchChapter && matchQuery;
+      });
+
+      filtered.forEach(w => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `work-item ${w.id === selectedWorkId ? 'active' : ''}`;
+        btn.onclick = () => {
+          selectedWorkId = w.id;
+          renderWorksList();
+          renderSelectedWork();
+        };
+        btn.innerHTML = `
+          <span class="work-chapter-tag">${w.chapter}</span>
+          <span class="work-title">${w.title}</span>
+          <span class="work-author">${w.author}</span>
+        `;
+        container.appendChild(btn);
+      });
+    }
+
+    function selectTab(tab) {
+      activeTab = tab;
+      ['author', 'summary', 'analysis', 'quiz', 'teacher'].forEach(t => {
+        const el = document.getElementById(`tab-${t}`);
+        if (el) el.classList.toggle('active', t === tab);
+      });
+      renderTabContent();
+    }
+
+    function renderSelectedWork() {
+      const w = getSelectedWork();
+      document.getElementById('detail-chapter').textContent = w.chapter;
+      document.getElementById('detail-title').textContent = w.title;
+      document.getElementById('detail-author-genre').textContent = `${w.author} • Оқу мақсаты: ${w.readingGoal || '5-сынып бағдарламасы'}`;
+      renderTabContent();
+      initAiWelcomeMessage(w);
+    }
+
+    function renderTabContent() {
+      const w = getSelectedWork();
+      const area = document.getElementById('tab-content-area');
+
+      if (activeTab === 'author') {
+        area.innerHTML = `
+          <div class="info-box">
+            <h4>👤 Автор және шығарма тарихы</h4>
+            <p style="font-size: 0.96rem; margin-top: 0.35rem;">${w.authorBio}</p>
+          </div>
+          <div class="info-grid">
+            <div class="info-box">
+              <h4>📌 Жанрлық ерекшелігі</h4>
+              <p style="font-size: 0.9rem;">${w.author}</p>
+            </div>
+            <div class="info-box">
+              <h4>🎯 Оқу бағдарламасының мақсаты</h4>
+              <p style="font-size: 0.9rem;">${w.readingGoal || 'Әдеби шығарманы талдау және құндылықтарды анықтау'}</p>
+            </div>
+          </div>
+        `;
+      } else if (activeTab === 'summary') {
+        const stagesHtml = (w.plotStages || []).map(s => `<li style="margin-bottom:0.35rem;">${s}</li>`).join('');
+        area.innerHTML = `
+          <div class="info-box" style="margin-bottom: 1rem;">
+            <h4>📖 Қысқаша мазмұны</h4>
+            <p style="font-size: 0.96rem; margin-top: 0.35rem;">${w.summary}</p>
+          </div>
+          ${stagesHtml ? `
+          <div class="info-box">
+            <h4>🗺️ Композициялық құрылымы (Сюжеттік желісі)</h4>
+            <ul style="padding-left: 1.2rem; margin-top: 0.45rem; font-size: 0.92rem;">${stagesHtml}</ul>
+          </div>` : ''}
+        `;
+      } else if (activeTab === 'analysis') {
+        const charsHtml = (w.characters || []).map(c => `<li style="margin-bottom:0.35rem;">${c}</li>`).join('');
+        area.innerHTML = `
+          <div class="info-box" style="margin-bottom: 1rem;">
+            <h4>💡 Тақырыбы мен Негізгі Идеясы</h4>
+            <p style="font-size: 0.95rem; margin-top: 0.35rem;">${w.idea}</p>
+          </div>
+          <div class="info-box">
+            <h4>🦸 Кейіпкерлер жүйесі және мінездеме</h4>
+            <ul style="padding-left: 1.2rem; margin-top: 0.45rem; font-size: 0.92rem;">${charsHtml || '<li>Кейіпкерлер тізімі ЖИ-ассистент арқылы талданады.</li>'}</ul>
+          </div>
+        `;
+      } else if (activeTab === 'quiz') {
+        const quizList = w.quiz || [];
+        if (!quizList.length) {
+          area.innerHTML = `<div class="info-box"><p>Бұл шығарма бойынша сұрақтарды төмендегі ЖИ-ассистенттен «Блум таксономиясы (5 сұрақ)» батырмасын басып ала аласыз!</p></div>`;
+          return;
+        }
+        area.innerHTML = quizList.map((item, qIdx) => `
+          <div class="quiz-card">
+            <div style="font-weight: 800; font-size: 0.95rem;">${item.q}</div>
+            ${item.opts.map((opt, oIdx) => `
+              <button type="button" class="quiz-opt" onclick="checkQuizAnswer(this, ${oIdx === item.a})">
+                ${opt}
+              </button>
+            `).join('')}
+          </div>
+        `).join('');
+      } else if (activeTab === 'teacher') {
+        const tn = w.teacherNotes || {
+          lessonObjective: 'Оқушылар шығарманың мазмұнын меңгеріп, кейіпкерлерге баға береді.',
+          descriptors: ['Шығарманың негізгі ойын анықтайды (3 балл)', 'Кейіпкер іс-әрекетін дәлелмен сипаттайды (3 балл)']
+        };
+        area.innerHTML = `
+          <div class="info-box" style="border-left-color: #f59e0b; margin-bottom: 1rem;">
+            <h4 style="color: #b45309;">👩‍🏫 Мұғалімге арналған ҚМЖ (Қысқа мерзімді жоспар) көмекшісі</h4>
+            <p style="font-size: 0.94rem; margin-top: 0.35rem;"><strong>Сабақтың мақсаты:</strong> ${tn.lessonObjective}</p>
+          </div>
+          <div class="info-box" style="border-left-color: #f59e0b;">
+            <h4 style="color: #b45309;">✅ Бағалау критерийлері мен Дескрипторлар (БЖБ / ФБ)</h4>
+            <ul style="padding-left: 1.2rem; margin-top: 0.45rem; font-size: 0.92rem;">
+              ${tn.descriptors.map(d => `<li style="margin-bottom:0.35rem;">${d}</li>`).join('')}
+            </ul>
+          </div>
+        `;
+      }
+    }
+
+    function checkQuizAnswer(btnElement, isCorrect) {
+      const parent = btnElement.parentElement;
+      parent.querySelectorAll('.quiz-opt').forEach(b => b.disabled = true);
+      if (isCorrect) {
+        btnElement.classList.add('correct');
+        btnElement.textContent += ' ✅ (Дұрыс жауап!)';
+      } else {
+        btnElement.classList.add('wrong');
+        btnElement.textContent += ' ❌ (Қате, қайта ойланып көр)';
+      }
+    }
+
+    // AI Assistant Logic
+    function initAiWelcomeMessage(w) {
+      const chat = document.getElementById('ai-chat-history');
+      chat.innerHTML = `
+        <div class="ai-msg-bot">Сәлем! Мен <strong>«Әдеби LAB» ЖИ-ассистентімін</strong>. Қазір біз <strong>${w.title}</strong> (${w.author}) шығармасын талдап жатырмыз.
+Оқушы ретінде эссе жоспарын, кейіпкер талдауын сұрай аласыз, ал мұғалім ретінде ҚМЖ дескрипторын немесе Блум сұрақтарын бір батырмамен құрастыра аласыз!</div>
+      `;
+    }
+
+    function runAiAction(actionType) {
+      const w = getSelectedWork();
+      const chat = document.getElementById('ai-chat-history');
+      let userText = '';
+      let botReply = '';
+
+      if (actionType === 'essay') {
+        userText = `«${w.title}» бойынша 5-сынып оқушысына эссе жоспарын құрып берші.`;
+        botReply = `✍️ **«${w.title}» шығармасы бойынша Эссе жоспары (80–100 сөз):**\n
+1. **Кіріспе (15–20 сөз):** Шығарманың авторы (${w.author}) және көтерілген басты тақырып туралы қысқаша таныстыру.
+2. **Негізгі бөлім (50–60 сөз):** ${w.idea} Шығармадағы басты оқиғадан 1 нақты дәлел келтіру (${w.summary.slice(0, 110)}...).
+3. **Қорытынды (15–20 сөз):** Бұл туынды бізді қандай адами қасиетке (адалдық, еңбекқорлық, мейірімділік) үйретеді? Өз ойыңмен түйіндеу.`;
+      } else if (actionType === 'character_map') {
+        userText = `Кейіпкерлерге сатылай кешенді мінездеме жасап берші.`;
+        botReply = `🦸 **Кейіпкерлерге әдеби талдау («${w.title}»):**\n${(w.characters || [w.idea]).map(c => '• ' + c).join('\n')}\n\n📌 **Сабақта қолдану әдісі:** Оқушыларға «Кейіпкерге хат» немесе «Екі жақты күнделік» әдісі арқылы кейіпкер іс-әрекетіне баға бергізіңіз.`;
+      } else if (actionType === 'bloom_questions') {
+        userText = `Сабаққа Блум таксономиясы бойынша деңгейлік сұрақтар құрастыр.`;
+        botReply = `🎓 **Блум таксономиясы бойынша 5 деңгейлік сұрақ («${w.title}»):**
+• **Білу:** Шығарманың авторы кім және оқиға қай жерде өтеді?
+• **Түсіну:** Шығарманың қысқаша мазмұнындағы негізгі түйін неде?
+• **Қолдану:** Басты кейіпкердің орнында болсаң, қандай шешім қабылдар едің?
+• **Талдау:** Жағымды және жағымсыз әрекеттерді салыстырып, себебін түсіндір.
+• **Бағалау:** Бұл шығарманың бүгінгі 5-сынып оқушысы үшін тәрбиелік маңызы қандай?`;
+      } else if (actionType === 'kmzh_goal') {
+        userText = `Мұғалімге арналған ҚМЖ мақсаты мен бағалау дескрипторын шығарып бер.`;
+        const tn = w.teacherNotes || { lessonObjective: w.readingGoal, descriptors: ['Шығарма мазмұнын талдайды (3 балл)'] };
+        botReply = `📋 **Мұғалімге ҚМЖ үлгісі («${w.title}»):**\n• **Оқу мақсаты:** ${w.readingGoal || '5.1.2.1'}\n• **Сабақ мақсаты:** ${tn.lessonObjective}\n• **Дескрипторлар (10 балдық шкалаға бейімделген):**\n${tn.descriptors.map(d => '  — ' + d).join('\n')}`;
+      } else if (actionType === 'moral') {
+        userText = `Шығарманың негізгі тәрбиелік мәні неде?`;
+        botReply = `💡 **Тәрбиелік мәні («${w.title}»):**\n${w.idea}\nҚорытынды ой: «Әдебиет — ардың ісі», бұл шығарма жас ұрпақты адал еңбекке, білімге және үлкенді құрметтеуге тәрбиелейді.`;
+      }
+
+      appendAiExchange(userText, botReply);
+    }
+
+    function handleCustomAiQuestion(e) {
+      e.preventDefault();
+      const input = document.getElementById('ai-user-input');
+      const q = input.value.trim();
+      if (!q) return;
+      input.value = '';
+
+      const w = getSelectedWork();
+      const reply = `🤖 **«${w.title}» бойынша ЖИ-талдау жауабы:**\nСіздің сұрағыңыз: «${q}»\n\n• **Дереккөз:** ${w.author}\n• **Мазмұндық негіз:** ${w.summary}\n• **Тұжырым:** ${w.idea}\n(Толық ҚМЖ немесе тест қажет болса, жоғарыдағы «Мұғалімге» немесе «Интерактивті Тест» таңдауларын басыңыз).`;
+      appendAiExchange(q, reply);
+    }
+
+    function appendAiExchange(userText, botReply) {
+      const chat = document.getElementById('ai-chat-history');
+      const uDiv = document.createElement('div');
+      uDiv.className = 'ai-msg-user';
+      uDiv.textContent = userText;
+      chat.appendChild(uDiv);
+
+      const bDiv = document.createElement('div');
+      bDiv.className = 'ai-msg-bot';
+      bDiv.textContent = botReply;
+      chat.appendChild(bDiv);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    // Native <dialog> Modal with Light Dismiss (Modern Web Guidance: light-dismiss-a-dialog)
+    const addDialog = document.getElementById('add-work-dialog');
+    if (!('closedBy' in HTMLDialogElement.prototype)) {
+      addDialog.addEventListener('click', (event) => {
+        if (event.target !== addDialog) return;
+        const rect = addDialog.getBoundingClientRect();
+        const isDialogContent = (
+          rect.top <= event.clientY &&
+          event.clientY <= rect.top + rect.height &&
+          rect.left <= event.clientX &&
+          event.clientX <= rect.left + rect.width
+        );
+        if (isDialogContent) return;
+        addDialog.close();
+      });
+    }
+
+    function openAddWorkDialog() {
+      addDialog.showModal();
+    }
+
+    function closeAddWorkDialog() {
+      addDialog.close();
+    }
+
+    function saveCustomWork(e) {
+      e.preventDefault();
+      const newWork = {
+        id: 'custom-' + Date.now(),
+        chapter: document.getElementById('new-chapter').value,
+        title: document.getElementById('new-title').value.trim(),
+        author: document.getElementById('new-author').value.trim(),
+        readingGoal: '5-сынып авторлық / қосымша материал',
+        authorBio: document.getElementById('new-author-bio').value.trim(),
+        summary: document.getElementById('new-summary').value.trim(),
+        plotStages: ['Басталуы мен дамуы: Пайдаланушы енгізген материал негізінде құрылды.'],
+        idea: document.getElementById('new-idea').value.trim(),
+        characters: [document.getElementById('new-idea').value.trim()],
+        teacherNotes: {
+          lessonObjective: 'Енгізілген жаңа әдеби материал бойынша оқушылардың функционалдық сауаттылығын арттыру.',
+          descriptors: ['Шығарманың мазмұнын баяндайды (3 балл)', 'Негізгі идеясын ашады (3 балл)']
+        },
+        quiz: []
+      };
+
+      worksData.unshift(newWork);
+      selectedWorkId = newWork.id;
+      try {
+        const customOnly = worksData.filter(w => String(w.id).startsWith('custom-'));
+        localStorage.setItem('adebi_lab_custom_works', JSON.stringify(customOnly));
+      } catch (_) {}
+
+      document.getElementById('add-work-form').reset();
+      closeAddWorkDialog();
+      renderWorksList();
+      renderSelectedWork();
+    }
+
+    // Бастапқы іске қосу
+    renderWorksList();
+    renderSelectedWork();
+  </script>
+</body>
+</html>
