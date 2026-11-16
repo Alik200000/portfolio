@@ -4,22 +4,24 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Әдеби LAB — 5-сынып «Қазақ әдебиеті» ЖИ-ассистенті (Оқушылар мен Мұғалімдерге арналған)</title>
-  <meta name="description" content="Әдеби LAB — 5-сынып оқушылары мен қазақ әдебиеті пәні мұғалімдеріне арналған интеллектуалды ЖИ-ассистент: шығармалар талдауы, авторлар, мазмұны, тесттер, ҚМЖ және AI чат." />
+  <meta name="description" content="Әдеби LAB — 5-сынып оқушылары мен қазақ әдебиеті пәні мұғалімдеріне арналған BilimLand стиліндегі интеллектуалды ЖИ-ассистент: шығармалар талдауы, авторлар, мазмұны, тесттер, ҚМЖ және AI чат." />
   <style>
     :root {
-      --bg-main: #f7f6f2;
+      color-scheme: light;
+      /* BilimLand Signature Green & Pure White Palette */
+      --bg-main: #f4f9f6;
       --bg-card: #ffffff;
-      --bg-soft: #eef2f6;
-      --primary: #0f766e;
-      --primary-dark: #115e59;
-      --primary-light: #ccfbf1;
-      --accent-gold: #b45309;
-      --accent-gold-bg: #fef3c7;
-      --text-dark: #0f172a;
-      --text-muted: #475569;
-      --border: #cbd5e1;
-      --radius-lg: 18px;
-      --radius-md: 12px;
+      --bg-soft: #eaf6ee;
+      --bilim-green: #00a651;
+      --bilim-green-dark: #008741;
+      --bilim-green-light: #e6f7ee;
+      --bilim-green-border: #a7e3c1;
+      --accent-orange: #ff8a00;
+      --text-dark: #1a2e22;
+      --text-muted: #526b5c;
+      --border: #d8ebe0;
+      --radius-lg: 20px;
+      --radius-md: 14px;
     }
 
     * {
@@ -32,7 +34,7 @@
       overflow-x: hidden;
       background: var(--bg-main);
       color: var(--text-dark);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      font-family: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
       line-height: 1.55;
       font-size: 16px;
     }
@@ -43,7 +45,7 @@
     }
 
     button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-      outline: 3px solid var(--primary);
+      outline: 3px solid var(--bilim-green);
       outline-offset: 2px;
     }
 
@@ -58,18 +60,33 @@
       }
     }
 
-    /* Header */
-    header.site-header {
-      background: linear-gradient(135deg, #0f172a 0%, #134e4a 100%);
-      color: #ffffff;
-      padding: 1.25rem 0;
-      border-bottom: 4px solid #14b8a6;
+    /* Modern Web Guidance: color (Forced Colors Mode fallbacks) */
+    @media (forced-colors: active) {
+      .work-item.active, .tab-btn.active, .role-btn.active, .btn-primary {
+        outline: 2px solid Highlight;
+        border-color: Highlight;
+      }
+      .bilim-hero, .ai-box-header {
+        border: 2px solid CanvasText;
+      }
     }
 
     .container {
       max-width: 1340px;
       margin: 0 auto;
       padding: 0 1.25rem;
+    }
+
+    /* BilimLand Top White Navigation Bar */
+    header.site-header {
+      background: #ffffff;
+      color: var(--text-dark);
+      padding: 0.9rem 0;
+      border-bottom: 2px solid var(--border);
+      box-shadow: 0 4px 16px rgba(0, 166, 81, 0.06);
+      position: sticky;
+      top: 0;
+      z-index: 40;
     }
 
     .header-flex {
@@ -87,26 +104,26 @@
     }
 
     .logo-icon {
-      width: 52px;
-      height: 52px;
+      width: 50px;
+      height: 50px;
       border-radius: 14px;
-      background: #14b8a6;
-      color: #042f2e;
+      background: linear-gradient(135deg, #00b85c 0%, #008741 100%);
+      color: #ffffff;
       font-weight: 900;
-      font-size: 1.5rem;
+      font-size: 1.35rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 14px rgba(20, 184, 166, 0.35);
+      box-shadow: 0 6px 16px rgba(0, 166, 81, 0.28);
     }
 
     .badge-pill {
       display: inline-block;
-      background: rgba(20, 184, 166, 0.2);
-      border: 1px solid #2dd4bf;
-      color: #99f6e4;
-      font-size: 0.75rem;
-      font-weight: 700;
+      background: var(--bilim-green-light);
+      border: 1px solid var(--bilim-green-border);
+      color: var(--bilim-green-dark);
+      font-size: 0.74rem;
+      font-weight: 800;
       padding: 0.2rem 0.65rem;
       border-radius: 999px;
       text-transform: uppercase;
@@ -115,27 +132,29 @@
 
     .role-switcher {
       display: inline-flex;
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--bg-soft);
       padding: 0.25rem;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 999px;
+      border: 1px solid var(--bilim-green-border);
       gap: 0.25rem;
     }
 
     .role-btn {
       background: transparent;
-      color: #e2e8f0;
+      color: var(--text-muted);
       border: none;
-      padding: 0.45rem 0.9rem;
-      border-radius: 9px;
-      font-weight: 700;
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      font-weight: 800;
       font-size: 0.85rem;
       cursor: pointer;
+      transition: all 0.15s ease;
     }
 
     .role-btn.active {
-      background: #14b8a6;
-      color: #042f2e;
+      background: var(--bilim-green);
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(0, 166, 81, 0.25);
     }
 
     .btn {
@@ -143,39 +162,78 @@
       align-items: center;
       justify-content: center;
       gap: 0.45rem;
-      padding: 0.55rem 1rem;
-      border-radius: 10px;
-      font-weight: 700;
+      padding: 0.55rem 1.1rem;
+      border-radius: 999px;
+      font-weight: 800;
       font-size: 0.88rem;
       cursor: pointer;
-      border: 1px solid transparent;
+      border: 1.5px solid transparent;
       text-decoration: none;
-      transition: background-color 0.15s ease;
+      transition: all 0.15s ease;
     }
 
     .btn-primary {
-      background: var(--primary);
+      background: var(--bilim-green);
       color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 166, 81, 0.22);
     }
     .btn-primary:hover {
-      background: var(--primary-dark);
-    }
-
-    .btn-gold {
-      background: #f59e0b;
-      color: #0f172a;
-    }
-    .btn-gold:hover {
-      background: #d97706;
+      background: var(--bilim-green-dark);
     }
 
     .btn-outline {
       background: #ffffff;
-      color: var(--text-dark);
-      border-color: var(--border);
+      color: var(--bilim-green-dark);
+      border-color: var(--bilim-green-border);
     }
     .btn-outline:hover {
-      background: var(--bg-soft);
+      background: var(--bilim-green-light);
+      border-color: var(--bilim-green);
+    }
+
+    /* BilimLand Hero Banner */
+    .bilim-hero {
+      margin-top: 1.25rem;
+      background: linear-gradient(125deg, #00a651 0%, #008741 65%, #006837 100%);
+      color: #ffffff;
+      border-radius: var(--radius-lg);
+      padding: 1.35rem 1.6rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 10px 28px rgba(0, 166, 81, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .bilim-hero::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      pointer-events: none;
+    }
+
+    .hero-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .hero-chip {
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      color: #ffffff;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
     }
 
     /* Main Layout: Sidebar (Works list) + Detail Workspace */
@@ -183,7 +241,7 @@
       display: grid;
       grid-template-columns: 360px 1fr;
       gap: 1.5rem;
-      margin: 1.5rem 0 2.5rem;
+      margin: 1.25rem 0 2.5rem;
       align-items: start;
     }
 
@@ -195,37 +253,38 @@
 
     .card {
       background: var(--bg-card);
-      border: 1px solid var(--border);
+      border: 1.5px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 1.25rem;
-      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+      padding: 1.3rem;
+      box-shadow: 0 6px 20px rgba(0, 120, 60, 0.04);
     }
 
     /* Left Sidebar: Works Catalog */
     .search-box {
       width: 100%;
-      padding: 0.6rem 0.85rem;
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      padding: 0.6rem 0.9rem;
+      border: 1.5px solid var(--border);
+      border-radius: 999px;
       margin-bottom: 0.65rem;
-      background: #f8fafc;
+      background: #f9fcfa;
     }
 
     .chapter-select {
       width: 100%;
-      padding: 0.55rem 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 10px;
+      padding: 0.55rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
       margin-bottom: 0.9rem;
-      background: #f8fafc;
-      font-weight: 600;
+      background: #f9fcfa;
+      font-weight: 700;
       font-size: 0.86rem;
+      color: var(--text-dark);
     }
 
     .works-list {
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
+      gap: 0.6rem;
       max-height: 620px;
       overflow-y: auto;
       padding-right: 0.2rem;
@@ -234,32 +293,44 @@
     .work-item {
       text-align: left;
       width: 100%;
-      padding: 0.8rem 0.95rem;
-      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      border-radius: 14px;
       border: 1.5px solid var(--border);
       background: #ffffff;
       cursor: pointer;
-      transition: border-color 0.15s ease, background-color 0.15s ease;
+      transition: all 0.15s ease;
       display: flex;
       flex-direction: column;
-      gap: 0.2rem;
+      gap: 0.22rem;
     }
 
     .work-item:hover {
-      border-color: var(--primary);
-      background: #f0fdfa;
+      border-color: var(--bilim-green);
+      background: var(--bilim-green-light);
     }
 
     .work-item.active {
-      border-color: var(--primary);
-      background: var(--primary-light);
-      box-shadow: 0 2px 6px rgba(15, 118, 110, 0.12);
+      border-color: var(--bilim-green);
+      background: var(--bilim-green-light);
+      box-shadow: 0 4px 12px rgba(0, 166, 81, 0.12);
+      position: relative;
+    }
+
+    .work-item.active::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 10px;
+      bottom: 10px;
+      width: 5px;
+      background: var(--bilim-green);
+      border-radius: 0 4px 4px 0;
     }
 
     .work-chapter-tag {
       font-size: 0.7rem;
       font-weight: 800;
-      color: var(--primary-dark);
+      color: var(--bilim-green-dark);
       text-transform: uppercase;
       letter-spacing: 0.03em;
     }
@@ -278,10 +349,10 @@
 
     /* Right Panel: Work Header + Choice Tabs */
     .work-banner {
-      background: linear-gradient(135deg, #f0fdfa 0%, #fef3c7 100%);
-      border: 1px solid #99f6e4;
+      background: var(--bilim-green-light);
+      border: 1.5px solid var(--bilim-green-border);
       border-radius: var(--radius-md);
-      padding: 1.2rem;
+      padding: 1.2rem 1.35rem;
       margin-bottom: 1.15rem;
       display: flex;
       flex-wrap: wrap;
@@ -295,28 +366,35 @@
       flex-wrap: wrap;
       gap: 0.5rem;
       margin-bottom: 1.25rem;
-      border-bottom: 2px solid #e2e8f0;
-      padding-bottom: 0.75rem;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 0.85rem;
     }
 
     .tab-btn {
-      padding: 0.55rem 0.95rem;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      background: #f8fafc;
+      padding: 0.55rem 1rem;
+      border-radius: 999px;
+      border: 1.5px solid var(--border);
+      background: #ffffff;
       color: var(--text-dark);
-      font-weight: 700;
+      font-weight: 800;
       font-size: 0.86rem;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
+      transition: all 0.15s ease;
+    }
+
+    .tab-btn:hover {
+      border-color: var(--bilim-green);
+      color: var(--bilim-green-dark);
     }
 
     .tab-btn.active {
-      background: var(--primary);
+      background: var(--bilim-green);
       color: #ffffff;
-      border-color: var(--primary);
+      border-color: var(--bilim-green);
+      box-shadow: 0 4px 10px rgba(0, 166, 81, 0.22);
     }
 
     .info-grid {
@@ -327,55 +405,76 @@
     }
 
     .info-box {
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--primary);
-      border-radius: 10px;
-      padding: 1rem;
+      background: #f9fcfa;
+      border: 1.5px solid var(--border);
+      border-left: 5px solid var(--bilim-green);
+      border-radius: 14px;
+      padding: 1.05rem 1.15rem;
     }
 
     .info-box h4 {
-      font-size: 0.85rem;
+      font-size: 0.86rem;
       text-transform: uppercase;
-      color: var(--primary-dark);
+      color: var(--bilim-green-dark);
       margin-bottom: 0.35rem;
       letter-spacing: 0.03em;
+      font-weight: 800;
     }
 
-    /* AI Assistant Chat Box */
+    /* BilimLand Green & White AI Assistant Box */
     .ai-box {
-      background: #0f172a;
-      color: #f8fafc;
-      border-radius: var(--radius-md);
-      padding: 1.15rem;
-      margin-top: 1.25rem;
+      background: #ffffff;
+      border: 2px solid var(--bilim-green);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-top: 1.35rem;
+      box-shadow: 0 8px 24px rgba(0, 166, 81, 0.08);
+    }
+
+    .ai-box-header {
+      background: linear-gradient(90deg, #00a651 0%, #008741 100%);
+      color: #ffffff;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .ai-box-body {
+      padding: 1.15rem 1.25rem;
+      background: #f9fcfa;
     }
 
     .ai-quick-prompts {
       display: flex;
       flex-wrap: wrap;
       gap: 0.45rem;
-      margin: 0.75rem 0;
+      margin-bottom: 0.85rem;
     }
 
     .prompt-chip {
-      background: #1e293b;
-      color: #99f6e4;
-      border: 1px solid #334155;
-      padding: 0.4rem 0.75rem;
+      background: #ffffff;
+      color: var(--bilim-green-dark);
+      border: 1.5px solid var(--bilim-green-border);
+      padding: 0.4rem 0.85rem;
       border-radius: 999px;
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
+      transition: all 0.15s ease;
     }
     .prompt-chip:hover {
-      background: #0f766e;
+      background: var(--bilim-green);
       color: #ffffff;
+      border-color: var(--bilim-green);
     }
 
     .ai-messages {
-      background: #1e293b;
-      border-radius: 10px;
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
       padding: 1rem;
       min-height: 190px;
       max-height: 320px;
@@ -384,31 +483,33 @@
       flex-direction: column;
       gap: 0.75rem;
       font-size: 0.9rem;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.8rem;
     }
 
     .ai-msg-bot {
-      background: #0f172a;
-      border-left: 3px solid #14b8a6;
-      padding: 0.75rem 0.95rem;
-      border-radius: 8px;
+      background: var(--bilim-green-light);
+      color: var(--text-dark);
+      border-left: 4px solid var(--bilim-green);
+      padding: 0.8rem 1rem;
+      border-radius: 10px;
       white-space: pre-line;
     }
 
     .ai-msg-user {
-      background: #115e59;
+      background: var(--bilim-green);
+      color: #ffffff;
       align-self: flex-end;
-      padding: 0.55rem 0.9rem;
-      border-radius: 8px;
-      font-weight: 600;
+      padding: 0.55rem 1rem;
+      border-radius: 14px 14px 2px 14px;
+      font-weight: 700;
     }
 
     /* Quiz Styling */
     .quiz-card {
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1rem;
+      background: #f9fcfa;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 1rem 1.15rem;
       margin-bottom: 0.85rem;
     }
 
@@ -416,20 +517,26 @@
       display: block;
       width: 100%;
       text-align: left;
-      padding: 0.55rem 0.85rem;
+      padding: 0.6rem 0.95rem;
       margin-top: 0.45rem;
-      border-radius: 8px;
-      border: 1px solid var(--border);
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
       background: #ffffff;
       cursor: pointer;
       font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .quiz-opt:hover:not(:disabled) {
+      border-color: var(--bilim-green);
+      background: var(--bilim-green-light);
     }
 
     .quiz-opt.correct {
       background: #dcfce7;
-      border-color: #16a34a;
-      color: #14532d;
-      font-weight: 700;
+      border-color: #00a651;
+      color: #065f46;
+      font-weight: 800;
     }
 
     .quiz-opt.wrong {
@@ -442,17 +549,18 @@
     dialog.modern-dialog {
       margin: auto;
       padding: 1.5rem;
-      border: 1px solid var(--border);
+      border: 2px solid var(--bilim-green);
       border-radius: var(--radius-lg);
       max-width: 640px;
       width: calc(100% - 2rem);
       background: #ffffff;
       color: var(--text-dark);
-      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+      box-shadow: 0 20px 45px rgba(0, 120, 60, 0.2);
     }
 
     dialog.modern-dialog::backdrop {
-      background: rgba(15, 23, 42, 0.65);
+      background: rgba(15, 45, 25, 0.55);
+      backdrop-filter: blur(2px);
     }
 
     .form-field {
@@ -461,19 +569,21 @@
     .form-field label {
       display: block;
       font-size: 0.82rem;
-      font-weight: 700;
+      font-weight: 800;
       margin-bottom: 0.25rem;
       color: var(--text-muted);
     }
     .form-field input, .form-field textarea, .form-field select {
       width: 100%;
       padding: 0.55rem 0.75rem;
-      border: 1px solid var(--border);
-      border-radius: 8px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      background: #f9fcfa;
     }
 
     footer.site-footer {
-      border-top: 1px solid var(--border);
+      background: #ffffff;
+      border-top: 2px solid var(--border);
       padding: 1.5rem 0 2.5rem;
       font-size: 0.85rem;
       color: var(--text-muted);
@@ -482,15 +592,15 @@
 </head>
 <body>
 
-  <!-- HEADER -->
+  <!-- TOP WHITE BILIMLAND HEADER -->
   <header class="site-header">
     <div class="container header-flex">
       <div class="logo-wrap">
         <div class="logo-icon" aria-hidden="true">ӘL</div>
         <div>
-          <span class="badge-pill">Ғылыми жоба • 5-сынып «Қазақ әдебиеті»</span>
-          <h1 style="font-size: clamp(1.35rem, 2.5vw, 1.85rem); font-weight: 900; margin-top: 0.15rem;">
-            Әдеби LAB — Оқушы мен Мұғалімге арналған ЖИ-Ассистент
+          <span class="badge-pill">Bilim Порталы • 5-сынып «Қазақ әдебиеті»</span>
+          <h1 style="font-size: clamp(1.25rem, 2.2vw, 1.6rem); font-weight: 900; color: var(--text-dark); margin-top: 0.1rem;">
+            Әдеби <span style="color: var(--bilim-green);">LAB</span> — Оқушы мен Мұғалімнің ЖИ-көмекшісі
           </h1>
         </div>
       </div>
@@ -498,27 +608,49 @@
       <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem;">
         <div class="role-switcher" role="group" aria-label="Пайдаланушы режимін таңдау">
           <button type="button" class="role-btn active" id="mode-student" onclick="setMode('student')">🎒 Оқушы режимі</button>
-          <button type="button" class="role-btn" id="mode-teacher" onclick="setMode('teacher')">👩‍🏫 Мұғалім режимі (ҚМЖ/БЖБ)</button>
+          <button type="button" class="role-btn" id="mode-teacher" onclick="setMode('teacher')">👩‍🏫 Мұғалім режимі (ҚМЖ)</button>
         </div>
-        <button type="button" class="btn btn-gold" onclick="openAddWorkDialog()">
+        <button type="button" class="btn btn-primary" onclick="openAddWorkDialog()">
           ➕ Өз материалыңды қосу
         </button>
       </div>
     </div>
   </header>
 
+  <!-- BILIMLAND GREEN HERO STRIP -->
+  <div class="container">
+    <div class="bilim-hero">
+      <div>
+        <div style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.92;">
+          Цифрлық білім беру платформасы • ЖИ (Жасанды Интеллект) лабораториясы
+        </div>
+        <div style="font-size: clamp(1.15rem, 2vw, 1.45rem); font-weight: 900; margin-top: 0.2rem;">
+          Шығарманы таңдап, автормен танысыңыз, қысқаша мазмұнын оқыңыз және ЖИ-мен талдау жасаңыз!
+        </div>
+      </div>
+      <div class="hero-chips">
+        <span class="hero-chip">✓ І – ІV Тоқсан бағдарламасы</span>
+        <span class="hero-chip">✓ Интерактивті Тесттер</span>
+        <span class="hero-chip">✓ Дайын ҚМЖ &amp; Дескриптор</span>
+      </div>
+    </div>
+  </div>
+
   <!-- MAIN WORKSPACE -->
   <main class="container workspace-grid">
     <!-- LEFT SIDEBAR: LIST OF WORKS -->
     <aside class="card isolated-panel" aria-label="5-сынып шығармалар тізімі">
-      <h2 style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.65rem;">
-        📚 5-сынып шығармалар тізімі
-      </h2>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+        <h2 style="font-size: 1.05rem; font-weight: 900; color: var(--bilim-green-dark);">
+          📚 Шығармалар тізімі (5-сынып)
+        </h2>
+        <span class="badge-pill" id="works-count-badge">7 тақырып</span>
+      </div>
       <input
         type="search"
         id="work-search"
         class="search-box"
-        placeholder="Шығарма немесе авторды іздеу..."
+        placeholder="🔍 Шығарма немесе авторды іздеу..."
         oninput="renderWorksList()"
       />
       <select id="chapter-filter" class="chapter-select" onchange="renderWorksList()" aria-label="Тоқсан және бөлім бойынша сүзгі">
@@ -538,60 +670,67 @@
       <div class="work-banner">
         <div>
           <span class="work-chapter-tag" id="detail-chapter"></span>
-          <h2 style="font-size: clamp(1.3rem, 2.2vw, 1.75rem); font-weight: 900; margin-top: 0.2rem;" id="detail-title"></h2>
-          <p style="font-size: 0.92rem; color: var(--text-muted); font-weight: 600;" id="detail-author-genre"></p>
+          <h2 style="font-size: clamp(1.3rem, 2.2vw, 1.7rem); font-weight: 900; margin-top: 0.2rem; color: var(--text-dark);" id="detail-title"></h2>
+          <p style="font-size: 0.9rem; color: var(--text-muted); font-weight: 700; margin-top: 0.15rem;" id="detail-author-genre"></p>
         </div>
         <div style="display: flex; gap: 0.5rem;">
-          <button type="button" class="btn btn-outline" onclick="window.print()">🖨️ Басып шығару / PDF</button>
+          <button type="button" class="btn btn-outline" onclick="window.print()">🖨️ Сабақ парағын басып шығару</button>
         </div>
       </div>
 
       <!-- Interactive Selection Tabs (Таңдаулар) -->
-      <div style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.4rem;">
+      <div style="font-size: 0.78rem; font-weight: 800; text-transform: uppercase; color: var(--bilim-green-dark); margin-bottom: 0.45rem;">
         Таңдаулар (керекті бөлімді басыңыз):
       </div>
       <div class="tabs-nav" role="tablist">
         <button type="button" class="tab-btn active" id="tab-author" onclick="selectTab('author')">👤 Автор туралы мәлімет</button>
         <button type="button" class="tab-btn" id="tab-summary" onclick="selectTab('summary')">📖 Қысқаша мазмұны</button>
         <button type="button" class="tab-btn" id="tab-analysis" onclick="selectTab('analysis')">🎯 Идеясы мен Кейіпкерлер</button>
-        <button type="button" class="tab-btn" id="tab-quiz" onclick="selectTab('quiz')">🧩 Интерактивті Тест (5 сұрақ)</button>
-        <button type="button" class="tab-btn" id="tab-teacher" onclick="selectTab('teacher')">👩‍🏫 Мұғалімге (ҚМЖ / Дескриптор)</button>
+        <button type="button" class="tab-btn" id="tab-quiz" onclick="selectTab('quiz')">🧩 Интерактивті Тест</button>
+        <button type="button" class="tab-btn" id="tab-teacher" onclick="selectTab('teacher')">👩‍🏫 Мұғалімге (ҚМЖ)</button>
       </div>
 
       <!-- Dynamic Tab Content -->
-      <div id="tab-content-area" style="min-height: 210px;"></div>
+      <div id="tab-content-area" style="min-height: 200px;"></div>
 
-      <!-- AI ASSISTANT MODULE -->
+      <!-- BILIMLAND GREEN & WHITE AI ASSISTANT MODULE -->
       <div class="ai-box">
-        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem;">
+        <div class="ai-box-header">
           <div>
-            <span class="badge-pill">🤖 Әдеби LAB — ЖИ Ассистенті</span>
-            <h3 style="font-size: 1.05rem; font-weight: 800; margin-top: 0.25rem;">
-              Осы шығарма бойынша ЖИ-ден көмек сұраңыз (Оқушы мен Мұғалімге)
+            <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; opacity: 0.9;">
+              🤖 Әдеби LAB • Интеллектуалды ЖИ-Ассистент
+            </div>
+            <h3 style="font-size: 1.05rem; font-weight: 900; margin-top: 0.1rem;">
+              Шығарма бойынша тапсырма, эссе немесе ҚМЖ сұраңыз
             </h3>
           </div>
+          <span style="background: rgba(255,255,255,0.22); padding: 0.25rem 0.7rem; border-radius: 999px; font-size: 0.75rem; font-weight: 800;">
+            24/7 Онлайн көмекші
+          </span>
         </div>
 
-        <div class="ai-quick-prompts">
-          <button type="button" class="prompt-chip" onclick="runAiAction('essay')">✍️ Эссе жоспарын құру</button>
-          <button type="button" class="prompt-chip" onclick="runAiAction('character_map')">🦸 Кейіпкерлерге мінездеме</button>
-          <button type="button" class="prompt-chip" onclick="runAiAction('bloom_questions')">🎓 Блум таксономиясы (5 сұрақ)</button>
-          <button type="button" class="prompt-chip" onclick="runAiAction('kmzh_goal')">📋 Мұғалімге: Сабақ мақсаты мен дескриптор</button>
-          <button type="button" class="prompt-chip" onclick="runAiAction('moral')">💡 Негізгі тәрбиелік мәні</button>
+        <div class="ai-box-body">
+          <div class="ai-quick-prompts">
+            <button type="button" class="prompt-chip" onclick="runAiAction('essay')">✍️ Эссе жоспарын құру</button>
+            <button type="button" class="prompt-chip" onclick="runAiAction('character_map')">🦸 Кейіпкерлерге мінездеме</button>
+            <button type="button" class="prompt-chip" onclick="runAiAction('bloom_questions')">🎓 Блум таксономиясы (5 сұрақ)</button>
+            <button type="button" class="prompt-chip" onclick="runAiAction('kmzh_goal')">📋 Мұғалімге: Сабақ мақсаты мен дескриптор</button>
+            <button type="button" class="prompt-chip" onclick="runAiAction('moral')">💡 Негізгі тәрбиелік мәні</button>
+          </div>
+
+          <div class="ai-messages" id="ai-chat-history"></div>
+
+          <form onsubmit="handleCustomAiQuestion(event)" style="display: flex; gap: 0.55rem;">
+            <input
+              type="text"
+              id="ai-user-input"
+              placeholder="Сұрағыңызды жазыңыз: мысалы, осы шығарманың басты идеясы қандай?"
+              style="flex: 1; padding: 0.6rem 1rem; border-radius: 999px; border: 1.5px solid var(--bilim-green-border); background: #ffffff; color: var(--text-dark);"
+              required
+            />
+            <button type="submit" class="btn btn-primary">Жіберу ➤</button>
+          </form>
         </div>
-
-        <div class="ai-messages" id="ai-chat-history"></div>
-
-        <form onsubmit="handleCustomAiQuestion(event)" style="display: flex; gap: 0.55rem;">
-          <input
-            type="text"
-            id="ai-user-input"
-            placeholder="Мысалы: Осы шығарманың басты идеясы қандай? Немесе сабаққа тапсырма құрастыр..."
-            style="flex: 1; padding: 0.6rem 0.9rem; border-radius: 10px; border: 1px solid #334155; background: #0f172a; color: #fff;"
-            required
-          />
-          <button type="submit" class="btn btn-primary">Жіберу ➤</button>
-        </form>
       </div>
     </section>
   </main>
@@ -599,8 +738,10 @@
   <!-- ADD CUSTOM MATERIAL DIALOG (Light Dismiss Native <dialog>) -->
   <dialog class="modern-dialog" id="add-work-dialog" closedby="any" aria-labelledby="dialog-title">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem;">
-      <h2 id="dialog-title" style="font-size: 1.2rem; font-weight: 800;">➕ Жаңа шығарма / Өз материалыңызды қосу</h2>
-      <button type="button" class="btn btn-outline" onclick="closeAddWorkDialog()" style="min-height: 36px; padding: 0.25rem 0.65rem;">✕</button>
+      <h2 id="dialog-title" style="font-size: 1.2rem; font-weight: 900; color: var(--bilim-green-dark);">
+        ➕ Жаңа шығарма / Өз материалыңызды қосу
+      </h2>
+      <button type="button" class="btn btn-outline" onclick="closeAddWorkDialog()" style="min-height: 36px; padding: 0.25rem 0.75rem;">✕</button>
     </div>
     <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.9rem;">
       Сессияға дайындаған өз материалыңызды осы жерге енгізсеңіз, ол бірден шығармалар тізіміне және ЖИ-ассистент базасына қосылады:
@@ -642,13 +783,13 @@
     </form>
   </dialog>
 
-  <footer class="site-footer container">
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;">
+  <footer class="site-footer">
+    <div class="container" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1rem;">
       <div>
-        <strong>«Әдеби LAB» ғылыми жобасы</strong> — 5-сынып «Қазақ әдебиеті» пәні бойынша оқушылар мен мұғалімдерге арналған цифрлық ЖИ-платформа.
+        <strong style="color: var(--bilim-green-dark);">«Әдеби LAB» ғылыми жобасы</strong> — 5-сынып «Қазақ әдебиеті» пәні бойынша оқушылар мен мұғалімдерге арналған цифрлық ЖИ-платформа.
       </div>
       <div>
-        Әзірлеуші: <a href="https://portfolio-9os8.onrender.com" target="_blank" rel="noopener noreferrer">Алимжан Аптай</a> • WhatsApp: <a href="tel:+77786078732">+7 778 607-87-32</a>
+        Әзірлеуші: <a href="https://portfolio-9os8.onrender.com" target="_blank" rel="noopener noreferrer" style="color: var(--bilim-green-dark); font-weight: 700;">Алимжан Аптай</a> • WhatsApp: <a href="tel:+77786078732" style="color: var(--bilim-green-dark); font-weight: 700;">+7 778 607-87-32</a>
       </div>
     </div>
   </footer>
@@ -666,7 +807,7 @@
         summary: 'Қарасудың бойында Қазанғап деген кедей аңшы өмір сүреді. Оның ұлы Кендебай сағат сайын емес, күн сайын өсетін алып батыр болып ержетеді. Ол Мергенбай батырдың баласы — панасыз қалған жетім балаға көмектесу үшін ханның жоғалған биесінің құлынын (Керқұланы) өсіріп, алты кез алмас қылыш пен сауыт киіп, баланың ата-анасын зынданнан құтқарып, елін мұратқа жеткізеді.',
         plotStages: [
           'Басталуы: Қарасу бойындағы Қазанғап кедейдің отбасында Кендебайдың дүниеге келуі.',
-          'Байланысуы: Кендебайдың көкжал қасқырдан буаз биені құтқарып, Керқұла құлынды аمان алып қалуы.',
+          'Байланысуы: Кендебайдың көкжал қасқырдан буаз биені құтқарып, Керқұла құлынды аман алып қалуы.',
           'Дамуы: Жетім баламен кездесуі және Керқұла атқа мініп, алыс сапарға аттануы.',
           'Шарықтау шегі: Дәу мен арыстанды жеңіп, ханның шартын орындап, баланың ата-анасын босатуы.',
           'Шешімі: Кендебайдың еліне оралып, әділдік орнатуы.'
@@ -735,7 +876,7 @@
         author: 'Ыбырай Алтынсарин • Әңгіме',
         readingGoal: '5.2.1.1 — әдеби шығармадағы кейіпкерді портреті мен іс-әрекеті арқылы талдау',
         authorBio: 'Ыбырай Алтынсарин (1841–1889) — қазақтың ұлы ағартушы-педагогы, жазушы, этнограф, балалар әдебиетінің атасы, қазақ даласында алғаш мектеп ашып, «Қазақ хрестоматиясын» (1879) жазған тұлға.',
-        summary: 'Атымтай Жомарт өзі асқан бай бола тұра, күн сайын бір мезгіл үстіне ескі киім киіп, отын шауып, шөп тасып еңбек етеді. Жарлы-жақыбайларға үнемі көмектеседі. Достары «Неге өзіңді қинайсың?» деп сұрағанда, ол дәулетке мастанып кетпеу үшін және еңбекпен табылған нанның қадірін ұмытпау үшін солай істейтінін4 себеппен түсіндіреді.',
+        summary: 'Атымтай Жомарт өзі асқан бай бола тұра, күн сайын бір мезгіл үстіне ескі киім киіп, отын шауып, шөп тасып еңбек етеді. Жарлы-жақыбайларға үнемі көмектеседі. Достары «Неге өзіңді қинайсың?» деп сұрағанда, ол дәулетке мастанып кетпеу үшін және еңбекпен табылған нанның қадірін ұмытпау үшін солай істейтінін 4 себеппен түсіндіреді.',
         plotStages: [
           'Басталуы: Атымтай Жомарттың бай бола тұра күнде еңбек етуі.',
           'Дамуы: Таныстарының оған таңғалып сұрақ қоюы.',
@@ -832,13 +973,13 @@
         chapter: 'ІІІ бөлім. Адамгершілік — асыл қасиет',
         title: '«Егіннің бастары» мысал өлеңі',
         author: 'Ахмет Байтұрсынұлы • Мысал өлең',
-        readingGoal: '5.1.4.1 — мысал жанрындағы алегория мен моральды анықтау',
+        readingGoal: '5.1.4.1 — мысал жанрындағы аллегория мен моральды анықтау',
         authorBio: 'Ахмет Байтұрсынұлы (1872–1937) — ұлт ұстазы, ақын, әдебиет зерттеуші ғалым, қазақ тіл білімінің негізін қалаушы, «Қырық мысал» және «Маса» жинақтарының авторы.',
         summary: 'Бір адам жас баласын ертіп егін алқабына барады. Баласы басы көкке қарап тікірейіп тұрған масаққа қызығады. Сонда әкесі оған іші дәнге толы масақтың басы төмен иіліп тұратынын, ал іші бос, дәні жоқ масақтың ғана кеудесін керіп тік тұратынын айтып, тәкаппарлықтан аулақ болуға үйретеді.',
         plotStages: [
           'Басталуы: Әкесі мен баласының егін басына баруы.',
           'Дамуы: Баланың тікірейген бидайға таңырқауы.',
-          'Шешімі: Әкенің даналық өсиеті (мораль): «Тәкаппар — о കനсіз бос масақ тәрізді».'
+          'Шешімі: Әкенің даналық өсиеті (мораль): «Тәкаппар — дәнсіз бос масақ тәрізді».'
         ],
         idea: 'Тақырыбы — кішіпейілділік пен тәкаппарлық. Идеясы — білімді, парасатты адам дәнге толы бидай секілді кішіпейіл болады.',
         characters: [
@@ -932,6 +1073,9 @@
         return matchChapter && matchQuery;
       });
 
+      const badge = document.getElementById('works-count-badge');
+      if (badge) badge.textContent = `${filtered.length} тақырып`;
+
       filtered.forEach(w => {
         const btn = document.createElement('button');
         btn.type = 'button';
@@ -1020,7 +1164,7 @@
           area.innerHTML = `<div class="info-box"><p>Бұл шығарма бойынша сұрақтарды төмендегі ЖИ-ассистенттен «Блум таксономиясы (5 сұрақ)» батырмасын басып ала аласыз!</p></div>`;
           return;
         }
-        area.innerHTML = quizList.map((item, qIdx) => `
+        area.innerHTML = quizList.map((item) => `
           <div class="quiz-card">
             <div style="font-weight: 800; font-size: 0.95rem;">${item.q}</div>
             ${item.opts.map((opt, oIdx) => `
@@ -1036,12 +1180,12 @@
           descriptors: ['Шығарманың негізгі ойын анықтайды (3 балл)', 'Кейіпкер іс-әрекетін дәлелмен сипаттайды (3 балл)']
         };
         area.innerHTML = `
-          <div class="info-box" style="border-left-color: #f59e0b; margin-bottom: 1rem;">
-            <h4 style="color: #b45309;">👩‍🏫 Мұғалімге арналған ҚМЖ (Қысқа мерзімді жоспар) көмекшісі</h4>
+          <div class="info-box" style="margin-bottom: 1rem;">
+            <h4>👩‍🏫 Мұғалімге арналған ҚМЖ (Қысқа мерзімді жоспар) көмекшісі</h4>
             <p style="font-size: 0.94rem; margin-top: 0.35rem;"><strong>Сабақтың мақсаты:</strong> ${tn.lessonObjective}</p>
           </div>
-          <div class="info-box" style="border-left-color: #f59e0b;">
-            <h4 style="color: #b45309;">✅ Бағалау критерийлері мен Дескрипторлар (БЖБ / ФБ)</h4>
+          <div class="info-box">
+            <h4>✅ Бағалау критерийлері мен Дескрипторлар (БЖБ / ФБ)</h4>
             <ul style="padding-left: 1.2rem; margin-top: 0.45rem; font-size: 0.92rem;">
               ${tn.descriptors.map(d => `<li style="margin-bottom:0.35rem;">${d}</li>`).join('')}
             </ul>
@@ -1073,7 +1217,6 @@
 
     function runAiAction(actionType) {
       const w = getSelectedWork();
-      const chat = document.getElementById('ai-chat-history');
       let userText = '';
       let botReply = '';
 
