@@ -88,7 +88,7 @@
       width: 100%;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: safe center;
       gap: 1rem;
     }
 
@@ -303,6 +303,8 @@
       gap: 0.45rem;
       max-height: 600px;
       overflow-y: auto;
+      scrollbar-gutter: stable;
+      overscroll-behavior: contain;
     }
 
     .work-item {
@@ -382,6 +384,7 @@
     .tabs-bar {
       display: flex;
       flex-wrap: wrap;
+      flex-wrap: balance;
       gap: 0.4rem;
       margin-bottom: 1.2rem;
       border-bottom: 1px solid var(--border-light);
@@ -466,6 +469,7 @@
     .chip-row {
       display: flex;
       flex-wrap: wrap;
+      flex-wrap: balance;
       gap: 0.4rem;
       margin-bottom: 0.85rem;
     }
@@ -495,6 +499,8 @@
       min-height: 170px;
       max-height: 290px;
       overflow-y: auto;
+      scrollbar-gutter: stable;
+      overscroll-behavior: contain;
       display: flex;
       flex-direction: column;
       gap: 0.65rem;
